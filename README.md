@@ -1,6 +1,6 @@
 # rss-feeds
 
-RSS feeds generated from pages that don't offer one.
+Vibe-coded RSS feeds generated from pages that don't provide one.
 
 ## Feeds
 
@@ -8,7 +8,7 @@ RSS feeds generated from pages that don't offer one.
 |------|-----|
 | Alan Kay on Quora | `https://raw.githubusercontent.com/arne-cl/rss-feeds/main/feeds/alankay-quora.xml` |
 
-Subscribe with the raw URL above — most RSS readers accept it as-is.
+Subscribe with the raw URL above.
 
 ## How it works
 
@@ -42,4 +42,3 @@ python3 -m venv .venv
 ```
 
 Set `QUORA_PROFILE_HTML=<file>` to run against a saved page copy instead of fetching Quora.
-
