@@ -7,24 +7,16 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 28 Sep 2026 12:26:51 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 28 Sep 2026 12:52:16 +0000</lastBuildDate>
     <item>
-      <title>Who is Alan Kay and why did he call himself the father of object oriented programming</title>
-      <link>https://www.quora.com/Who-is-Alan-Kay-and-why-did-he-call-himself-the-father-of-object-oriented-programming/answer/Alan-Kay-11</link>
-      <description>I never called myself “the father of OOP”.
-I did coin the term for a general style that was being developed by a number of people, including Ivan Sutherland, Dahl &amp; Nygaard, myself, etc.
-The term “OOP” was a hasty and poor choice on my part. I should have called it something more like “Process Oriented Programming”, etc.
-Sorry.
+      <title>Did the ENIAC have a BIOS</title>
+      <link>https://www.quora.com/Did-the-ENIAC-have-a-BIOS/answer/Alan-Kay-11</link>
+      <description>I’m pretty sure it nether had a BIOS, nor anything analogous to a BIOS. I’m on the side of those who don’t consider it to be a stored program computer (there were a few tricks you could do along those lines, but not enough IMO to qualify).
+An interesting question is whether the program needed for “Basic IO” needs to be in firmware to qualify (the letter of the law says “yes”, but I’m more with the spirit of the law, which doesn’t need a ROM to qualify).
+Along the spirit lines, it’s worth contemplating that well into the 60s, many computers were started “cold” with no code at all, but by first using toggles or other kinds of switches, an operator would key in a few instructions that would e.g. read in a paper taper full of more instructions. This was the case for most of the early DEC computers. The CDC 6600 ca 1964–5 had a panel of switches for initial cold starts (this was much more convenient than toggles …).
 
-David L Smith
- in a comment below said:
-Well, I think that might have confused people since we’re all familiar with running “processes” but “objects” had less concrete usage.
-My reply
- should have been here:
-Back in the 60s “objects” generally meant “something with multiple fields (including possible procedure pointers)” and this is what Sketchpad, AED, etc. had. LISP’s early use of the term “object” more or less meant this semantically (something with “properties” (some of which could be lambda expressions). Simula used independent Algol-60 blocks (which had variables that could hold data or signify procedures …).
-My thought — catalysed by Sketchpad and Simula — was that the intercommunicating “processes” starting to be used by time-sharing and multiprocessing — were a great semantic primitive for “everything”, but that it would take a lot of software engineering to make them pragmatically universal.
-When someone asked me what I was working on, I said without thinking “OOP”, instead of how I was actually thinking about it (which included trying to not think in terms of passive data structures or the simulation of them).</description>
-      <guid isPermaLink="false">https://www.quora.com/Who-is-Alan-Kay-and-why-did-he-call-himself-the-father-of-object-oriented-programming/answer/Alan-Kay-11</guid>
+Turning to Wikipedia, it says that the first officially named BIOS happened in 1975 for the CP/M OS, but that the “modern” version of the term was ca 1981 for the IBM PC. Both of these were ROM based.</description>
+      <guid isPermaLink="false">https://www.quora.com/Did-the-ENIAC-have-a-BIOS/answer/Alan-Kay-11</guid>
     </item>
     <item>
       <title>Hi Dr Kay Ive been researching the development of the GUI for a project recently and Ive been wondering something why did you feel that windows needed to be able to overlap in the first place What was wrong with</title>
@@ -42,14 +34,22 @@ The full blown combination of features mentioned above was realised in the event
       <guid isPermaLink="false">https://www.quora.com/Hi-Dr-Kay-Ive-been-researching-the-development-of-the-GUI-for-a-project-recently-and-Ive-been-wondering-something-why-did-you-feel-that-windows-needed-to-be-able-to-overlap-in-the-first-place-What-was-wrong-with/answer/Alan-Kay-11</guid>
     </item>
     <item>
-      <title>Did the ENIAC have a BIOS</title>
-      <link>https://www.quora.com/Did-the-ENIAC-have-a-BIOS/answer/Alan-Kay-11</link>
-      <description>I’m pretty sure it nether had a BIOS, nor anything analogous to a BIOS. I’m on the side of those who don’t consider it to be a stored program computer (there were a few tricks you could do along those lines, but not enough IMO to qualify).
-An interesting question is whether the program needed for “Basic IO” needs to be in firmware to qualify (the letter of the law says “yes”, but I’m more with the spirit of the law, which doesn’t need a ROM to qualify).
-Along the spirit lines, it’s worth contemplating that well into the 60s, many computers were started “cold” with no code at all, but by first using toggles or other kinds of switches, an operator would key in a few instructions that would e.g. read in a paper taper full of more instructions. This was the case for most of the early DEC computers. The CDC 6600 ca 1964–5 had a panel of switches for initial cold starts (this was much more convenient than toggles …).
+      <title>Who is Alan Kay and why did he call himself the father of object oriented programming</title>
+      <link>https://www.quora.com/Who-is-Alan-Kay-and-why-did-he-call-himself-the-father-of-object-oriented-programming/answer/Alan-Kay-11</link>
+      <description>I never called myself “the father of OOP”.
+I did coin the term for a general style that was being developed by a number of people, including Ivan Sutherland, Dahl &amp; Nygaard, myself, etc.
+The term “OOP” was a hasty and poor choice on my part. I should have called it something more like “Process Oriented Programming”, etc.
+Sorry.
 
-Turning to Wikipedia, it says that the first officially named BIOS happened in 1975 for the CP/M OS, but that the “modern” version of the term was ca 1981 for the IBM PC. Both of these were ROM based.</description>
-      <guid isPermaLink="false">https://www.quora.com/Did-the-ENIAC-have-a-BIOS/answer/Alan-Kay-11</guid>
+David L Smith
+ in a comment below said:
+Well, I think that might have confused people since we’re all familiar with running “processes” but “objects” had less concrete usage.
+My reply
+ should have been here:
+Back in the 60s “objects” generally meant “something with multiple fields (including possible procedure pointers)” and this is what Sketchpad, AED, etc. had. LISP’s early use of the term “object” more or less meant this semantically (something with “properties” (some of which could be lambda expressions). Simula used independent Algol-60 blocks (which had variables that could hold data or signify procedures …).
+My thought — catalysed by Sketchpad and Simula — was that the intercommunicating “processes” starting to be used by time-sharing and multiprocessing — were a great semantic primitive for “everything”, but that it would take a lot of software engineering to make them pragmatically universal.
+When someone asked me what I was working on, I said without thinking “OOP”, instead of how I was actually thinking about it (which included trying to not think in terms of passive data structures or the simulation of them).</description>
+      <guid isPermaLink="false">https://www.quora.com/Who-is-Alan-Kay-and-why-did-he-call-himself-the-father-of-object-oriented-programming/answer/Alan-Kay-11</guid>
     </item>
   </channel>
 </rss>
