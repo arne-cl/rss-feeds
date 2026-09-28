@@ -40,3 +40,6 @@ python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 .venv/bin/python scripts/build_feed.py
 ```
+
+Set `QUORA_PROFILE_HTML=<file>` to run against a saved page copy instead of fetching Quora.
+

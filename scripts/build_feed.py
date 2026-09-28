@@ -5,8 +5,8 @@ Quora blocks plain requests and its HTML embeds answer data in escaped JSON,
 so this script:
 
 1. Tries a direct fetch with Chrome TLS impersonation (curl_cffi) and parses
-   the answer objects embedded in the page's JSON blobs (full answer text,
-   no timestamps).
+   the answer objects embedded in the page's JSON blobs (full answer text +
+   creation timestamps).
 2. Falls back to the r.jina.ai reader proxy and parses the rendered DOM
    (excerpt text + answer dates).
 
@@ -15,8 +15,10 @@ merged into the previous feed file to keep history and preserve dates.
 
 Usage: python scripts/build_feed.py
 Optional env: JINA_API_KEY (avoids r.jina.ai rate limits on shared IPs)
+              QUORA_PROFILE_HTML=<file> (parse a saved page copy offline)
 """
 
+import json
 import os
 import re
 import sys
@@ -76,6 +78,11 @@ def fetch_jina(url: str) -> str:
 
 
 def fetch_page(url: str) -> tuple[str, str]:
+    path = os.environ.get("QUORA_PROFILE_HTML")
+    if path:
+        log.info("using local HTML copy: %s", path)
+        with open(path, encoding="utf-8") as f:
+            return f.read(), "direct"
     try:
         html = fetch_direct(url)
         log.info("direct fetch ok (%d bytes)", len(html))
@@ -89,16 +96,50 @@ def fetch_page(url: str) -> tuple[str, str]:
 # Parsing strategy 1: direct HTML with embedded JSON
 # --------------------------------------------------------------------------
 
-SPAN_PAT = re.compile(r'\\+"text\\+": \\+"((?:[^"\\]|\\.)*?)\\+"(?=[,}\]])', re.S)
+def _qtext_to_text(json_str) -> str:
+    """Render a Quora qtext document (JSON string of sections/spans) to text."""
+    if not isinstance(json_str, str):
+        return ""
+    try:
+        doc = json.loads(json_str)
+    except ValueError:
+        return ""
+    sections = doc.get("sections", []) if isinstance(doc, dict) else []
+    paragraphs = []
+    for section in sections:
+        if not isinstance(section, dict):
+            continue
+        text = "".join(
+            span.get("text", "") for span in section.get("spans", []) if isinstance(span, dict)
+        ).strip()
+        if text:
+            paragraphs.append(text)
+    return "\n".join(paragraphs)
 
 
-def decode_json_text(value: str) -> str:
-    value = re.sub(r'\\{2,}u([0-9a-fA-F]{4})', lambda m: chr(int(m.group(1), 16)), value)
-    value = re.sub(r"\\{2,}n", "\n", value)
-    value = re.sub(r'\\{2,}"', '"', value)
-    value = value.replace('\\"', '"')
-    value = re.sub(r"\\+([nt])", lambda m: {"n": "\n", "t": "\t"}[m.group(1)], value)
-    return value
+def _iter_store_answers(html: str):
+    """Yield Answer nodes from the JSON blobs embedded in inlineQueryResults."""
+    for sm in re.finditer(r"<script[^>]*>", html):
+        end = html.find("</script>", sm.end())
+        if end == -1:
+            continue
+        block = html[sm.end() : end]
+        if "permaUrl" not in block:
+            continue
+        for pm in re.finditer(r'\.push\("((?:[^"\\]|\\.)*)"\)', block):
+            try:
+                data = json.loads(json.loads('"' + pm.group(1) + '"'))
+            except ValueError:
+                continue
+            stack = [data]
+            while stack:
+                node = stack.pop()
+                if isinstance(node, dict):
+                    if node.get("__typename") == "Answer" and "permaUrl" in node:
+                        yield node
+                    stack.extend(node.values())
+                elif isinstance(node, list):
+                    stack.extend(node)
 
 
 def title_from_url(url: str) -> str:
@@ -107,35 +148,30 @@ def title_from_url(url: str) -> str:
 
 
 def parse_direct(html: str) -> list[dict]:
-    positions = [m.start() for m in re.finditer(r"permaUrl", html)]
-    if not positions:
-        return []
-    positions.append(positions[-1] + 40000)
-
     items, seen = [], set()
-    for k in range(len(positions) - 1):
-        window = html[positions[k] : positions[k + 1]]
-        mu = re.search(r'permaUrl\\":\\"((?:[^"\\]|\\.)+?)\\"', window)
-        if not mu:
-            continue
-        url = urljoin("https://www.quora.com", mu.group(1))
+    for ans in _iter_store_answers(html):
+        url = urljoin("https://www.quora.com", ans["permaUrl"])
         if not ANSWER_PATH.match(url) or url in seen:
             continue
         seen.add(url)
 
-        cm = re.search(r'\\"content\\":\\"', window)
-        if not cm:
-            log.info("no content blob for %s", url)
-            continue
-        spans = SPAN_PAT.findall(window[cm.end() :])
-        text = "\n".join(decode_json_text(s) for s in spans).strip()
+        question = ans.get("question")
+        title = ""
+        if isinstance(question, dict):
+            title = _qtext_to_text(question.get("title"))
+
+        published = None
+        created = ans.get("creationTime")
+        if isinstance(created, (int, float)):
+            published = datetime.fromtimestamp(created / 1e6, tz=timezone.utc)
+
         items.append(
             {
                 "id": url,
-                "title": title_from_url(url),
+                "title": title or title_from_url(url),
                 "link": url,
-                "description": text,
-                "published": None,
+                "description": _qtext_to_text(ans.get("content")),
+                "published": published,
             }
         )
     log.info("direct JSON parse: %d answer(s)", len(items))
