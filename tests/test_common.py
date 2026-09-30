@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from scripts import common
+import common
 
 
 def write_feed(tmp_path, xml):

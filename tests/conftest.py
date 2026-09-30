@@ -1,4 +1,7 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+for path in (ROOT, os.path.join(ROOT, "scripts")):
+    if path not in sys.path:
+        sys.path.insert(0, path)
