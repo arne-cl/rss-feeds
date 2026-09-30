@@ -161,3 +161,28 @@ class TestBuildFeed:
         items = []
         with pytest.raises(TypeError):
             common.build_feed(items)
+
+    def test_preserves_item_order(self):
+        """feedgen 1.0.0 prepends entries by default; feed order must survive."""
+        items = [
+            {
+                "id": f"https://example.com/{n}",
+                "title": f"item {n}",
+                "link": f"https://example.com/{n}",
+                "description": "",
+                "published": None,
+            }
+            for n in (1, 2, 3)
+        ]
+        xml = common.build_feed(
+            items,
+            feed_id="https://example.com/",
+            title="T",
+            link="https://example.com/",
+            description="d",
+            language="en",
+        ).decode("utf-8")
+        titles = [t.strip() for t in __import__("re").findall(
+            r"<title>(item \d)</title>", xml
+        )]
+        assert titles == ["item 1", "item 2", "item 3"]

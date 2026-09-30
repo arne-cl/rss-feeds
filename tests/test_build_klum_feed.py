@@ -47,7 +47,7 @@ class TestParseKlum:
         assert item["published"] == datetime(2026, 9, 21, tzinfo=timezone.utc)
         # only button is an expiring signed CDN mp4 -> page link fallback
         assert item["link"] == "https://www.klum.com/news"
-        assert item["id"] == "https://www.klum.com/news#20260921-der-mochtegernkanzler"
+        assert item["id"] == "https://www.klum.com/news#20260921-der-mochtegernekanzler"
 
     def test_date_spanning_multiple_elements_is_parsed(self):
         # HTML renders this date as "21." + "09.2026" in separate spans

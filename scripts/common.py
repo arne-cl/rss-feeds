@@ -156,7 +156,7 @@ def build_feed(
     fg.updated(datetime.now(timezone.utc))
 
     for item in items:
-        fe = fg.add_entry()
+        fe = fg.add_entry(order="append")
         fe.id(item["id"])
         fe.title(item["title"])
         fe.link(href=item["link"])
