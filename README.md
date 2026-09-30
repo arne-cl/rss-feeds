@@ -42,6 +42,14 @@ ids are stable synthetic anchors (`.../news#<YYYYMMDD>-<slug>`) because most
 items have no permalink of their own. Items are merged into
 `feeds/klum-news.xml` (newest first, capped at 100).
 
+Internal article pages (not YouTube, not `.pdfx` viewers) get their text
+extracted (`div.dmNewParagraph` blocks) and embedded as `content:encoded`.
+The embedded HTML is cached inside the feed itself, so each page is fetched
+only once. The desktop rendering sometimes points at Duda page aliases
+(`/empty-page<id>`); when the mobile rendering has the canonical slug, that
+URL wins. Responsive mobile/desktop variants of the same post are deduped
+by date + word overlap.
+
 The feed is refreshed weekly by
 [.github/workflows/update.yml](.github/workflows/update.yml) (Mondays 06:17
 UTC), which commits the updated XML if anything changed. Trigger it manually
@@ -61,5 +69,7 @@ python3 -m venv .venv
 ```
 
 Set `QUORA_PROFILE_HTML=<file>` or `KLUM_NEWS_HTML=<file>` to run against a
-saved page copy instead of fetching the site. The saved copies used by the
-tests live in `tests/fixtures/` (`venv/bin/pytest`).
+saved page copy instead of fetching the site. For the Klum builder,
+`KLUM_PAGES_DIR=<dir>` enables offline mode for the article pages too
+(saved copies named `<slug>.html`; no requests at all). The saved copies
+used by the tests live in `tests/fixtures/` (`venv/bin/pytest`).
