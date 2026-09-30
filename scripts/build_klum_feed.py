@@ -245,6 +245,22 @@ def parse_klum(html: str) -> list[dict]:
     return items
 
 
+def prune_superseded(merged: dict[str, dict], items: list[dict]) -> dict[str, dict]:
+    """Drop previously stored entries the current parse merged away.
+
+    After an id-scheme migration or a dedup-rule change the previous feed
+    can still hold entries (e.g. a responsive variant under its own anchor
+    id) that duplicate a freshly parsed item.
+    """
+    new_ids = {item["id"] for item in items}
+    return {
+        key: entry
+        for key, entry in merged.items()
+        if key in new_ids
+        or not any(_is_copy_of(entry, item) for item in items)
+    }
+
+
 # --------------------------------------------------------------------------
 # Main
 # --------------------------------------------------------------------------
@@ -264,6 +280,7 @@ def main() -> int:
         return 1
 
     merged = common.merge_items(common.load_previous(OUTPUT_PATH), items)
+    merged = prune_superseded(merged, items)
     common.write_feed(
         list(merged.values()),
         OUTPUT_PATH,

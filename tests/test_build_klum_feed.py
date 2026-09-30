@@ -150,3 +150,64 @@ class TestCanonicalLinks:
             parse_fixture(), "Offener Brief an den Bürgermeister von Bergisch"
         )[0]
         assert item["link"] == "https://www.klum.com/empty-pagef219b1ce"
+
+
+class TestPruneSuperseded:
+    @staticmethod
+    def entry(item_id, title, link, published):
+        return {
+            "id": item_id,
+            "title": title,
+            "link": link,
+            "description": title,
+            "published": published,
+        }
+
+    def test_stale_alias_entry_is_pruned(self):
+        """The previous feed can hold an anchor-id entry that the current
+        parse merged away (mobile alias wording); it must not survive."""
+        from datetime import datetime, timezone
+
+        stale = self.entry(
+            "https://www.klum.com/news#20260917-oktoberfest-2026-im-gasthaus-zum-horn",
+            'Oktoberfest 2026 im Gasthaus"ZUM HORN"',
+            "https://www.klum.com/empty-page2efa0a05",
+            datetime(2026, 9, 17, tzinfo=timezone.utc),
+        )
+        fresh = self.entry(
+            "https://www.klum.com/news#20260917-oktoberfest-im-gasthaus-zum-horn-in-bergisch-gladbach",
+            "Oktoberfest im Gasthaus Zum Horn in Bergisch Gladbach",
+            "https://www.klum.com/oktoberfest-2026",
+            datetime(2026, 9, 17, tzinfo=timezone.utc),
+        )
+        other = self.entry(
+            "https://www.klum.com/news#20260919-oktoberfest-in-helferskirchen-mit-susal",
+            "Oktoberfest in Helferskirchen mit SUSAL",
+            "https://www.klum.com/news",
+            datetime(2026, 9, 19, tzinfo=timezone.utc),
+        )
+        merged = build_klum_feed.prune_superseded(
+            {stale["id"]: stale, fresh["id"]: fresh, other["id"]: other},
+            [fresh, other],
+        )
+        assert set(merged) == {fresh["id"], other["id"]}
+
+    def test_genuine_distinct_entries_are_kept(self):
+        from datetime import datetime, timezone
+
+        repost = self.entry(
+            "https://www.klum.com/news#20251219-ist-die-schweiz-ein-vorbild-fur-uns",
+            "Ist die Schweiz ein Vorbild für uns?",
+            "https://www.youtube.com/watch?v=IjaLps8PYPM",
+            datetime(2025, 12, 19, tzinfo=timezone.utc),
+        )
+        items = [
+            self.entry(
+                "https://www.klum.com/news#20250801-ist-die-schweiz-ein-vorbild-fur-uns",
+                "Ist die Schweiz ein Vorbild für uns?",
+                "https://www.youtube.com/watch?v=IjaLps8PYPM",
+                datetime(2025, 8, 1, tzinfo=timezone.utc),
+            )
+        ]
+        merged = build_klum_feed.prune_superseded({repost["id"]: repost}, items)
+        assert set(merged) == {repost["id"]}
