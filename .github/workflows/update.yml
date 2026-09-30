@@ -29,7 +29,9 @@ jobs:
       - name: Build feeds
         env:
           JINA_API_KEY: ${{ secrets.JINA_API_KEY }}
-        run: python scripts/build_feed.py
+        run: |
+          python scripts/build_quora_feed.py
+          python scripts/build_klum_feed.py
 
       - name: Commit feeds if changed
         run: |
