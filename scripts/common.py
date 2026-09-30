@@ -8,6 +8,7 @@ merging new items into the previous feed file, and RSS assembly via feedgen.
 import json
 import logging
 import os
+import re
 import time
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
@@ -76,6 +77,11 @@ def fetch_page(url: str, local_html_env: str) -> tuple[str, str]:
 # Merging with the previous feed
 # --------------------------------------------------------------------------
 
+def squash(text: str) -> str:
+    """Case/punctuation-insensitive key for title comparisons."""
+    return re.sub(r"[^a-z0-9]+", "", text.lower())
+
+
 def load_previous(path: str) -> dict[str, dict]:
     if not os.path.exists(path):
         return {}
@@ -91,6 +97,10 @@ def load_previous(path: str) -> dict[str, dict]:
         if link is None or not link.get_text(strip=True):
             continue
         url = link.get_text(strip=True)
+        guid = item.find("guid")
+        item_id = guid.get_text(strip=True) if guid else ""
+        if not item_id:
+            item_id = url
         pub = None
         pub_tag = item.find("pubdate") or item.find("pubDate")
         if pub_tag is not None:
@@ -100,8 +110,8 @@ def load_previous(path: str) -> dict[str, dict]:
                 pass
         desc = item.find("description")
         title = item.find("title")
-        prev[url] = {
-            "id": url,
+        prev[item_id] = {
+            "id": item_id,
             "title": title.get_text(" ", strip=True) if title else "",
             "link": url,
             "description": desc.get_text() if desc else "",
@@ -115,6 +125,9 @@ def merge_items(previous: dict[str, dict], items: list[dict]) -> dict[str, dict]
     """Merge new items into the previous feed's items (by id).
 
     New items without a published date keep the previously stored one.
+    Previous entries that duplicate a new item under an older id scheme
+    (same link + date, or same normalized title + date) are dropped, so
+    id-scheme migrations don't leave shadow copies behind.
     """
     merged = dict(previous)
     for item in items:
@@ -122,7 +135,32 @@ def merge_items(previous: dict[str, dict], items: list[dict]) -> dict[str, dict]
         if old and item["published"] is None:
             item["published"] = old["published"]
         merged[item["id"]] = item
-    return merged
+
+    link_dates = set()
+    title_dates = set()
+    for item in items:
+        if item["published"] is None:
+            continue
+        date = item["published"].date()
+        link_dates.add((item["link"], date))
+        title_dates.add((squash(item["title"]), date))
+
+    new_ids = {item["id"] for item in items}
+
+    def superseded(entry: dict) -> bool:
+        if entry["published"] is None:
+            return False
+        date = entry["published"].date()
+        return (entry["link"], date) in link_dates or (
+            squash(entry["title"]),
+            date,
+        ) in title_dates
+
+    return {
+        key: value
+        for key, value in merged.items()
+        if key in new_ids or not superseded(value)
+    }
 
 
 # --------------------------------------------------------------------------

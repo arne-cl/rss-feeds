@@ -58,6 +58,28 @@ class TestLoadPrevious:
         )
         assert common.load_previous(path) == {}
 
+    def test_guid_is_used_as_key_and_id(self, tmp_path):
+        """Items whose guid differs from the link must keep their real id."""
+        path = write_feed(
+            tmp_path,
+            """<?xml version="1.0" encoding="UTF-8"?>
+            <rss version="2.0"><channel>
+              <item>
+                <title>Anchor item</title>
+                <link>https://example.com/news</link>
+                <guid isPermaLink="false">https://example.com/news#20260101-anchor-item</guid>
+                <description>text</description>
+                <pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
+              </item>
+            </channel></rss>""",
+        )
+        prev = common.load_previous(path)
+        assert set(prev) == {"https://example.com/news#20260101-anchor-item"}
+        entry = prev["https://example.com/news#20260101-anchor-item"]
+        assert entry["id"] == "https://example.com/news#20260101-anchor-item"
+        assert entry["link"] == "https://example.com/news"
+        assert entry["published"] == datetime(2026, 1, 1, tzinfo=timezone.utc)
+
 
 class TestSortKey:
     def test_none_sorts_oldest(self):
@@ -120,6 +142,121 @@ class TestMergeItems:
         }
         merged = common.merge_items({}, [new])
         assert merged == {"https://example.com/x": new}
+
+    @staticmethod
+    def prev_item(item_id, title, link, published):
+        return {
+            "id": item_id,
+            "title": title,
+            "link": link,
+            "description": title,
+            "published": published,
+        }
+
+    @staticmethod
+    def new_item(item_id, title, link, published):
+        return {
+            "id": item_id,
+            "title": title,
+            "link": link,
+            "description": title,
+            "published": published,
+        }
+
+    def test_drops_old_guid_entry_with_same_link_and_date(self):
+        """Old guid==link entries must not survive next to their anchor twin."""
+        old = self.prev_item(
+            "https://youtu.be/Vt4nSIlJV6Q",
+            "Ich mache Schluß mit Insta.",
+            "https://youtu.be/Vt4nSIlJV6Q",
+            datetime(2026, 8, 13, tzinfo=timezone.utc),
+        )
+        new = self.new_item(
+            "https://www.klum.com/news#20260813-ich-mache-schlu-mit-insta",
+            "Ich mache Schluß mit Insta.",
+            "https://youtu.be/Vt4nSIlJV6Q",
+            datetime(2026, 8, 13, tzinfo=timezone.utc),
+        )
+        merged = common.merge_items({"https://youtu.be/Vt4nSIlJV6Q": old}, [new])
+        assert list(merged) == ["https://www.klum.com/news#20260813-ich-mache-schlu-mit-insta"]
+
+    def test_drops_old_guid_entry_with_same_title_and_date(self):
+        """Catches entries whose link changed between id schemes."""
+        old = self.prev_item(
+            "https://www.klum.com/news",
+            "Der Möchtegernekanzler",
+            "https://www.klum.com/news",
+            datetime(2026, 9, 21, tzinfo=timezone.utc),
+        )
+        new = self.new_item(
+            "https://www.klum.com/news#20260921-der-mochtegernekanzler",
+            "Der Möchtegernekanzler",
+            "https://www.klum.com/news",
+            datetime(2026, 9, 21, tzinfo=timezone.utc),
+        )
+        merged = common.merge_items({"https://www.klum.com/news": old}, [new])
+        assert list(merged) == ["https://www.klum.com/news#20260921-der-mochtegernekanzler"]
+
+    def test_keeps_genuine_repost_with_same_title_other_date(self):
+        old = self.prev_item(
+            "https://www.klum.com/news#20251219-ist-die-schweiz-ein-vorbild-fur-uns",
+            "Ist die Schweiz ein Vorbild für uns?",
+            "https://www.youtube.com/watch?v=IjaLps8PYPM",
+            datetime(2025, 12, 19, tzinfo=timezone.utc),
+        )
+        new = self.new_item(
+            "https://www.klum.com/news#20250801-ist-die-schweiz-ein-vorbild-fur-uns",
+            "Ist die Schweiz ein Vorbild für uns?",
+            "https://www.youtube.com/watch?v=IjaLps8PYPM",
+            datetime(2025, 8, 1, tzinfo=timezone.utc),
+        )
+        merged = common.merge_items(
+            {
+                "https://www.klum.com/news#20251219-ist-die-schweiz-ein-vorbild-fur-uns": old,
+            },
+            [new],
+        )
+        assert len(merged) == 2
+
+    def test_undated_entries_are_never_dropped(self):
+        old = self.prev_item(
+            "https://example.com/old",
+            "Same title",
+            "https://example.com/old",
+            None,
+        )
+        new = self.new_item(
+            "https://example.com/new",
+            "Same title",
+            "https://example.com/new",
+            None,
+        )
+        merged = common.merge_items({"https://example.com/old": old}, [new])
+        assert len(merged) == 2
+
+    def test_full_cycle_old_feed_format(self, tmp_path):
+        """Regression: regenerating over an old guid==link feed yields no dupes."""
+        old_xml = """<?xml version="1.0" encoding="UTF-8"?>
+        <rss version="2.0"><channel>
+          <item>
+            <title>Elektrosmog</title>
+            <link>https://www.klum.com/empty-pagee3f564cc</link>
+            <guid isPermaLink="false">https://www.klum.com/empty-pagee3f564cc</guid>
+            <description>Elektrosmog</description>
+            <pubDate>Tue, 25 Aug 2026 00:00:00 +0000</pubDate>
+          </item>
+        </channel></rss>"""
+        path = write_feed(tmp_path, old_xml)
+        previous = common.load_previous(path)
+        new = self.new_item(
+            "https://www.klum.com/news#20260825-elektrosmog",
+            "Elektrosmog",
+            "https://www.klum.com/wupsi-offiziele-anfrage-handy",
+            datetime(2026, 8, 25, tzinfo=timezone.utc),
+        )
+        merged = common.merge_items(previous, [new])
+        assert len(merged) == 1
+        assert merged[new["id"]]["link"] == new["link"]
 
 
 class TestBuildFeed:
