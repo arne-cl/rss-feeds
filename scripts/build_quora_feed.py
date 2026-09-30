@@ -13,7 +13,7 @@ so this script:
 The profile page only shows the latest few answers, so newly parsed items are
 merged into the previous feed file to keep history and preserve dates.
 
-Usage: python scripts/build_feed.py
+Usage: python scripts/build_quora_feed.py
 Optional env: JINA_API_KEY (avoids r.jina.ai rate limits on shared IPs)
               QUORA_PROFILE_HTML=<file> (parse a saved page copy offline)
 """
@@ -22,15 +22,14 @@ import json
 import os
 import re
 import sys
-import time
 import logging
 from datetime import datetime, timezone, date
-from email.utils import parsedate_to_datetime
 from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
-from curl_cffi import requests as creq
-from feedgen.feed import FeedGenerator
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import common
 
 PROFILE_URL = "https://www.quora.com/profile/Alan-Kay-11"
 ANSWER_PATH = re.compile(r"^https://www\.quora\.com/[^/]+/answer/Alan-Kay-11/?$")
@@ -40,56 +39,7 @@ OUTPUT_PATH = os.path.normpath(
 )
 MAX_ITEMS = 100
 
-log = logging.getLogger("build_feed")
-
-
-# --------------------------------------------------------------------------
-# Fetching
-# --------------------------------------------------------------------------
-
-def fetch_direct(url: str) -> str:
-    r = creq.get(
-        url,
-        impersonate="chrome",
-        timeout=30,
-        headers={"Accept": "text/html", "Accept-Language": "en-US,en;q=0.9"},
-    )
-    r.raise_for_status()
-    return r.text
-
-
-def fetch_jina(url: str) -> str:
-    headers = {"x-respond-with": "html"}
-    api_key = os.environ.get("JINA_API_KEY")
-    if api_key:
-        headers["Authorization"] = f"Bearer {api_key}"
-    last_exc = None
-    for attempt in range(3):
-        try:
-            r = creq.get(f"https://r.jina.ai/{url}", headers=headers, timeout=60)
-            r.raise_for_status()
-            return r.text
-        except Exception as exc:  # noqa: BLE001
-            last_exc = exc
-            wait = 2**attempt * 2
-            log.warning("jina attempt %d failed (%s), retrying in %ds", attempt + 1, exc, wait)
-            time.sleep(wait)
-    raise last_exc
-
-
-def fetch_page(url: str) -> tuple[str, str]:
-    path = os.environ.get("QUORA_PROFILE_HTML")
-    if path:
-        log.info("using local HTML copy: %s", path)
-        with open(path, encoding="utf-8") as f:
-            return f.read(), "direct"
-    try:
-        html = fetch_direct(url)
-        log.info("direct fetch ok (%d bytes)", len(html))
-        return html, "direct"
-    except Exception as exc:  # noqa: BLE001
-        log.warning("direct fetch failed (%s), falling back to jina", exc)
-    return fetch_jina(url), "jina"
+log = logging.getLogger("build_quora_feed")
 
 
 # --------------------------------------------------------------------------
@@ -247,80 +197,14 @@ def parse_dom(html: str) -> list[dict]:
 
 
 # --------------------------------------------------------------------------
-# Feed assembly
+# Main
 # --------------------------------------------------------------------------
-
-def load_previous(path: str) -> dict[str, dict]:
-    if not os.path.exists(path):
-        return {}
-    try:
-        with open(path, encoding="utf-8") as f:
-            soup = BeautifulSoup(f.read(), "xml")
-    except Exception as exc:  # noqa: BLE001
-        log.warning("could not parse previous feed (%s), starting fresh", exc)
-        return {}
-    prev = {}
-    for item in soup.find_all("item"):
-        link = item.find("link")
-        if link is None or not link.get_text(strip=True):
-            continue
-        url = link.get_text(strip=True)
-        pub = None
-        pub_tag = item.find("pubdate")
-        if pub_tag is not None:
-            try:
-                pub = parsedate_to_datetime(pub_tag.get_text(strip=True))
-            except (TypeError, ValueError):
-                pass
-        desc = item.find("description")
-        title = item.find("title")
-        prev[url] = {
-            "id": url,
-            "title": title.get_text(" ", strip=True) if title else "",
-            "link": url,
-            "description": desc.get_text() if desc else "",
-            "published": pub,
-        }
-    log.info("loaded %d item(s) from previous feed", len(prev))
-    return prev
-
-
-def sort_key(item: dict):
-    pub = item["published"]
-    if pub is None:
-        return datetime.min.replace(tzinfo=timezone.utc)
-    if pub.tzinfo is None:
-        pub = pub.replace(tzinfo=timezone.utc)
-    return pub
-
-
-def build_feed(items: list[dict]) -> bytes:
-    fg = FeedGenerator()
-    fg.id(PROFILE_URL)
-    fg.title(FEED_TITLE)
-    fg.link(href=PROFILE_URL)
-    fg.description(f"Answers by Alan Kay on Quora (auto-generated from {PROFILE_URL})")
-    fg.language("en")
-    fg.updated(datetime.now(timezone.utc))
-
-    for item in items:
-        fe = fg.add_entry()
-        fe.id(item["id"])
-        fe.title(item["title"])
-        fe.link(href=item["link"])
-        fe.description(item["description"])
-        if item["published"]:
-            fe.published(item["published"])
-            fe.updated(item["published"])
-
-    return fg.rss_str(pretty=True)
-
 
 def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 
     try:
-        html, source = fetch_page(PROFILE_URL)
+        html, source = common.fetch_page(PROFILE_URL, "QUORA_PROFILE_HTML")
     except Exception as exc:  # noqa: BLE001
         log.error("all fetch attempts failed: %s", exc)
         return 1
@@ -329,7 +213,7 @@ def main() -> int:
     if not items:
         if source == "direct":
             try:
-                html = fetch_jina(PROFILE_URL)
+                html = common.fetch_jina(PROFILE_URL)
             except Exception as exc:  # noqa: BLE001
                 log.error("jina fallback fetch failed: %s", exc)
                 return 1
@@ -339,18 +223,17 @@ def main() -> int:
         log.error("no answers parsed — page layout may have changed; keeping previous feed")
         return 1
 
-    merged = load_previous(OUTPUT_PATH)
-    for item in items:
-        old = merged.get(item["id"])
-        if old and item["published"] is None:
-            item["published"] = old["published"]
-        merged[item["id"]] = item
-
-    ordered = sorted(merged.values(), key=sort_key, reverse=True)[:MAX_ITEMS]
-    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
-    with open(OUTPUT_PATH, "wb") as f:
-        f.write(build_feed(ordered))
-    log.info("wrote %d item(s) to %s", len(ordered), OUTPUT_PATH)
+    merged = common.merge_items(common.load_previous(OUTPUT_PATH), items)
+    common.write_feed(
+        list(merged.values()),
+        OUTPUT_PATH,
+        MAX_ITEMS,
+        feed_id=PROFILE_URL,
+        title=FEED_TITLE,
+        link=PROFILE_URL,
+        description=f"Answers by Alan Kay on Quora (auto-generated from {PROFILE_URL})",
+        language="en",
+    )
     return 0
 
 

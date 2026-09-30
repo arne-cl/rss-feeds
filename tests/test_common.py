@@ -150,10 +150,12 @@ class TestBuildFeed:
         ).decode("utf-8")
         assert "<title>Example News</title>" in xml
         assert "News from example.com" in xml
-        assert '<language lang="de"/>' in xml
+        assert "<language>de</language>" in xml
         assert xml.count("<item>") == 2
         assert "<title>An entry</title>" in xml
-        assert "2025-09-01" in xml  # published date present
+        assert (
+            "<pubDate>Mon, 01 Sep 2025 10:00:00 +0000</pubDate>" in xml
+        )  # published date present
 
     def test_requires_all_metadata(self):
         items = []
