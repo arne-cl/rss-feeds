@@ -3,11 +3,17 @@
 import os
 from datetime import datetime, timezone
 
+import pytest
+
 import build_klum_feed
 
 FIXTURE = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "fixtures", "klum-news.html"
 )
+PAGES_DIR = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "fixtures", "klum-pages"
+)
+WUPSI_PAGE = os.path.join(PAGES_DIR, "wupsi-offiziele-anfrage-handy.html")
 
 
 def parse_fixture():
@@ -211,3 +217,127 @@ class TestPruneSuperseded:
         ]
         merged = build_klum_feed.prune_superseded({repost["id"]: repost}, items)
         assert set(merged) == {repost["id"]}
+
+
+@pytest.fixture
+def wupsi_html():
+    with open(WUPSI_PAGE, encoding="utf-8") as f:
+        return f.read()
+
+
+class TestExtractPageContent:
+    def test_wupsi_article_paragraphs(self, wupsi_html):
+        content = build_klum_feed.extract_page_content(wupsi_html)
+        assert content is not None
+        assert content.startswith("<p>")
+        assert content.endswith("</p>")
+        assert "<p>ELEKTROSMOG</p>" in content
+        assert "<p>Guten Tag Herr Kretkowski" in content
+        # no site chrome (menu/footer) and no builder boilerplate
+        assert "DATENSCHUTZ" not in content
+        assert "dmNewParagraph" not in content
+        # BOM and whitespace junk is normalized
+        assert "\ufeff" not in content
+
+    def test_page_without_article_blocks(self):
+        content = build_klum_feed.extract_page_content("<html><body>hi</body></html>")
+        assert content is None
+
+
+class TestEmbeddableLinks:
+    @pytest.mark.parametrize(
+        "link",
+        [
+            "https://www.klum.com/wupsi-offiziele-anfrage-handy",
+            "https://www.klum.com/empty-pagee3f564cc",
+            "https://www.klum.com/oktoberfest-2026",
+            "https://www.klum.com/news/3976/weihnachtslied-",
+            "https://klum.com/leserbrief-an-die-bergische-landeszeitung",
+        ],
+    )
+    def test_internal_article_pages(self, link):
+        assert build_klum_feed.is_embeddable_page(link)
+
+    @pytest.mark.parametrize(
+        "link",
+        [
+            "https://www.klum.com/news",
+            "https://www.youtube.com/watch?v=PQgeDxl7DQI",
+            "https://youtu.be/Vt4nSIlJV6Q",
+            "https://www.klum.com/mein-brief-an-den-buergermeister-.pdfx?forced=true",
+            "https://example.com/some-page",
+            "https://www.klum.com/news",
+        ],
+    )
+    def test_not_embeddable(self, link):
+        assert not build_klum_feed.is_embeddable_page(link)
+
+
+class TestEmbedContent:
+    @staticmethod
+    def item(item_id, link):
+        return {
+            "id": item_id,
+            "title": "t",
+            "link": link,
+            "description": "t",
+            "published": None,
+        }
+
+    def test_embeds_article_from_saved_copy(self, monkeypatch):
+        monkeypatch.setenv("KLUM_PAGES_DIR", PAGES_DIR)
+        items = [self.item("id-1", "https://www.klum.com/wupsi-offiziele-anfrage-handy")]
+        build_klum_feed.embed_content(items, {})
+        assert "<p>Guten Tag Herr Kretkowski" in items[0]["content"]
+
+    def test_offline_mode_never_fetches(self, monkeypatch):
+        """With KLUM_PAGES_DIR set, a missing saved copy must not hit the net."""
+        monkeypatch.setenv("KLUM_PAGES_DIR", PAGES_DIR)
+        monkeypatch.setattr(
+            build_klum_feed,
+            "fetch_article",
+            lambda link: pytest.fail("must not fetch in offline mode"),
+        )
+        items = [self.item("id-1", "https://www.klum.com/oktoberfest-2026")]
+        build_klum_feed.embed_content(items, {})
+        assert "content" not in items[0]
+
+    def test_reuses_cached_content_without_fetching(self, monkeypatch):
+        monkeypatch.setattr(
+            build_klum_feed,
+            "fetch_article",
+            lambda link: pytest.fail("must not fetch when cached"),
+        )
+        cached = self.item(
+            "https://www.klum.com/news#20260825-elektrosmog",
+            "https://www.klum.com/wupsi-offiziele-anfrage-handy",
+        )
+        cached["content"] = "<p>cached</p>"
+        items = [
+            self.item(
+                "https://www.klum.com/news#20260825-elektrosmog",
+                "https://www.klum.com/wupsi-offiziele-anfrage-handy",
+            )
+        ]
+        build_klum_feed.embed_content(items, {cached["id"]: cached})
+        assert items[0]["content"] == "<p>cached</p>"
+
+    def test_youtube_items_are_untouched(self, monkeypatch):
+        monkeypatch.setattr(
+            build_klum_feed,
+            "fetch_article",
+            lambda link: pytest.fail("must not fetch YouTube links"),
+        )
+        items = [self.item("id-1", "https://www.youtube.com/watch?v=PQgeDxl7DQI")]
+        build_klum_feed.embed_content(items, {})
+        assert "content" not in items[0]
+
+    def test_fetch_failure_is_tolerated(self, monkeypatch):
+        monkeypatch.setattr(
+            build_klum_feed,
+            "fetch_article",
+            lambda link: (_ for _ in ()).throw(RuntimeError("boom")),
+        )
+        items = [self.item("id-1", "https://www.klum.com/oktoberfest-2026")]
+        build_klum_feed.embed_content(items, {})
+        assert "content" not in items[0]

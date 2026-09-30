@@ -110,13 +110,17 @@ def load_previous(path: str) -> dict[str, dict]:
                 pass
         desc = item.find("description")
         title = item.find("title")
-        prev[item_id] = {
+        entry = {
             "id": item_id,
             "title": title.get_text(" ", strip=True) if title else "",
             "link": url,
             "description": desc.get_text() if desc else "",
             "published": pub,
         }
+        encoded = item.find("content:encoded")
+        if encoded is not None:
+            entry["content"] = encoded.get_text()
+        prev[item_id] = entry
     log.info("loaded %d item(s) from previous feed", len(prev))
     return prev
 
@@ -132,8 +136,18 @@ def merge_items(previous: dict[str, dict], items: list[dict]) -> dict[str, dict]
     merged = dict(previous)
     for item in items:
         old = merged.get(item["id"])
-        if old and item["published"] is None:
-            item["published"] = old["published"]
+        if old is None:
+            # id-scheme migration: fall back to the same link target
+            old = next(
+                (e for e in previous.values() if e["link"] == item["link"]), None
+            )
+        if old:
+            if item["published"] is None:
+                item["published"] = old["published"]
+            # cached article content belongs to the link target, so it can
+            # safely cross id schemes
+            if not item.get("content") and old.get("content"):
+                item["content"] = old["content"]
         merged[item["id"]] = item
 
     link_dates = set()
@@ -199,6 +213,8 @@ def build_feed(
         fe.title(item["title"])
         fe.link(href=item["link"])
         fe.description(item["description"])
+        if item.get("content"):
+            fe.content(item["content"], type="html")
         if item["published"]:
             fe.published(item["published"])
             fe.updated(item["published"])

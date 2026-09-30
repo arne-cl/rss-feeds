@@ -80,6 +80,39 @@ class TestLoadPrevious:
         assert entry["link"] == "https://example.com/news"
         assert entry["published"] == datetime(2026, 1, 1, tzinfo=timezone.utc)
 
+    def test_content_encoded_is_read_back(self, tmp_path):
+        """Embedded article HTML must survive round-trips (content cache)."""
+        path = write_feed(
+            tmp_path,
+            """<?xml version="1.0" encoding="UTF-8"?>
+            <rss xmlns:content="http://purl.org/rss/1.0/modules/content/"
+                 version="2.0"><channel>
+              <item>
+                <title>With content</title>
+                <link>https://example.com/a</link>
+                <description>short</description>
+                <content:encoded><![CDATA[<p>full text</p>]]></content:encoded>
+              </item>
+            </channel></rss>""",
+        )
+        prev = common.load_previous(path)
+        assert prev["https://example.com/a"]["content"] == "<p>full text</p>"
+
+    def test_without_content_encoded_key_is_absent(self, tmp_path):
+        path = write_feed(
+            tmp_path,
+            """<?xml version="1.0" encoding="UTF-8"?>
+            <rss version="2.0"><channel>
+              <item>
+                <title>Plain</title>
+                <link>https://example.com/b</link>
+                <description>x</description>
+              </item>
+            </channel></rss>""",
+        )
+        prev = common.load_previous(path)
+        assert "content" not in prev["https://example.com/b"]
+
 
 class TestSortKey:
     def test_none_sorts_oldest(self):
@@ -258,6 +291,41 @@ class TestMergeItems:
         assert len(merged) == 1
         assert merged[new["id"]]["link"] == new["link"]
 
+    def test_cached_content_carries_over_to_new_item(self):
+        old = self.prev_item(
+            "https://example.com/old",
+            "Same post",
+            "https://example.com/page",
+            datetime(2026, 1, 1, tzinfo=timezone.utc),
+        )
+        old["content"] = "<p>cached article</p>"
+        new = self.new_item(
+            "https://example.com/news#20260101-same-post",
+            "Same post",
+            "https://example.com/page",
+            datetime(2026, 1, 1, tzinfo=timezone.utc),
+        )
+        merged = common.merge_items({"https://example.com/old": old}, [new])
+        assert merged[new["id"]]["content"] == "<p>cached article</p>"
+
+    def test_fresh_content_wins_over_cache(self):
+        old = self.prev_item(
+            "https://example.com/news#20260101-same-post",
+            "Same post",
+            "https://example.com/page",
+            datetime(2026, 1, 1, tzinfo=timezone.utc),
+        )
+        old["content"] = "<p>cached</p>"
+        new = self.new_item(
+            "https://example.com/news#20260101-same-post",
+            "Same post",
+            "https://example.com/page",
+            datetime(2026, 1, 1, tzinfo=timezone.utc),
+        )
+        new["content"] = "<p>fresh</p>"
+        merged = common.merge_items({"https://example.com/news#20260101-same-post": old}, [new])
+        assert merged[new["id"]]["content"] == "<p>fresh</p>"
+
 
 class TestBuildFeed:
     def test_feed_metadata_and_entries(self):
@@ -323,3 +391,37 @@ class TestBuildFeed:
             r"<title>(item \d)</title>", xml
         )]
         assert titles == ["item 1", "item 2", "item 3"]
+
+    def test_writes_content_encoded(self):
+        items = [
+            {
+                "id": "https://example.com/a",
+                "title": "With content",
+                "link": "https://example.com/a",
+                "description": "short",
+                "published": datetime(2026, 1, 1, tzinfo=timezone.utc),
+                "content": "<p>full text</p>",
+            },
+            {
+                "id": "https://example.com/b",
+                "title": "Without content",
+                "link": "https://example.com/b",
+                "description": "",
+                "published": None,
+            },
+        ]
+        xml = common.build_feed(
+            items,
+            feed_id="https://example.com/",
+            title="T",
+            link="https://example.com/",
+            description="d",
+            language="en",
+        ).decode("utf-8")
+        from bs4 import BeautifulSoup
+
+        soup = BeautifulSoup(xml, "xml")
+        encoded = soup.find_all("content:encoded")
+        assert len(encoded) == 1
+        # readers unescape the XML and render the value as HTML
+        assert encoded[0].get_text() == "<p>full text</p>"

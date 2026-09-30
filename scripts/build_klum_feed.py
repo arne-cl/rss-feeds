@@ -20,6 +20,7 @@ Optional env: KLUM_NEWS_HTML=<file> (parse a saved page copy offline)
 import os
 import re
 import sys
+import html as html_module
 import logging
 import unicodedata
 from datetime import datetime, timezone
@@ -36,6 +37,7 @@ OUTPUT_PATH = os.path.normpath(
     os.path.join(os.path.dirname(__file__), "..", "feeds", "klum-news.xml")
 )
 MAX_ITEMS = 100
+PAGES_DIR_ENV = "KLUM_PAGES_DIR"
 
 DATE_RE = re.compile(r"(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})")
 MOBILE_CLASSES = {"hide-for-large", "hide-for-medium"}
@@ -262,6 +264,117 @@ def prune_superseded(merged: dict[str, dict], items: list[dict]) -> dict[str, di
 
 
 # --------------------------------------------------------------------------
+# Article content embedding
+# --------------------------------------------------------------------------
+
+BLOCK_TAGS = ["p", "h1", "h2", "h3", "h4", "h5", "h6"]
+KLUM_HOSTS = {"www.klum.com", "klum.com"}
+
+
+def fetch_article(link: str) -> str:
+    """Fetch an article page (kept separate so tests can stub it)."""
+    return common.fetch_direct(link)
+
+
+def is_embeddable_page(link: str) -> bool:
+    """True for internal klum.com article pages worth embedding.
+
+    Excludes the news index itself, YouTube links and .pdfx viewer pages.
+    Duda empty-page aliases are included — they serve real content.
+    """
+    if link == PAGE_URL:
+        return False
+    match = re.match(r"https?://([^/?#]+)([^?#]*)", link)
+    if not match:
+        return False
+    host = match.group(1).lower()
+    path = match.group(2)
+    if host not in KLUM_HOSTS:
+        return False
+    if path in ("", "/news", "/news/"):
+        return False
+    if ".pdfx" in path:
+        return False
+    return True
+
+
+def extract_page_content(page_html: str) -> str | None:
+    """Article HTML (simple <p> blocks) from a Duda page, or None.
+
+    Duda renders article text inside div.dmNewParagraph containers;
+    everything else (menu, footer, boilerplate) lives outside them.
+    """
+    soup = BeautifulSoup(page_html, "html.parser")
+    for tag in soup(["script", "style"]):
+        tag.decompose()
+    blocks = []
+    for par in soup.select("div.dmNewParagraph"):
+        for block in par.find_all(BLOCK_TAGS):
+            if block.find(BLOCK_TAGS):
+                continue  # container block; its children are listed too
+            for br in block.find_all("br"):
+                br.replace_with("\n")
+            for part in block.get_text().split("\n"):
+                text = _norm(part)
+                if text:
+                    blocks.append(text)
+    if not blocks:
+        return None
+    return "<p>" + "</p><p>".join(html_module.escape(b) for b in blocks) + "</p>"
+
+
+def _local_page_path(link: str) -> str | None:
+    """Path of a saved page copy for link inside $KLUM_PAGES_DIR."""
+    match = re.match(r"https?://[^/?#]+([^?#]*)", link)
+    if not match:
+        return None
+    segment = match.group(1).rstrip("/").rsplit("/", 1)[-1]
+    if not segment:
+        return None
+    return os.path.join(os.environ[PAGES_DIR_ENV], segment + ".html")
+
+
+def embed_content(items: list[dict], previous: dict[str, dict]) -> None:
+    """Attach article HTML ("content") to items linking to internal pages.
+
+    Content is cached inside the feed itself: entries loaded from the
+    previous feed carry their content, so already-fetched pages are never
+    requested again. With KLUM_PAGES_DIR set, only saved page copies are
+    used (offline mode — no requests at all).
+    """
+    by_id = {entry["id"]: entry for entry in previous.values()}
+    by_link = {entry["link"]: entry for entry in previous.values()}
+    offline_dir = os.environ.get(PAGES_DIR_ENV)
+    embedded = 0
+    for item in items:
+        link = item["link"]
+        if not is_embeddable_page(link):
+            continue
+        old = by_id.get(item["id"]) or by_link.get(link)
+        if old and old.get("content"):
+            item["content"] = old["content"]
+            continue
+        page_html = None
+        if offline_dir:
+            path = _local_page_path(link)
+            if path and os.path.exists(path):
+                with open(path, encoding="utf-8") as f:
+                    page_html = f.read()
+        else:
+            try:
+                page_html = fetch_article(link)
+            except Exception as exc:  # noqa: BLE001
+                log.warning("could not fetch %s: %s", link, exc)
+        if not page_html:
+            continue
+        content = extract_page_content(page_html)
+        if content:
+            item["content"] = content
+            embedded += 1
+    log.info("embedded article content for %d item(s)", embedded)
+
+
+# --------------------------------------------------------------------------
 # Main
 # --------------------------------------------------------------------------
 
@@ -274,12 +387,14 @@ def main() -> int:
         log.error("fetch failed: %s", exc)
         return 1
 
+    previous = common.load_previous(OUTPUT_PATH)
     items = parse_klum(html)
     if not items:
         log.error("no news items parsed — page layout may have changed; keeping previous feed")
         return 1
 
-    merged = common.merge_items(common.load_previous(OUTPUT_PATH), items)
+    embed_content(items, previous)
+    merged = common.merge_items(previous, items)
     merged = prune_superseded(merged, items)
     common.write_feed(
         list(merged.values()),
