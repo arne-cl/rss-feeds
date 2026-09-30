@@ -22,7 +22,7 @@ def by_prefix(items, prefix):
 class TestParseKlum:
     def test_item_shape(self):
         items = parse_fixture()
-        assert len(items) == 69
+        assert len(items) == 68
         for item in items:
             assert set(item) == {"id", "title", "link", "description", "published"}
             assert item["title"]
@@ -107,3 +107,46 @@ class TestParseKlum:
         assert item["title"] == (
             "Ab dem 01.08.2023 ist das Gasthaus Zum Horn neu verpachtet"
         )
+
+
+class TestCanonicalLinks:
+    def test_elektrosmog_uses_canonical_mobile_link(self):
+        """Desktop renders this button as the Duda alias /empty-pagee3f564cc,
+        the mobile variant as the canonical /wupsi-offiziele-anfrage-handy
+        (identical pages) — the canonical URL must win."""
+        item = by_prefix(parse_fixture(), "Elektrosmog")[0]
+        assert item["link"] == "https://www.klum.com/wupsi-offiziele-anfrage-handy"
+        assert item["published"] == datetime(2026, 8, 25, tzinfo=timezone.utc)
+
+    def test_same_day_wording_variants_are_merged(self):
+        """The 17.09.2026 Oktoberfest post appears twice with different
+        wording (mobile: "Oktoberfest 2026 im Gasthaus ZUM HORN",
+        desktop: "Oktoberfest im Gasthaus Zum Horn in Bergisch Gladbach")."""
+        items = by_prefix(parse_fixture(), "Oktoberfest")
+        assert len(items) == 2  # Helferskirchen + Gasthaus Zum Horn
+        horn = [i for i in items if "horn" in i["title"].lower()]
+        assert len(horn) == 1
+        assert horn[0]["title"] == (
+            "Oktoberfest im Gasthaus Zum Horn in Bergisch Gladbach"
+        )
+        assert horn[0]["link"] == "https://www.klum.com/oktoberfest-2026"
+        assert horn[0]["published"] == datetime(2026, 9, 17, tzinfo=timezone.utc)
+
+    def test_distinct_same_day_posts_are_kept(self):
+        """Regression guard: unrelated posts on one day must not merge
+        even when they share a short phrase ("In München tut ...")."""
+        items = parse_fixture()
+        assert len(by_prefix(items, "Mit Ansage")) == 1
+        assert len(by_prefix(items, "Gibt es durch MFE")) == 1
+        # different YouTube videos
+        links = {
+            by_prefix(items, "Mit Ansage")[0]["link"],
+            by_prefix(items, "Gibt es durch MFE")[0]["link"],
+        }
+        assert len(links) == 2
+
+    def test_empty_page_only_items_keep_their_link(self):
+        item = by_prefix(
+            parse_fixture(), "Offener Brief an den Bürgermeister von Bergisch"
+        )[0]
+        assert item["link"] == "https://www.klum.com/empty-pagef219b1ce"

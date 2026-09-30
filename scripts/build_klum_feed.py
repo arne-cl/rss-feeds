@@ -61,7 +61,19 @@ def _norm(text: str) -> str:
 
 def _squash(text: str) -> str:
     """Case/punctuation-insensitive key for title comparisons."""
-    return re.sub(r"[^a-z0-9]+", "", text.lower())
+    return common.squash(text)
+
+
+def _tokens(text: str) -> set[str]:
+    return set(re.findall(r"[a-z0-9]+", text.lower()))
+
+
+def _title_overlap(a: str, b: str) -> bool:
+    """True if the titles' word sets overlap heavily (Jaccard >= 0.5)."""
+    ta, tb = _tokens(a), _tokens(b)
+    if not ta or not tb:
+        return False
+    return len(ta & tb) / len(ta | tb) >= 0.5
 
 
 def _slugify(text: str) -> str:
@@ -168,6 +180,15 @@ def _is_copy_of(candidate: dict, other: dict) -> bool:
         and candidate["published"]
     ):
         return True
+    # responsive variants can word the same post very differently
+    # ("Oktoberfest 2026 im Gasthaus ZUM HORN" vs "Oktoberfest im Gasthaus
+    # Zum Horn in Bergisch Gladbach"); same date + heavy word overlap
+    if (
+        other["published"]
+        and candidate["published"]
+        and _title_overlap(other["title"], candidate["title"])
+    ):
+        return True
     return False
 
 
@@ -194,7 +215,14 @@ def parse_klum(html: str) -> list[dict]:
     candidates = desktop + [m for i, m in enumerate(mobile) if i not in used]
     kept = []
     for candidate in candidates:
-        if any(_is_copy_of(candidate, other) for other in kept):
+        copy_of = next(
+            (other for other in kept if _is_copy_of(candidate, other)), None
+        )
+        if copy_of is not None:
+            # the desktop rendering sometimes points at a Duda alias
+            # (/empty-page<id>) while the mobile one has the canonical slug
+            if "/empty-page" in copy_of["link"] and "/empty-page" not in candidate["link"]:
+                copy_of["link"] = candidate["link"]
             continue
         kept.append(candidate)
 
