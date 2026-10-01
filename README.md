@@ -8,6 +8,7 @@ Vibe-coded RSS feeds generated from pages that don't provide one.
 |------|-----|
 | Alan Kay on Quora | `https://raw.githubusercontent.com/arne-cl/rss-feeds/main/feeds/alankay-quora.xml` |
 | Günther Klum News | `https://raw.githubusercontent.com/arne-cl/rss-feeds/main/feeds/klum-news.xml` |
+| Tiny Ruins on Instagram | `https://raw.githubusercontent.com/arne-cl/rss-feeds/main/feeds/instagram-tiny_ruins.xml` |
 
 Subscribe with the raw URL above.
 
@@ -32,10 +33,13 @@ python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 .venv/bin/python scripts/build_quora_feed.py
 .venv/bin/python scripts/build_klum_feed.py
+.venv/bin/python scripts/build_instagram_feed.py tiny_ruins
 ```
 
 Set `QUORA_PROFILE_HTML=<file>` or `KLUM_NEWS_HTML=<file>` to run against a
 saved page copy instead of fetching the site. For the Klum builder,
 `KLUM_PAGES_DIR=<dir>` enables offline mode for the article pages too
-(saved copies named `<slug>.html`; no requests at all). The saved copies
-used by the tests live in `tests/fixtures/` (`venv/bin/pytest`).
+(saved copies named `<slug>.html`; no requests at all). For the Instagram
+builder, pass the account as the only argument (e.g. `tiny_ruins` above) and
+set `INSTAGRAM_PROFILE_HTML=<file>` to run offline. The saved copies
+used by the tests live in `tests/fixtures/` (`.venv/bin/pytest`).
