@@ -36,11 +36,15 @@ Quora blocks plain HTTP clients, so the script:
 script parses the news rows from the HTML, keeping the desktop variant and
 using the mobile variant only to fill in dates the desktop rendering lost
 and to catch items missing there. News items are date + text, usually with a
-"MEHR INFORMATIONEN" button linking to YouTube or internal pages; expiring
-signed CDN links are rejected and the news page URL is used instead. Item
+"MEHR INFORMATIONEN" button linking to YouTube or internal pages. Item
 ids are stable synthetic anchors (`.../news#<YYYYMMDD>-<slug>`) because most
 items have no permalink of their own. Items are merged into
 `feeds/klum-news.xml` (newest first, capped at 100).
+
+Media buttons pointing at Duda's CDN (e.g. a WhatsApp video mp4) carry
+signed, expiring URLs; they are kept verbatim as the item link **and** as an
+RSS `<enclosure>` — the weekly rebuild refreshes the signature, so the URL
+stays live as long as the item is listed.
 
 Internal article pages (not YouTube, not `.pdfx` viewers) get their text
 extracted (`div.dmNewParagraph` blocks) and embedded as `content:encoded`.

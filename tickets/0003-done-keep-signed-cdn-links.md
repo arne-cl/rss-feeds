@@ -35,11 +35,24 @@ enclosure directly).
 
 ## Hurdles
 
-- (to be filled during implementation)
+- The feedgen `<enclosure>` attribute order is fixed (url, length, type);
+  the round-trip test asserts the exact serialized form.
+- Bare `href="https://cdn.website-editor.net"` links exist in the page's
+  `<head>` boilerplate — outside `dmRespCol` columns, so the parser never
+  sees them; media detection additionally requires a non-root path.
+- `Content-Length` came back fine from a live HEAD request (27,029,278
+  bytes for the mp4); failure paths fall back to length 0 (tests stubbed).
+
+## Result
+
+- "Der Möchtegernekanzler" (21.09.2026): `<link>` is the signed mp4 URL,
+  plus `<enclosure type="video/mp4" length="27029278">`; a fresh signature
+  is stored on every weekly rebuild while the item remains listed.
+- 68 items, 14 embedded articles, 1 enclosure — no regressions (74 tests).
 
 ## Status
 
 - [x] ticket draft committed
-- [ ] phase 1: enclosure round-trip in common.py
-- [ ] phase 2: keep CDN links + enclosures in klum parser
-- [ ] rebuild, README, ticket done
+- [x] phase 1: enclosure round-trip in common.py
+- [x] phase 2: keep CDN links + enclosures in klum parser
+- [x] rebuild, README, ticket done
