@@ -30,10 +30,16 @@ class TestParseKlum:
         items = parse_fixture()
         assert len(items) == 68
         for item in items:
-            assert set(item) == {"id", "title", "link", "description", "published"}
+            assert {"id", "title", "link", "description", "published"} <= set(item)
+            assert set(item) <= {
+                "id", "title", "link", "description", "published", "enclosure",
+            }
             assert item["title"]
             assert item["description"] == item["title"]
             assert item["link"].startswith("http")
+            if "enclosure" in item:
+                assert set(item["enclosure"]) == {"url", "type", "length"}
+                assert item["enclosure"]["length"] == 0  # filled later, live
 
     def test_ids_are_unique_synthetic_anchors(self):
         items = parse_fixture()
@@ -51,8 +57,11 @@ class TestParseKlum:
     def test_newest_item(self):
         item = by_prefix(parse_fixture(), "Der Möchtegernekanzler")[0]
         assert item["published"] == datetime(2026, 9, 21, tzinfo=timezone.utc)
-        # only button is an expiring signed CDN mp4 -> page link fallback
-        assert item["link"] == "https://www.klum.com/news"
+        # the signed, expiring CDN mp4 is kept as link AND enclosure now
+        assert item["link"].startswith("https://cdn.website-editor.net/")
+        assert ".mp4" in item["link"]
+        assert item["enclosure"]["url"] == item["link"]
+        assert item["enclosure"]["type"] == "video/mp4"
         assert item["id"] == "https://www.klum.com/news#20260921-der-mochtegernekanzler"
 
     def test_date_spanning_multiple_elements_is_parsed(self):
@@ -341,3 +350,63 @@ class TestEmbedContent:
         items = [self.item("id-1", "https://www.klum.com/oktoberfest-2026")]
         build_klum_feed.embed_content(items, {})
         assert "content" not in items[0]
+
+
+class TestMediaTypes:
+    @pytest.mark.parametrize(
+        "url,mime",
+        [
+            ("https://cdn.website-editor.net/a/b.mp4?Expires=1", "video/mp4"),
+            ("https://cdn.website-editor.net/a/b.pdf", "application/pdf"),
+            ("https://cdn.website-editor.net/a/b.jpg", "image/jpeg"),
+            ("https://cdn.website-editor.net/a/b.jpeg", "image/jpeg"),
+            ("https://cdn.website-editor.net/a/b.png", "image/png"),
+            ("https://cdn.website-editor.net/a/b.mp3", "audio/mpeg"),
+            ("https://cdn.website-editor.net/a/b", "application/octet-stream"),
+        ],
+    )
+    def test_media_type_from_extension(self, url, mime):
+        assert build_klum_feed.media_type(url) == mime
+
+
+class TestAttachMediaLengths:
+    @staticmethod
+    def media_item():
+        return {
+            "id": "x",
+            "title": "t",
+            "link": "https://cdn.website-editor.net/a/b.mp4",
+            "description": "t",
+            "published": None,
+            "enclosure": {
+                "url": "https://cdn.website-editor.net/a/b.mp4",
+                "type": "video/mp4",
+                "length": 0,
+            },
+        }
+
+    def test_fills_length_from_head_request(self, monkeypatch):
+        monkeypatch.setattr(build_klum_feed, "fetch_content_length", lambda url: 4711)
+        items = [self.media_item()]
+        build_klum_feed.attach_media_lengths(items)
+        assert items[0]["enclosure"]["length"] == 4711
+
+    def test_head_failure_keeps_zero(self, monkeypatch):
+        def boom(url):
+            raise RuntimeError("offline")
+
+        monkeypatch.setattr(build_klum_feed, "fetch_content_length", boom)
+        items = [self.media_item()]
+        build_klum_feed.attach_media_lengths(items)
+        assert items[0]["enclosure"]["length"] == 0
+
+    def test_items_without_enclosure_untouched(self, monkeypatch):
+        monkeypatch.setattr(
+            build_klum_feed,
+            "fetch_content_length",
+            lambda url: pytest.fail("must not fetch without enclosure"),
+        )
+        items = [{"id": "x", "title": "t", "link": "https://www.youtube.com/watch?v=1",
+                  "description": "t", "published": None}]
+        build_klum_feed.attach_media_lengths(items)
+        assert "enclosure" not in items[0]

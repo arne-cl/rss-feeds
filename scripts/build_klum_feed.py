@@ -5,13 +5,16 @@ The page is a static Duda/1&1 website-builder site: news items are stacked
 rows, each rendered twice (a mobile and a desktop variant) with slightly
 different wording and — rarely — conflicting dates. Items are date + text,
 optionally with a "MEHR INFORMATIONEN" button linking to YouTube or internal
-pages. One button is an expiring signed CDN mp4 URL; some items have no
-button at all.
+pages. Some buttons point at media files on Duda's CDN (e.g. a WhatsApp
+video mp4) with signed, expiring URLs; those are kept verbatim as the item
+link AND exposed as an RSS <enclosure> — the weekly rebuild refreshes the
+signature, so the URL stays live as long as the item is listed. Some items
+have no button at all.
 
 Item links therefore use the best stable URL available: the button href
-(relative URLs resolved, mangled YouTube hosts normalized, expiring signed
-CDN URLs rejected) with a fallback to the news page itself. Item ids are
-always stable synthetic anchors: https://www.klum.com/news#<YYYYMMDD>-<slug>.
+(relative URLs resolved, mangled YouTube hosts normalized) with a fallback
+to the news page itself. Item ids are always stable synthetic anchors:
+https://www.klum.com/news#<YYYYMMDD>-<slug>.
 
 Usage: python scripts/build_klum_feed.py
 Optional env: KLUM_NEWS_HTML=<file> (parse a saved page copy offline)
@@ -41,7 +44,15 @@ PAGES_DIR_ENV = "KLUM_PAGES_DIR"
 
 DATE_RE = re.compile(r"(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})")
 MOBILE_CLASSES = {"hide-for-large", "hide-for-medium"}
-UNSTABLE_HOSTS = {"cdn.website-editor.net", "le-cdn.website-editor.net"}
+MEDIA_CDN_HOSTS = {"cdn.website-editor.net", "le-cdn.website-editor.net"}
+MEDIA_TYPES = {
+    ".mp4": "video/mp4",
+    ".pdf": "application/pdf",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".png": "image/png",
+    ".mp3": "audio/mpeg",
+}
 MANGLED_YOUTUBE_HOSTS = {
     "www.yout-ube.com": "www.youtube.com",
     "yout-ube.com": "www.youtube.com",
@@ -87,17 +98,47 @@ def _slugify(text: str) -> str:
 
 
 def _best_link(href: str) -> str:
-    """Resolve a button href to a stable absolute URL, or the page URL."""
+    """Resolve a button href to an absolute URL (or the page URL)."""
     resolved = urljoin(PAGE_URL, href.strip())
     match = re.match(r"https?://([^/]+)", resolved)
     if not match:
         return PAGE_URL
     host = match.group(1).lower()
-    if host in UNSTABLE_HOSTS or "Expires=" in resolved or "Signature=" in resolved:
-        return PAGE_URL
     if host in MANGLED_YOUTUBE_HOSTS:
         resolved = resolved.replace(match.group(1), MANGLED_YOUTUBE_HOSTS[host], 1)
     return resolved
+
+
+def media_type(url: str) -> str:
+    """MIME type guessed from the URL's file extension."""
+    path = re.match(r"https?://[^/?#]+([^?#]*)", url)
+    suffix = os.path.splitext(path.group(1).lower())[1] if path else ""
+    return MEDIA_TYPES.get(suffix, "application/octet-stream")
+
+
+def _is_media_url(url: str) -> bool:
+    """True for Duda CDN file links (signed or not, real path required)."""
+    match = re.match(r"https?://([^/?#]+)(/.+)", url)
+    return bool(match and match.group(1).lower() in MEDIA_CDN_HOSTS)
+
+
+def fetch_content_length(url: str) -> int:
+    """Content-Length via HEAD request (0 when unavailable)."""
+    r = common.creq.head(url, impersonate="chrome", timeout=30, allow_redirects=True)
+    r.raise_for_status()
+    return int(r.headers.get("Content-Length") or 0)
+
+
+def attach_media_lengths(items: list[dict]) -> None:
+    """Fill enclosure lengths via HEAD requests (best effort)."""
+    for item in items:
+        enclosure = item.get("enclosure")
+        if not enclosure:
+            continue
+        try:
+            enclosure["length"] = fetch_content_length(enclosure["url"])
+        except Exception as exc:  # noqa: BLE001
+            log.warning("no Content-Length for %s: %s", enclosure["url"], exc)
 
 
 def _extract(html: str, mobile: bool) -> list[dict]:
@@ -152,12 +193,21 @@ def _extract(html: str, mobile: bool) -> list[dict]:
                 if not title:
                     continue
                 link = PAGE_URL
+                media = None
                 for href in group["links"]:
                     candidate = _best_link(href)
-                    if candidate != PAGE_URL:
+                    if media is None and _is_media_url(candidate):
+                        media = candidate
+                    if link == PAGE_URL and candidate != PAGE_URL:
                         link = candidate
-                        break
-                items.append({"published": published, "title": title, "link": link})
+                items.append(
+                    {
+                        "published": published,
+                        "title": title,
+                        "link": link,
+                        "media": media,
+                    }
+                )
     return items
 
 
@@ -234,15 +284,20 @@ def parse_klum(html: str) -> list[dict]:
             f"{item['published']:%Y%m%d}" if item["published"] else "undated"
         )
         anchor = f"{PAGE_URL}#{date_part}-{_slugify(item['title'])}"
-        items.append(
-            {
-                "id": anchor,
-                "title": item["title"],
-                "link": item["link"],
-                "description": item["title"],
-                "published": item["published"],
+        entry = {
+            "id": anchor,
+            "title": item["title"],
+            "link": item["link"],
+            "description": item["title"],
+            "published": item["published"],
+        }
+        if item.get("media"):
+            entry["enclosure"] = {
+                "url": item["media"],
+                "type": media_type(item["media"]),
+                "length": 0,  # filled by attach_media_lengths in live runs
             }
-        )
+        items.append(entry)
     log.info("parsed %d unique item(s)", len(items))
     return items
 
@@ -394,6 +449,7 @@ def main() -> int:
         return 1
 
     embed_content(items, previous)
+    attach_media_lengths(items)
     merged = common.merge_items(previous, items)
     merged = prune_superseded(merged, items)
     common.write_feed(
