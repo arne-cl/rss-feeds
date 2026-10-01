@@ -1,0 +1,264 @@
+#!/usr/bin/env python3
+"""Build an RSS feed from an Instagram profile page.
+
+Instagram provides no feeds and blocks most scrapers, so this script:
+
+1. Tries a direct fetch of ``https://www.instagram.com/<account>/`` with
+   Chrome TLS impersonation (curl_cffi) and parses the media objects embedded
+   in the page's ``<script type="application/json">`` blobs (post shortcode,
+   caption text, image URL, and a date string inside accessibility_caption).
+2. Falls back to the r.jina.ai reader proxy and parses the rendered DOM
+   (post links, image alt texts as titles).
+
+The profile page only shows the latest few posts, so newly parsed items are
+merged into the previous feed file to keep history and preserve dates.
+
+Usage: python scripts/build_instagram_feed.py <account>
+Optional env: JINA_API_KEY (avoids r.jina.ai rate limits on shared IPs)
+              INSTAGRAM_PROFILE_HTML=<file> (parse a saved page copy offline)
+"""
+
+import html as html_mod
+import json
+import os
+import re
+import sys
+import logging
+from datetime import datetime, timezone
+
+from bs4 import BeautifulSoup
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import common
+
+ACCOUNT_RE = re.compile(r"^[A-Za-z0-9._]{1,30}$")
+POST_URL_RE = re.compile(r"https://www\.instagram\.com/p/([A-Za-z0-9_-]{5,})/?")
+ACCESSIBILITY_DATE_RE = re.compile(r"on (\w+ \d{1,2}, \d{4})")
+TITLE_MAX_LEN = 80
+MAX_ITEMS = 100
+
+FEEDS_DIR = os.path.normpath(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "feeds")
+)
+
+log = logging.getLogger("build_instagram_feed")
+
+
+# --------------------------------------------------------------------------
+# Configuration
+# --------------------------------------------------------------------------
+
+def validate_account(account) -> str:
+    """Return the account if it is a plausible Instagram username, else raise."""
+    if not isinstance(account, str) or not ACCOUNT_RE.match(account):
+        raise ValueError(f"invalid Instagram account: {account!r}")
+    return account
+
+
+def instagram_url(account: str) -> str:
+    return f"https://www.instagram.com/{account}/"
+
+
+def output_path(account: str) -> str:
+    return os.path.join(FEEDS_DIR, f"instagram-{account.lower()}.xml")
+
+
+# --------------------------------------------------------------------------
+# Parsing strategy 1: direct HTML with embedded JSON
+# --------------------------------------------------------------------------
+
+def _iter_json_blobs(html: str):
+    for sm in re.finditer(r'<script type="application/json"[^>]*>(.*?)</script>', html, re.S):
+        try:
+            yield json.loads(sm.group(1))
+        except ValueError:
+            continue
+
+
+def _walk(root):
+    stack = [root]
+    while stack:
+        node = stack.pop()
+        if isinstance(node, dict):
+            yield node
+            stack.extend(node.values())
+        elif isinstance(node, list):
+            stack.extend(node)
+
+
+def parse_accessibility_date(text):
+    """Parse 'Photo by X on September 23, 2026.' style captions."""
+    if not text:
+        return None
+    m = ACCESSIBILITY_DATE_RE.search(text)
+    if not m:
+        return None
+    try:
+        return datetime.strptime(m.group(1), "%B %d, %Y").replace(tzinfo=timezone.utc)
+    except ValueError:
+        return None
+
+
+def _media_kind(media_type) -> str:
+    return {1: "Photo", 2: "Video", 8: "Carousel"}.get(media_type, "Post")
+
+
+def _item_title(code: str, caption: str, media_type) -> str:
+    first_line = re.sub(r"\s+", " ", caption.split("\n", 1)[0]).strip()
+    if not first_line:
+        return f"{_media_kind(media_type)} {code}"
+    if len(first_line) > TITLE_MAX_LEN:
+        first_line = first_line[: TITLE_MAX_LEN - 1].rstrip() + "…"
+    return first_line
+
+
+def _item_from_node(node: dict):
+    code = node.get("code")
+    if not code:
+        return None
+    url = f"https://www.instagram.com/p/{code}/"
+    caption = (node.get("caption") or {}).get("text") or ""
+    image_url = node.get("display_uri") or ""
+    item = {
+        "id": url,
+        "title": _item_title(code, caption, node.get("media_type")),
+        "link": url,
+        "description": caption,
+        "published": parse_accessibility_date(node.get("accessibility_caption")),
+    }
+    if image_url:
+        item["enclosure"] = {"url": image_url, "type": "image/jpeg", "length": 0}
+        escaped_caption = html_mod.escape(caption).replace("\n", "<br>")
+        item["content"] = (
+            f'<img src="{html_mod.escape(image_url, quote=True)}" />\n'
+            f"<p>{escaped_caption}</p>\n"
+            f'<p><a href="{url}">View on Instagram</a></p>'
+        )
+    return item
+
+
+def parse_direct(html: str) -> list[dict]:
+    items, seen = [], set()
+    for blob in _iter_json_blobs(html):
+        for node in _walk(blob):
+            if "__isXIGPolarisMedia" not in node:
+                continue
+            code = node.get("code")
+            if not code or code in seen:
+                continue
+            seen.add(code)
+            item = _item_from_node(node)
+            if item:
+                items.append(item)
+    log.info("direct JSON parse: %d post(s)", len(items))
+    return items
+
+
+# --------------------------------------------------------------------------
+# Parsing strategy 2: rendered DOM (jina reader HTML)
+# --------------------------------------------------------------------------
+
+def parse_dom(html: str) -> list[dict]:
+    soup = BeautifulSoup(html, "html.parser")
+    items, seen = [], set()
+    for a in soup.find_all("a", href=True):
+        m = POST_URL_RE.match(a["href"])
+        if not m or m.group(1) in seen:
+            continue
+        code = m.group(1)
+        seen.add(code)
+        img = a.find("img", alt=True)
+        title = (img["alt"] if img else "") or a.get_text(" ", strip=True)
+        if not title:
+            title = f"Post {code}"
+        items.append(
+            {
+                "id": a["href"],
+                "title": title,
+                "link": a["href"],
+                "description": "",
+                "published": None,
+            }
+        )
+    log.info("DOM parse: %d post(s)", len(items))
+    return items
+
+
+# --------------------------------------------------------------------------
+# Profile metadata
+# --------------------------------------------------------------------------
+
+def profile_metadata(html: str) -> dict:
+    for blob in _iter_json_blobs(html):
+        for node in _walk(blob):
+            if "username" in node and ("full_name" in node or "all_media_count" in node):
+                meta = {
+                    "username": node.get("username") or "",
+                    "full_name": node.get("full_name") or "",
+                    "biography": node.get("biography") or "",
+                }
+                if meta["username"]:
+                    return meta
+    return {}
+
+
+# --------------------------------------------------------------------------
+# Main
+# --------------------------------------------------------------------------
+
+def main(argv=None) -> int:
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
+    argv = sys.argv[1:] if argv is None else argv
+    if len(argv) != 1:
+        print(f"usage: {os.path.basename(sys.argv[0])} <account>", file=sys.stderr)
+        return 2
+    try:
+        account = validate_account(argv[0])
+    except ValueError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+
+    url = instagram_url(account)
+    offline = bool(os.environ.get("INSTAGRAM_PROFILE_HTML"))
+    try:
+        page, source = common.fetch_page(url, "INSTAGRAM_PROFILE_HTML")
+    except Exception as exc:  # noqa: BLE001
+        log.error("all fetch attempts failed: %s", exc)
+        return 1
+
+    items = parse_direct(page)
+    if not items and not offline:
+        if source == "direct":
+            try:
+                page = common.fetch_jina(url)
+            except Exception as exc:  # noqa: BLE001
+                log.error("jina fallback fetch failed: %s", exc)
+                return 1
+        items = parse_dom(page)
+
+    if not items:
+        log.error("no posts parsed — page layout may have changed; keeping previous feed")
+        return 1
+
+    meta = profile_metadata(page)
+    name = meta.get("full_name") or account
+    out = output_path(account)
+    merged = common.merge_items(common.load_previous(out), items)
+    common.write_feed(
+        list(merged.values()),
+        out,
+        MAX_ITEMS,
+        feed_id=url,
+        title=f"{name} on Instagram",
+        link=url,
+        description=(
+            meta.get("biography")
+            or f"Instagram posts by {name} (auto-generated from {url})"
+        ),
+        language="en",
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

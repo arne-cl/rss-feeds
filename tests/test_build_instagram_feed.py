@@ -1,5 +1,6 @@
 """Tests for the Instagram feed builder."""
 
+import html as html_mod
 import os
 from datetime import datetime, timezone
 
@@ -56,7 +57,7 @@ class TestParseDirect:
     def test_content_html_embeds_image_and_caption(self):
         item = by_code(parse_fixture(), "DdoYr2_CY-5")[0]
         assert item["content"].startswith("<img src=")
-        assert item["enclosure"]["url"] in item["content"]
+        assert html_mod.escape(item["enclosure"]["url"], quote=True) in item["content"]
         assert "youtu.be" in item["content"]
 
     def test_all_fixture_items_have_date_and_enclosure(self):
@@ -118,8 +119,8 @@ class TestParseDom:
         assert items[0]["title"] == "TOTD 67 - Museum"
         assert items[0]["published"] is None
 
-    def test_title_fallback_without_alt(self):
-        html = '<a href="https://www.instagram.com/p/AbCdEf1/">some text</a>'
+    def test_title_fallback_without_alt_or_text(self):
+        html = '<a href="https://www.instagram.com/p/AbCdEf1/"></a>'
         items = build_instagram_feed.parse_dom(html)
         assert items[0]["title"] == "Post AbCdEf1"
 
