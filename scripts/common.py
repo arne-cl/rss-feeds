@@ -120,6 +120,17 @@ def load_previous(path: str) -> dict[str, dict]:
         encoded = item.find("content:encoded")
         if encoded is not None:
             entry["content"] = encoded.get_text()
+        enc = item.find("enclosure")
+        if enc is not None and enc.get("url"):
+            try:
+                length = int(enc.get("length") or 0)
+            except ValueError:
+                length = 0
+            entry["enclosure"] = {
+                "url": enc["url"],
+                "length": length,
+                "type": enc.get("type") or "application/octet-stream",
+            }
         prev[item_id] = entry
     log.info("loaded %d item(s) from previous feed", len(prev))
     return prev
@@ -148,6 +159,10 @@ def merge_items(previous: dict[str, dict], items: list[dict]) -> dict[str, dict]
             # safely cross id schemes
             if not item.get("content") and old.get("content"):
                 item["content"] = old["content"]
+            # a fresh parse may not see the media button anymore; keep the
+            # last known enclosure rather than dropping it silently
+            if not item.get("enclosure") and old.get("enclosure"):
+                item["enclosure"] = old["enclosure"]
         merged[item["id"]] = item
 
     link_dates = set()
@@ -215,6 +230,9 @@ def build_feed(
         fe.description(item["description"])
         if item.get("content"):
             fe.content(item["content"], type="html")
+        if item.get("enclosure"):
+            enc = item["enclosure"]
+            fe.enclosure(enc["url"], enc.get("length") or 0, enc["type"])
         if item["published"]:
             fe.published(item["published"])
             fe.updated(item["published"])

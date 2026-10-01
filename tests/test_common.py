@@ -113,6 +113,42 @@ class TestLoadPrevious:
         prev = common.load_previous(path)
         assert "content" not in prev["https://example.com/b"]
 
+    def test_enclosure_is_read_back(self, tmp_path):
+        path = write_feed(
+            tmp_path,
+            """<?xml version="1.0" encoding="UTF-8"?>
+            <rss version="2.0"><channel>
+              <item>
+                <title>With media</title>
+                <link>https://example.com/news</link>
+                <description>x</description>
+                <enclosure url="https://cdn.example.com/video.mp4"
+                           length="12345" type="video/mp4"/>
+              </item>
+            </channel></rss>""",
+        )
+        prev = common.load_previous(path)
+        assert prev["https://example.com/news"]["enclosure"] == {
+            "url": "https://cdn.example.com/video.mp4",
+            "length": 12345,
+            "type": "video/mp4",
+        }
+
+    def test_without_enclosure_key_is_absent(self, tmp_path):
+        path = write_feed(
+            tmp_path,
+            """<?xml version="1.0" encoding="UTF-8"?>
+            <rss version="2.0"><channel>
+              <item>
+                <title>Plain</title>
+                <link>https://example.com/b</link>
+                <description>x</description>
+              </item>
+            </channel></rss>""",
+        )
+        prev = common.load_previous(path)
+        assert "enclosure" not in prev["https://example.com/b"]
+
 
 class TestSortKey:
     def test_none_sorts_oldest(self):
@@ -326,6 +362,56 @@ class TestMergeItems:
         merged = common.merge_items({"https://example.com/news#20260101-same-post": old}, [new])
         assert merged[new["id"]]["content"] == "<p>fresh</p>"
 
+    def test_stale_enclosure_carries_over_to_new_item(self):
+        old = self.prev_item(
+            "https://example.com/news#20260921-der-mochtegernekanzler",
+            "Der Möchtegernekanzler",
+            "https://cdn.example.com/old-signed-video.mp4?Expires=1",
+            datetime(2026, 9, 21, tzinfo=timezone.utc),
+        )
+        old["enclosure"] = {
+            "url": "https://cdn.example.com/old-signed-video.mp4?Expires=1",
+            "length": 0,
+            "type": "video/mp4",
+        }
+        new = self.new_item(
+            "https://example.com/news#20260921-der-mochtegernekanzler",
+            "Der Möchtegernekanzler",
+            "https://www.klum.com/news",
+            datetime(2026, 9, 21, tzinfo=timezone.utc),
+        )
+        merged = common.merge_items(
+            {"https://example.com/news#20260921-der-mochtegernekanzler": old}, [new]
+        )
+        assert merged[new["id"]]["enclosure"]["url"] == old["enclosure"]["url"]
+
+    def test_fresh_enclosure_wins_over_stale(self):
+        item_id = "https://example.com/news#20260921-der-mochtegernekanzler"
+        old = self.prev_item(
+            item_id,
+            "Der Möchtegernekanzler",
+            "https://cdn.example.com/old.mp4?Expires=1",
+            datetime(2026, 9, 21, tzinfo=timezone.utc),
+        )
+        old["enclosure"] = {
+            "url": "https://cdn.example.com/old.mp4?Expires=1",
+            "length": 0,
+            "type": "video/mp4",
+        }
+        new = self.new_item(
+            item_id,
+            "Der Möchtegernekanzler",
+            "https://cdn.example.com/fresh.mp4?Expires=2",
+            datetime(2026, 9, 21, tzinfo=timezone.utc),
+        )
+        new["enclosure"] = {
+            "url": "https://cdn.example.com/fresh.mp4?Expires=2",
+            "length": 99,
+            "type": "video/mp4",
+        }
+        merged = common.merge_items({item_id: old}, [new])
+        assert merged[item_id]["enclosure"]["url"] == new["enclosure"]["url"]
+
 
 class TestBuildFeed:
     def test_feed_metadata_and_entries(self):
@@ -425,3 +511,39 @@ class TestBuildFeed:
         assert len(encoded) == 1
         # readers unescape the XML and render the value as HTML
         assert encoded[0].get_text() == "<p>full text</p>"
+
+    def test_writes_enclosure(self):
+        items = [
+            {
+                "id": "https://example.com/a",
+                "title": "With media",
+                "link": "https://example.com/a",
+                "description": "",
+                "published": datetime(2026, 9, 21, tzinfo=timezone.utc),
+                "enclosure": {
+                    "url": "https://cdn.example.com/video.mp4?Expires=1",
+                    "length": 12345,
+                    "type": "video/mp4",
+                },
+            },
+            {
+                "id": "https://example.com/b",
+                "title": "Without media",
+                "link": "https://example.com/b",
+                "description": "",
+                "published": None,
+            },
+        ]
+        xml = common.build_feed(
+            items,
+            feed_id="https://example.com/",
+            title="T",
+            link="https://example.com/",
+            description="d",
+            language="en",
+        ).decode("utf-8")
+        assert (
+            '<enclosure url="https://cdn.example.com/video.mp4?Expires=1" '
+            'length="12345" type="video/mp4"/>'
+        ) in xml
+        assert xml.count("<enclosure") == 1
