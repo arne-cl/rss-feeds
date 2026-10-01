@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# pre-push: reject pushes that introduce secret-looking tokens.
+# Scans the added lines of all local commits not yet on any remote.
+# Activate with: git config core.hooksPath .githooks
+
+PATTERNS=(
+  'pk\.eyJ[A-Za-z0-9+/=_-]{30,}'
+  'sk\.eyJ[A-Za-z0-9+/=_-]{30,}'
+  'AKIA[0-9A-Z]{16}'
+  'gh[pousr]_[A-Za-z0-9]{20,}'
+  'glpat-[A-Za-z0-9_-]{20,}'
+  'AIza[0-9A-Za-z_-]{35}'
+  'xox[baprs]-[A-Za-z0-9-]{10,}'
+  'BEGIN (RSA |EC |OPENSSH |PGP |DSA )?PRIVATE KEY'
+)
+
+status=0
+for c in $(git rev-list --branches --not --remotes); do
+  added=$(git show --no-color --no-ext-diff --pretty=format: "$c" 2>/dev/null | grep '^+' || true)
+  [ -z "$added" ] && continue
+  for p in "${PATTERNS[@]}"; do
+    hits=$(printf '%s\n' "$added" | grep -E "$p" || true)
+    if [ -n "$hits" ]; then
+      echo "pre-push hook: possible secret in commit $(git rev-parse --short "$c") (pattern: $p)" >&2
+      printf '%s\n' "$hits" | cut -c1-120 | head -3 >&2
+      status=1
+    fi
+  done
+done
+
+if [ "$status" -ne 0 ]; then
+  echo "pre-push hook: refusing to push. Redact the secret and rewrite the offending commit(s)." >&2
+fi
+exit "$status"
