@@ -547,3 +547,80 @@ class TestBuildFeed:
             'length="12345" type="video/mp4"/>'
         ) in xml
         assert xml.count("<enclosure") == 1
+
+
+class TestBuildFeedItunes:
+    def items(self, image=None):
+        return [
+            {
+                "id": "https://example.com/a",
+                "title": "An entry",
+                "link": "https://example.com/a",
+                "description": "text",
+                "published": datetime(2025, 9, 1, 10, 0, tzinfo=timezone.utc),
+                "image": image,
+            }
+        ]
+
+    def test_itunes_channel_tags(self):
+        xml = common.build_feed(
+            self.items(),
+            feed_id="https://example.com/",
+            title="T",
+            link="https://example.com/",
+            description="d",
+            language="de",
+            itunes_author="BRF1",
+            itunes_summary="Show summary",
+            itunes_image="https://example.com/cover.jpg",
+            itunes_category="Music",
+            itunes_explicit="no",
+        ).decode("utf-8")
+        assert "<itunes:author>BRF1</itunes:author>" in xml
+        assert "<itunes:summary>Show summary</itunes:summary>" in xml
+        assert (
+            '<itunes:image href="https://example.com/cover.jpg"/>' in xml
+        )
+        assert '<itunes:category text="Music"/>' in xml
+        assert "<itunes:explicit>no</itunes:explicit>" in xml
+
+    def test_itunes_entry_image(self):
+        xml = common.build_feed(
+            self.items(image="https://example.com/ep.jpg"),
+            feed_id="https://example.com/",
+            title="T",
+            link="https://example.com/",
+            description="d",
+            language="de",
+        ).decode("utf-8")
+        assert '<itunes:image href="https://example.com/ep.jpg"/>' in xml
+
+    def test_without_itunes_metadata_no_itunes_namespace(self):
+        xml = common.build_feed(
+            self.items(),
+            feed_id="https://example.com/",
+            title="T",
+            link="https://example.com/",
+            description="d",
+            language="de",
+        ).decode("utf-8")
+        assert "itunes:" not in xml
+
+    def test_item_without_image_key_is_accepted(self):
+        xml = common.build_feed(
+            [
+                {
+                    "id": "https://example.com/a",
+                    "title": "An entry",
+                    "link": "https://example.com/a",
+                    "description": "text",
+                    "published": None,
+                }
+            ],
+            feed_id="https://example.com/",
+            title="T",
+            link="https://example.com/",
+            description="d",
+            language="de",
+        ).decode("utf-8")
+        assert "<item>" in xml

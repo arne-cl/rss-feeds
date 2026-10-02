@@ -77,6 +77,10 @@ def parse_archive(html: str) -> list[dict]:
             continue
         excerpt_el = card.select_one(".content-wrapper p")
         img_el = card.select_one("img[data-src]")
+        # feedgen only accepts .jpg/.png for itunes:image
+        image = img_el["data-src"] if img_el else ""
+        if not image.lower().endswith((".jpg", ".png")):
+            image = ""
         seen.add(episode_id)
         items.append(
             {
@@ -89,7 +93,7 @@ def parse_archive(html: str) -> list[dict]:
                 "published": datetime.strptime(
                     time_el["datetime"].strip(), "%Y-%m-%d %H:%M"
                 ).replace(tzinfo=BRF_TZ),
-                "image": img_el["data-src"] if img_el else "",
+                "image": image,
             }
         )
     items.sort(key=lambda item: item["published"], reverse=True)
@@ -145,3 +149,162 @@ def resolve_audio(play_html: str) -> dict | None:
         return None
     url = source.get("src") or source.get("data-src")
     return {"url": url, "type": source.get("type") or "audio/mpeg"}
+
+
+# --------------------------------------------------------------------------
+# Enrichment (episode pages, audio resolution, lengths)
+# --------------------------------------------------------------------------
+
+def fetch_episode_page(link: str) -> str:
+    """Fetch an episode page (kept separate so tests can stub it)."""
+    return common.fetch_direct(link)
+
+
+def fetch_play_snippet(play_url: str) -> str:
+    """Fetch a streaming2.brf.be/play/ snippet (stub in tests)."""
+    return common.fetch_direct(play_url)
+
+
+def _read_local_copy(path: str | None) -> str | None:
+    if path and os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            return f.read()
+    return None
+
+
+def _episode_local_path(link: str) -> str | None:
+    match = EPISODE_URL_RE.match(link)
+    if not match:
+        return None
+    return os.path.join(os.environ[PAGES_DIR_ENV], match.group(1) + ".html")
+
+
+def _play_local_path(play_hash: str) -> str:
+    return os.path.join(os.environ[PLAY_DIR_ENV], play_hash + ".html")
+
+
+def enrich_items(items: list[dict], previous: dict[str, dict]) -> None:
+    """Attach article content and the audio enclosure to items.
+
+    Everything is cached inside the feed itself: items whose previous entry
+    already carries content and an enclosure are not fetched again. With
+    CHANSONS_PAGES_DIR / CHANSONS_PLAY_DIR set, only saved page copies are
+    used (offline mode — no requests at all).
+    """
+    by_id = {entry["id"]: entry for entry in previous.values()}
+    enriched = 0
+    for item in items:
+        old = by_id.get(item["id"])
+        if old and old.get("content") and old.get("enclosure"):
+            item["content"] = old["content"]
+            item["enclosure"] = old["enclosure"]
+            item["description"] = old.get("description") or item["description"]
+            continue
+
+        page_html = None
+        if os.environ.get(PAGES_DIR_ENV):
+            page_html = _read_local_copy(_episode_local_path(item["link"]))
+        else:
+            try:
+                page_html = fetch_episode_page(item["link"])
+            except Exception as exc:  # noqa: BLE001
+                log.warning("could not fetch %s: %s", item["link"], exc)
+        if not page_html:
+            continue
+        parsed = parse_episode(page_html)
+        if parsed["excerpt"]:
+            item["description"] = parsed["excerpt"]
+        if parsed["content"]:
+            item["content"] = parsed["content"]
+
+        if not parsed["play_hash"]:
+            continue
+        play_html = None
+        if os.environ.get(PLAY_DIR_ENV):
+            play_html = _read_local_copy(_play_local_path(parsed["play_hash"]))
+        else:
+            play_url = f"https://streaming2.brf.be/play/{parsed['play_hash']}"
+            try:
+                play_html = fetch_play_snippet(play_url)
+            except Exception as exc:  # noqa: BLE001
+                log.warning("could not fetch %s: %s", play_url, exc)
+        if not play_html:
+            continue
+        audio = resolve_audio(play_html)
+        if audio:
+            item["enclosure"] = {**audio, "length": 0}
+            enriched += 1
+    log.info("resolved audio for %d item(s)", enriched)
+
+
+def fetch_content_length(url: str) -> int:
+    """Content-Length via HEAD request (0 when unavailable)."""
+    r = common.creq.head(url, impersonate="chrome", timeout=30)
+    r.raise_for_status()
+    return int(r.headers.get("Content-Length") or 0)
+
+
+def attach_audio_lengths(items: list[dict]) -> None:
+    """Fill enclosure lengths via HEAD requests (best effort)."""
+    for item in items:
+        enclosure = item.get("enclosure")
+        if not enclosure or enclosure.get("length"):
+            continue
+        try:
+            enclosure["length"] = fetch_content_length(enclosure["url"])
+        except Exception as exc:  # noqa: BLE001
+            log.warning("no Content-Length for %s: %s", enclosure["url"], exc)
+
+
+# --------------------------------------------------------------------------
+# Main
+# --------------------------------------------------------------------------
+
+SHOW_DESCRIPTION = (
+    "Eine Sendung, die, wenn es sie nicht schon seit über 30 Jahren geben "
+    "würde, für Ostbelgien erfunden werden müsste. Am Schnittpunkt der "
+    "Kulturen stellt der BRF französische Chansons, deutschsprachige Lieder "
+    "und internationale Folk- und Worldmusic vor. Montag, 20 - 21 Uhr."
+)
+SHOW_IMAGE = (
+    "https://1.brf.be/wp-content/uploads/sites/2/2015/06/CLF-1420x968.jpg"
+)
+
+
+def main() -> int:
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
+
+    try:
+        html, _source = common.fetch_page(SHOW_URL, ARCHIVE_HTML_ENV)
+    except Exception as exc:  # noqa: BLE001
+        log.error("fetch failed: %s", exc)
+        return 1
+
+    previous = common.load_previous(OUTPUT_PATH)
+    items = parse_archive(html)
+    if not items:
+        log.error(
+            "no episodes parsed — page layout may have changed; "
+            "keeping previous feed"
+        )
+        return 1
+
+    enrich_items(items, previous)
+    attach_audio_lengths(items)
+    merged = common.merge_items(previous, items)
+    common.write_feed(
+        list(merged.values()),
+        OUTPUT_PATH,
+        MAX_ITEMS,
+        feed_id=SHOW_URL,
+        title=FEED_TITLE,
+        link=SHOW_URL,
+        description=f"{SHOW_DESCRIPTION} (auto-generated from {SHOW_URL})",
+        language="de",
+        itunes_author="BRF1",
+        itunes_summary=SHOW_DESCRIPTION,
+        itunes_image=SHOW_IMAGE,
+        itunes_category="Music",
+        itunes_explicit="no",
+    )
+    return 0

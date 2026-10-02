@@ -213,6 +213,11 @@ def build_feed(
     link: str,
     description: str,
     language: str,
+    itunes_author: str | None = None,
+    itunes_summary: str | None = None,
+    itunes_image: str | None = None,
+    itunes_category: str | None = None,
+    itunes_explicit: str | None = None,
 ) -> bytes:
     fg = FeedGenerator()
     fg.id(feed_id)
@@ -221,6 +226,28 @@ def build_feed(
     fg.description(description)
     fg.language(language)
     fg.updated(datetime.now(timezone.utc))
+
+    needs_itunes = any(
+        (
+            itunes_author,
+            itunes_summary,
+            itunes_image,
+            itunes_category,
+            itunes_explicit,
+        )
+    ) or any(item.get("image") for item in items)
+    if needs_itunes:
+        fg.load_extension("podcast")
+        if itunes_author:
+            fg.podcast.itunes_author(itunes_author)
+        if itunes_summary:
+            fg.podcast.itunes_summary(itunes_summary)
+        if itunes_image:
+            fg.podcast.itunes_image(itunes_image)
+        if itunes_category:
+            fg.podcast.itunes_category(itunes_category)
+        if itunes_explicit:
+            fg.podcast.itunes_explicit(itunes_explicit)
 
     for item in items:
         fe = fg.add_entry(order="append")
@@ -233,6 +260,8 @@ def build_feed(
         if item.get("enclosure"):
             enc = item["enclosure"]
             fe.enclosure(enc["url"], enc.get("length") or 0, enc["type"])
+        if item.get("image"):
+            fe.podcast.itunes_image(item["image"])
         if item["published"]:
             fe.published(item["published"])
             fe.updated(item["published"])

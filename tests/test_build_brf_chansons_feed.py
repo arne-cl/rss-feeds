@@ -5,6 +5,8 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 import build_brf_chansons_feed
+import common
+from bs4 import BeautifulSoup
 
 FIXTURES = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fixtures")
 ARCHIVE = os.path.join(FIXTURES, "brf1-chansons.html")
@@ -92,7 +94,14 @@ class TestParseArchive:
             assert item["title"]
             assert item["description"]
             assert item["link"].startswith("https://1.brf.be/sendungen/chansons/")
-            assert item["image"].startswith("https://1.brf.be/wp-content/uploads/")
+            assert item["image"] == "" or item["image"].startswith(
+                "https://1.brf.be/wp-content/uploads/"
+            )
+
+    def test_non_jpg_png_images_are_dropped(self):
+        # feedgen's itunes:image only accepts .jpg/.png; this card has .jpeg
+        item = by_id(parse_archive_fixture(), "1221968")[0]
+        assert item["image"] == ""
 
     def test_ids_are_unique_episode_urls(self):
         items = parse_archive_fixture()
@@ -133,3 +142,231 @@ class TestParseArchive:
         items = parse_archive_fixture()
         published = [i["published"] for i in items]
         assert published == sorted(published, reverse=True)
+
+
+class TestEnrichItems:
+    def test_attaches_content_excerpt_and_enclosure(self, monkeypatch):
+        items = parse_archive_fixture()
+
+        def fake_episode(link):
+            return read(EPISODE) if "1227507" in link else None
+
+        monkeypatch.setattr(
+            build_brf_chansons_feed, "fetch_episode_page", fake_episode
+        )
+        monkeypatch.setattr(
+            build_brf_chansons_feed,
+            "fetch_play_snippet",
+            lambda url: read(PLAY),
+        )
+        build_brf_chansons_feed.enrich_items(items, {})
+
+        item = by_id(items, "1227507")[0]
+        assert item["content"].startswith("<p>")
+        assert item["description"].endswith("solidarische, prekäre Zwischenräume.")
+        assert item["enclosure"]["url"] == (
+            "https://streaming2.brf.be/audio/2026/40/"
+            "f3edc82a75e9abb8bb302761597fd249.mp3"
+        )
+        assert item["enclosure"]["type"] == "audio/mpeg"
+        assert item["enclosure"]["length"] == 0  # filled later by HEAD
+        # all other episodes had no (fetchable) page in this test
+        assert sum(1 for i in items if i.get("enclosure")) == 1
+
+    def test_cached_items_are_not_refetched(self, monkeypatch):
+        items = parse_archive_fixture()
+        old = {
+            "https://1.brf.be/sendungen/chansons/1227507/": {
+                "id": "https://1.brf.be/sendungen/chansons/1227507/",
+                "title": "cached",
+                "link": "https://1.brf.be/sendungen/chansons/1227507/",
+                "description": "full cached description",
+                "published": None,
+                "content": "<p>cached content</p>",
+                "enclosure": {
+                    "url": "https://streaming2.brf.be/audio/x.mp3",
+                    "type": "audio/mpeg",
+                    "length": 42,
+                },
+            }
+        }
+        calls = []
+
+        def fake_fetch(link):
+            calls.append(link)
+            return None  # uncached episodes have no fetchable page here
+
+        monkeypatch.setattr(
+            build_brf_chansons_feed, "fetch_episode_page", fake_fetch
+        )
+        monkeypatch.setattr(
+            build_brf_chansons_feed, "fetch_play_snippet", fake_fetch
+        )
+        build_brf_chansons_feed.enrich_items(items, old)
+
+        item = by_id(items, "1227507")[0]
+        assert item["content"] == "<p>cached content</p>"
+        assert item["enclosure"]["length"] == 42
+        assert item["description"] == "full cached description"
+        assert not any("1227507" in c for c in calls)
+
+    def test_offline_mode_uses_saved_copies_only(self, monkeypatch, tmp_path):
+        pages = tmp_path / "pages"
+        play = tmp_path / "play"
+        pages.mkdir()
+        play.mkdir()
+        (pages / "1227507.html").write_text(read(EPISODE), encoding="utf-8")
+        (play / "5689cb.html").write_text(read(PLAY), encoding="utf-8")
+        monkeypatch.setenv("CHANSONS_PAGES_DIR", str(pages))
+        monkeypatch.setenv("CHANSONS_PLAY_DIR", str(play))
+
+        def fail_fetch(url):
+            raise AssertionError(f"offline mode must not fetch {url}")
+
+        monkeypatch.setattr(
+            build_brf_chansons_feed, "fetch_episode_page", fail_fetch
+        )
+        monkeypatch.setattr(
+            build_brf_chansons_feed, "fetch_play_snippet", fail_fetch
+        )
+        items = [by_id(parse_archive_fixture(), "1227507")[0]]
+        build_brf_chansons_feed.enrich_items(items, {})
+        assert items[0]["enclosure"]["url"].endswith(".mp3")
+
+    def test_offline_mode_missing_copy_is_skipped(self, monkeypatch, tmp_path):
+        monkeypatch.setenv("CHANSONS_PAGES_DIR", str(tmp_path))
+        monkeypatch.setenv("CHANSONS_PLAY_DIR", str(tmp_path))
+        monkeypatch.setattr(
+            build_brf_chansons_feed,
+            "fetch_episode_page",
+            lambda url: (_ for _ in ()).throw(AssertionError("no fetch")),
+        )
+        items = [by_id(parse_archive_fixture(), "1227507")[0]]
+        build_brf_chansons_feed.enrich_items(items, {})
+        assert "content" not in items[0]
+        assert "enclosure" not in items[0]
+
+
+class TestAttachAudioLengths:
+    def test_length_from_head_request(self, monkeypatch):
+        class FakeResponse:
+            headers = {"Content-Length": "56488879"}
+
+            def raise_for_status(self):
+                pass
+
+        monkeypatch.setattr(
+            common.creq, "head", lambda *a, **k: FakeResponse()
+        )
+        items = [
+            {
+                "id": "x",
+                "title": "t",
+                "link": "l",
+                "description": "",
+                "published": None,
+                "enclosure": {
+                    "url": "https://streaming2.brf.be/audio/a.mp3",
+                    "type": "audio/mpeg",
+                    "length": 0,
+                },
+            }
+        ]
+        build_brf_chansons_feed.attach_audio_lengths(items)
+        assert items[0]["enclosure"]["length"] == 56488879
+
+    def test_head_failure_keeps_zero(self, monkeypatch):
+        def boom(*a, **k):
+            raise OSError("offline")
+
+        monkeypatch.setattr(common.creq, "head", boom)
+        items = [
+            {
+                "id": "x",
+                "title": "t",
+                "link": "l",
+                "description": "",
+                "published": None,
+                "enclosure": {
+                    "url": "https://streaming2.brf.be/audio/a.mp3",
+                    "type": "audio/mpeg",
+                    "length": 0,
+                },
+            }
+        ]
+        build_brf_chansons_feed.attach_audio_lengths(items)
+        assert items[0]["enclosure"]["length"] == 0
+
+    def test_known_length_is_kept(self, monkeypatch):
+        monkeypatch.setattr(
+            common.creq,
+            "head",
+            lambda *a, **k: (_ for _ in ()).throw(AssertionError("no HEAD")),
+        )
+        items = [
+            {
+                "id": "x",
+                "title": "t",
+                "link": "l",
+                "description": "",
+                "published": None,
+                "enclosure": {
+                    "url": "https://streaming2.brf.be/audio/a.mp3",
+                    "type": "audio/mpeg",
+                    "length": 7,
+                },
+            }
+        ]
+        build_brf_chansons_feed.attach_audio_lengths(items)
+        assert items[0]["enclosure"]["length"] == 7
+
+
+class TestMainOffline:
+    def test_end_to_end(self, monkeypatch, tmp_path):
+        pages = tmp_path / "pages"
+        play = tmp_path / "play"
+        pages.mkdir()
+        play.mkdir()
+        (pages / "1227507.html").write_text(read(EPISODE), encoding="utf-8")
+        (play / "5689cb.html").write_text(read(PLAY), encoding="utf-8")
+        output = tmp_path / "brf1-chansons.xml"
+        monkeypatch.setenv("CHANSONS_HTML", ARCHIVE)
+        monkeypatch.setenv("CHANSONS_PAGES_DIR", str(pages))
+        monkeypatch.setenv("CHANSONS_PLAY_DIR", str(play))
+        monkeypatch.setattr(build_brf_chansons_feed, "OUTPUT_PATH", str(output))
+        monkeypatch.setattr(
+            build_brf_chansons_feed,
+            "fetch_content_length",
+            lambda url: 1234,
+        )
+
+        assert build_brf_chansons_feed.main() == 0
+
+        import common
+
+        xml = output.read_bytes()
+        assert b"<itunes:author>BRF1</itunes:author>" in xml
+        soup = BeautifulSoup(xml, "xml")
+        items = soup.find_all("item")
+        assert len(items) == 12
+        newest = items[0]
+        assert newest.find("guid").get_text() == (
+            "https://1.brf.be/sendungen/chansons/1227507/"
+        )
+        enc = newest.find("enclosure")
+        assert enc["url"].endswith(
+            "f3edc82a75e9abb8bb302761597fd249.mp3"
+        )
+        assert enc["type"] == "audio/mpeg"
+        assert enc["length"] == "1234"
+        assert newest.find("itunes:image")["href"].startswith(
+            "https://1.brf.be/wp-content/"
+        )
+
+    def test_broken_archive_keeps_previous_feed(self, monkeypatch, tmp_path):
+        empty = tmp_path / "empty.html"
+        empty.write_text("<html></html>", encoding="utf-8")
+        monkeypatch.setenv("CHANSONS_HTML", str(empty))
+        monkeypatch.setattr(build_brf_chansons_feed, "OUTPUT_PATH", str(tmp_path / "f.xml"))
+        assert build_brf_chansons_feed.main() == 1
+        assert not (tmp_path / "f.xml").exists()
