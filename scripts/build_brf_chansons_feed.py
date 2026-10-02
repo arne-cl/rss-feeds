@@ -308,3 +308,7 @@ def main() -> int:
         itunes_explicit="no",
     )
     return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
