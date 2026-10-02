@@ -14,6 +14,7 @@ CHANSONS_PAGES_DIR=<dir> (saved episode pages, offline mode),
 CHANSONS_PLAY_DIR=<dir> (saved play-endpoint snippets, offline mode).
 """
 
+import html as html_module
 import os
 import re
 import sys
@@ -94,3 +95,53 @@ def parse_archive(html: str) -> list[dict]:
     items.sort(key=lambda item: item["published"], reverse=True)
     log.info("parsed %d episode(s) from archive", len(items))
     return items
+
+
+# --------------------------------------------------------------------------
+# Episode page + play endpoint
+# --------------------------------------------------------------------------
+
+def parse_episode(html: str) -> dict:
+    """Content, excerpt and audio play hash from an episode page.
+
+    The play hash sits inside an inline script tag (the player stub loads
+    https://streaming2.brf.be/play/<hash> via jQuery.get), so it must be
+    extracted from the raw HTML before scripts are stripped.
+    """
+    match = PLAY_URL_RE.search(html)
+    play_hash = match.group(1) if match else None
+
+    soup = BeautifulSoup(html, "html.parser")
+    for tag in soup(["script", "style"]):
+        tag.decompose()
+
+    blocks = []
+    article = soup.select_one("section.classic-content article")
+    if article:
+        for par in article.find_all("p"):
+            text = _norm(par.get_text(" ", strip=True))
+            if text:
+                blocks.append(text)
+    content = (
+        "<p>" + "</p><p>".join(html_module.escape(b) for b in blocks) + "</p>"
+        if blocks
+        else None
+    )
+
+    excerpt_el = soup.select_one("p.excerpt.under-title")
+    excerpt = (
+        _norm(excerpt_el.get_text(" ", strip=True)) if excerpt_el else None
+    )
+    return {"play_hash": play_hash, "content": content, "excerpt": excerpt}
+
+
+def resolve_audio(play_html: str) -> dict | None:
+    """Audio URL + MIME type from a streaming2.brf.be/play/ snippet."""
+    soup = BeautifulSoup(play_html, "html.parser")
+    source = soup.select_one("audio source[src]") or soup.select_one(
+        "[data-src]"
+    )
+    if source is None or not source.get("src") and not source.get("data-src"):
+        return None
+    url = source.get("src") or source.get("data-src")
+    return {"url": url, "type": source.get("type") or "audio/mpeg"}

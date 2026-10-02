@@ -26,6 +26,59 @@ def by_id(items, episode_id):
     return [i for i in items if i["id"].endswith(f"/{episode_id}/")]
 
 
+def parse_episode_fixture():
+    return build_brf_chansons_feed.parse_episode(read(EPISODE))
+
+
+class TestParseEpisode:
+    def test_play_hash_found_in_player_script(self):
+        assert parse_episode_fixture()["play_hash"] == "5689cb"
+
+    def test_excerpt_is_full_sentence(self):
+        excerpt = parse_episode_fixture()["excerpt"]
+        assert excerpt.startswith(
+            'Katharina Kollmann alias Nichtseattle hat mit "Große Liebe"'
+        )
+        assert excerpt.endswith("solidarische, prekäre Zwischenräume.")
+
+    def test_content_is_escaped_paragraphs(self):
+        content = parse_episode_fixture()["content"]
+        assert content.startswith("<p>")
+        assert content.endswith("<p>Maaru Will</p>")
+        assert "&quot;Nichtseattle&quot;?" in content
+        # the &nbsp;-only filler paragraph before the player is dropped
+        assert "&nbsp;" not in content
+        # no raw HTML from the article may leak into content
+        assert "<div" not in content
+        assert "<script" not in content
+
+    def test_episode_without_player(self):
+        html = (
+            "<html><body><p class='excerpt under-title'>Kurzbeschreibung</p>"
+            "<section class='classic-content'><article>"
+            "<p>Hello world</p></article></section></body></html>"
+        )
+        result = build_brf_chansons_feed.parse_episode(html)
+        assert result["play_hash"] is None
+        assert result["content"] == "<p>Hello world</p>"
+        assert result["excerpt"] == "Kurzbeschreibung"
+
+
+class TestResolveAudio:
+    def test_mp3_url_and_type_from_play_snippet(self):
+        audio = build_brf_chansons_feed.resolve_audio(read(PLAY))
+        assert audio == {
+            "url": (
+                "https://streaming2.brf.be/audio/2026/40/"
+                "f3edc82a75e9abb8bb302761597fd249.mp3"
+            ),
+            "type": "audio/mpeg",
+        }
+
+    def test_no_audio_in_snippet(self):
+        assert build_brf_chansons_feed.resolve_audio("<html></html>") is None
+
+
 class TestParseArchive:
     def test_all_cards_found_teaser_and_archive(self):
         # 2 newest in the "Sendungsprofil" teaser + 10 archive cards
