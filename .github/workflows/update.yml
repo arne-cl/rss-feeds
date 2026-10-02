@@ -32,6 +32,7 @@ jobs:
         run: |
           python scripts/build_quora_feed.py
           python scripts/build_klum_feed.py
+          python scripts/build_brf_chansons_feed.py
           # Instagram is the flakiest source; don't let it block the others
           python scripts/build_instagram_feed.py tiny_ruins \
             || echo "::warning::Instagram feed build failed"
