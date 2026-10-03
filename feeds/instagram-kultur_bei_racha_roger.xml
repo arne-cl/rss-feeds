@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+  <channel>
+    <title>kultur_bei_racha_roger on Instagram</title>
+    <link>https://www.instagram.com/kultur_bei_racha_roger/</link>
+    <description>Instagram posts by kultur_bei_racha_roger (auto-generated from https://www.instagram.com/kultur_bei_racha_roger/)</description>
+    <docs>http://www.rssboard.org/rss-specification</docs>
+    <generator>python-feedgen</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 03 Oct 2026 10:02:21 +0000</lastBuildDate>
+    <item>
+      <title>Feed build failed</title>
+      <link>https://www.instagram.com/kultur_bei_racha_roger/</link>
+      <description>HTTP Error 403: </description>
+      <content:encoded>&lt;p&gt;The last feed update failed; the items below are the most recent posts known.&lt;/p&gt;
+&lt;pre&gt;Traceback (most recent call last):
+  File "/home/arne/repos/rss-feeds/scripts/build_instagram_feed.py", line 321, in main
+    page = common.fetch_jina(url)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/arne/repos/rss-feeds/scripts/common.py", line 54, in fetch_jina
+    raise last_exc
+  File "/home/arne/repos/rss-feeds/scripts/common.py", line 47, in fetch_jina
+    r.raise_for_status()
+  File "/home/arne/repos/rss-feeds/.venv/lib/python3.12/site-packages/curl_cffi/requests/models.py", line 241, in raise_for_status
+    raise HTTPError(f"HTTP Error {self.status_code}: {self.reason}", 0, self)
+curl_cffi.requests.exceptions.HTTPError: HTTP Error 403: 
+&lt;/pre&gt;</content:encoded>
+      <guid isPermaLink="false">https://www.instagram.com/kultur_bei_racha_roger/#build-status</guid>
+      <pubDate>Sat, 03 Oct 2026 10:02:21 +0000</pubDate>
+    </item>
+  </channel>
+</rss>
