@@ -239,11 +239,14 @@ class TestFailureWarning:
         assert "<title>Feed build failed</title>" in xml
 
     def test_success_removes_stale_warning(self, tmp_path, monkeypatch):
+        common_mod = build_instagram_feed.common
+        real_fetch_page = common_mod.fetch_page
         monkeypatch.delenv("INSTAGRAM_PROFILE_HTML", raising=False)
         self._fail_fetch(monkeypatch)
         monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
         assert build_instagram_feed.main(["tiny_ruins"]) == 0
 
+        monkeypatch.setattr(common_mod, "fetch_page", real_fetch_page)
         monkeypatch.setenv("INSTAGRAM_PROFILE_HTML", FIXTURE)
         assert build_instagram_feed.main(["tiny_ruins"]) == 0
 

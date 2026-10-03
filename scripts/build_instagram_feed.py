@@ -13,6 +13,12 @@ Instagram provides no feeds and blocks most scrapers, so this script:
 The profile page only shows the latest few posts, so newly parsed items are
 merged into the previous feed file to keep history and preserve dates.
 
+Soft failures (fetch, fallback fetch, unparseable page) do not abort with a
+non-zero exit: they are recorded as a rolling "Feed build failed" item
+(error + stacktrace) inside the feed, keeping all previous items, so feed
+subscribers can see the breakage. The next successful build removes that
+item again.
+
 Usage: python scripts/build_instagram_feed.py <account>
 Optional env: JINA_API_KEY (avoids r.jina.ai rate limits on shared IPs)
               INSTAGRAM_PROFILE_HTML=<file> (parse a saved page copy offline)
@@ -24,6 +30,7 @@ import os
 import re
 import sys
 import logging
+import traceback
 from datetime import datetime, timezone
 
 from bs4 import BeautifulSoup
@@ -36,6 +43,8 @@ POST_URL_RE = re.compile(r"https://www\.instagram\.com/p/([A-Za-z0-9_-]{5,})/?")
 ACCESSIBILITY_DATE_RE = re.compile(r"on (\w+ \d{1,2}, \d{4})")
 TITLE_MAX_LEN = 80
 MAX_ITEMS = 100
+WARNING_ID_SUFFIX = "#build-status"
+WARNING_TITLE = "Feed build failed"
 
 FEEDS_DIR = os.path.normpath(
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "feeds")
@@ -203,6 +212,85 @@ def profile_metadata(html: str) -> dict:
 
 
 # --------------------------------------------------------------------------
+# Feed failure warning + metadata
+# --------------------------------------------------------------------------
+
+def previous_feed_metadata(out: str) -> dict:
+    """Channel-level title/description of the previous feed file, if any."""
+    if not os.path.exists(out):
+        return {}
+    try:
+        with open(out, encoding="utf-8") as f:
+            soup = BeautifulSoup(f.read(), "xml")
+    except Exception as exc:  # noqa: BLE001
+        log.warning("could not parse previous feed metadata (%s)", exc)
+        return {}
+    title = soup.find("title")
+    description = soup.find("description")
+    if title is None:
+        return {}
+    return {
+        "title": title.get_text(" ", strip=True),
+        "description": description.get_text(" ", strip=True) if description else "",
+    }
+
+
+def _feed_kwargs(account: str, meta: dict) -> dict:
+    """write_feed metadata derived from profile meta, falling back to the
+    previous feed's channel metadata (which failure builds don't have)."""
+    url = instagram_url(account)
+    prev = previous_feed_metadata(output_path(account))
+    name = meta.get("full_name") or account
+    title = f"{name} on Instagram"
+    if not meta.get("full_name") and prev.get("title"):
+        title = prev["title"]
+    description = (
+        meta.get("biography")
+        or prev.get("description")
+        or f"Instagram posts by {name} (auto-generated from {url})"
+    )
+    return {
+        "feed_id": url,
+        "title": title,
+        "link": url,
+        "description": description,
+        "language": "en",
+    }
+
+
+def without_warning(previous: dict[str, dict]) -> dict[str, dict]:
+    """Drop stale build-failure entries once the feed builds again."""
+    return {
+        key: value
+        for key, value in previous.items()
+        if not key.endswith(WARNING_ID_SUFFIX)
+    }
+
+
+def write_warning_feed(account: str, exc: Exception) -> int:
+    """Record a failed build as an item in the feed, keeping previous items."""
+    log.error("feed build failed: %s", exc)
+    stacktrace = traceback.format_exc()
+    url = instagram_url(account)
+    warning = {
+        "id": url + WARNING_ID_SUFFIX,
+        "title": WARNING_TITLE,
+        "link": url,
+        "description": str(exc) or repr(exc),
+        "published": datetime.now(timezone.utc),
+        "content": (
+            "<p>The last feed update failed; the items below are the most "
+            "recent posts known.</p>\n"
+            f"<pre>{html_mod.escape(stacktrace, quote=False)}</pre>"
+        ),
+    }
+    out = output_path(account)
+    merged = common.merge_items(common.load_previous(out), [warning])
+    common.write_feed(list(merged.values()), out, MAX_ITEMS, **_feed_kwargs(account, {}))
+    return 0
+
+
+# --------------------------------------------------------------------------
 # Main
 # --------------------------------------------------------------------------
 
@@ -219,12 +307,12 @@ def main(argv=None) -> int:
         return 2
 
     url = instagram_url(account)
+    out = output_path(account)
     offline = bool(os.environ.get("INSTAGRAM_PROFILE_HTML"))
     try:
         page, source = common.fetch_page(url, "INSTAGRAM_PROFILE_HTML")
     except Exception as exc:  # noqa: BLE001
-        log.error("all fetch attempts failed: %s", exc)
-        return 1
+        return write_warning_feed(account, exc)
 
     items = parse_direct(page)
     if not items and not offline:
@@ -232,31 +320,20 @@ def main(argv=None) -> int:
             try:
                 page = common.fetch_jina(url)
             except Exception as exc:  # noqa: BLE001
-                log.error("jina fallback fetch failed: %s", exc)
-                return 1
+                return write_warning_feed(account, exc)
         items = parse_dom(page)
 
     if not items:
-        log.error("no posts parsed — page layout may have changed; keeping previous feed")
-        return 1
+        try:
+            raise RuntimeError(
+                "no posts parsed — page layout may have changed; keeping previous feed"
+            )
+        except RuntimeError as exc:
+            return write_warning_feed(account, exc)
 
     meta = profile_metadata(page)
-    name = meta.get("full_name") or account
-    out = output_path(account)
-    merged = common.merge_items(common.load_previous(out), items)
-    common.write_feed(
-        list(merged.values()),
-        out,
-        MAX_ITEMS,
-        feed_id=url,
-        title=f"{name} on Instagram",
-        link=url,
-        description=(
-            meta.get("biography")
-            or f"Instagram posts by {name} (auto-generated from {url})"
-        ),
-        language="en",
-    )
+    merged = common.merge_items(without_warning(common.load_previous(out)), items)
+    common.write_feed(list(merged.values()), out, MAX_ITEMS, **_feed_kwargs(account, meta))
     return 0
 
 
