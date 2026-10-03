@@ -170,7 +170,104 @@ class TestMain:
         monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
         assert build_instagram_feed.main(["../evil"]) == 2
 
-    def test_unparseable_page_keeps_previous_feed(self, tmp_path, monkeypatch):
+
+class TestFailureWarning:
+    """Soft failures must end up as an item inside the feed, exit 0."""
+
+    @staticmethod
+    def _fail_fetch(monkeypatch, message="direct fetch exploded"):
+        def boom(*args, **kwargs):
+            raise RuntimeError(message)
+
+        monkeypatch.setattr(build_instagram_feed.common, "fetch_page", boom)
+
+    def test_fetch_failure_writes_warning_feed_and_exits_zero(
+        self, tmp_path, monkeypatch
+    ):
+        monkeypatch.delenv("INSTAGRAM_PROFILE_HTML", raising=False)
+        self._fail_fetch(monkeypatch)
+        monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+
+        xml = (tmp_path / "instagram-tiny_ruins.xml").read_text(encoding="utf-8")
+        assert "<title>Feed build failed</title>" in xml
+        assert "direct fetch exploded" in xml
+        assert "Traceback (most recent call last)" in xml
+        assert "<pubDate>" in xml
+
+    def test_jina_fallback_failure_writes_warning_feed(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("INSTAGRAM_PROFILE_HTML", raising=False)
+        monkeypatch.setattr(
+            build_instagram_feed.common,
+            "fetch_page",
+            lambda *a, **k: ("<html>login wall</html>", "direct"),
+        )
+
+        def boom(url):
+            raise RuntimeError("jina exploded")
+
+        monkeypatch.setattr(build_instagram_feed.common, "fetch_jina", boom)
+        monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+
+        xml = (tmp_path / "instagram-tiny_ruins.xml").read_text(encoding="utf-8")
+        assert "<title>Feed build failed</title>" in xml
+        assert "jina exploded" in xml
+
+    def test_repeated_failure_replaces_warning_entry(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("INSTAGRAM_PROFILE_HTML", raising=False)
+        self._fail_fetch(monkeypatch)
+        monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+
+        xml = (tmp_path / "instagram-tiny_ruins.xml").read_text(encoding="utf-8")
+        assert xml.count("<item>") == 1
+        assert xml.count("Feed build failed") == 1
+
+    def test_failure_keeps_previous_items(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("INSTAGRAM_PROFILE_HTML", FIXTURE)
+        monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+
+        monkeypatch.delenv("INSTAGRAM_PROFILE_HTML")
+        self._fail_fetch(monkeypatch)
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+
+        xml = (tmp_path / "instagram-tiny_ruins.xml").read_text(encoding="utf-8")
+        assert xml.count("<item>") == 13
+        assert "<title>Feed build failed</title>" in xml
+
+    def test_success_removes_stale_warning(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("INSTAGRAM_PROFILE_HTML", raising=False)
+        self._fail_fetch(monkeypatch)
+        monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+
+        monkeypatch.setenv("INSTAGRAM_PROFILE_HTML", FIXTURE)
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+
+        xml = (tmp_path / "instagram-tiny_ruins.xml").read_text(encoding="utf-8")
+        assert xml.count("<item>") == 12
+        assert "Feed build failed" not in xml
+
+    def test_unparseable_page_writes_warning_feed(self, tmp_path, monkeypatch):
         monkeypatch.setenv("INSTAGRAM_PROFILE_HTML", "<html>login wall</html>")
         monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
-        assert build_instagram_feed.main(["tiny_ruins"]) == 1
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+
+        xml = (tmp_path / "instagram-tiny_ruins.xml").read_text(encoding="utf-8")
+        assert "<title>Feed build failed</title>" in xml
+        assert xml.count("<item>") == 1
+
+    def test_warning_feed_keeps_previous_metadata(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("INSTAGRAM_PROFILE_HTML", FIXTURE)
+        monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+
+        monkeypatch.delenv("INSTAGRAM_PROFILE_HTML")
+        self._fail_fetch(monkeypatch)
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+
+        xml = (tmp_path / "instagram-tiny_ruins.xml").read_text(encoding="utf-8")
+        assert "<title>Tiny Ruins on Instagram</title>" in xml
