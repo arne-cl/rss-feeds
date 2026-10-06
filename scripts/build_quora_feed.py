@@ -13,6 +13,12 @@ so this script:
 The profile page only shows the latest few answers, so newly parsed items are
 merged into the previous feed file to keep history and preserve dates.
 
+Soft failures (fetch, fallback fetch, unparseable page) do not abort with a
+non-zero exit: they are recorded as a rolling "Feed build failed" item
+(error + stacktrace) inside the feed, keeping all previous items, so feed
+subscribers can see the breakage. The next successful build removes that
+item again.
+
 Usage: python scripts/build_quora_feed.py
 Optional env: JINA_API_KEY (avoids r.jina.ai rate limits on shared IPs)
               QUORA_PROFILE_HTML=<file> (parse a saved page copy offline)
@@ -202,38 +208,48 @@ def parse_dom(html: str) -> list[dict]:
 
 def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
-
-    try:
-        html, source = common.fetch_page(PROFILE_URL, "QUORA_PROFILE_HTML")
-    except Exception as exc:  # noqa: BLE001
-        log.error("all fetch attempts failed: %s", exc)
-        return 1
-
-    items = parse_direct(html) if source == "direct" else []
-    if not items:
-        if source == "direct":
-            try:
-                html = common.fetch_jina(PROFILE_URL)
-            except Exception as exc:  # noqa: BLE001
-                log.error("jina fallback fetch failed: %s", exc)
-                return 1
-        items = parse_dom(html)
-
-    if not items:
-        log.error("no answers parsed — page layout may have changed; keeping previous feed")
-        return 1
-
-    merged = common.merge_items(common.load_previous(OUTPUT_PATH), items)
-    common.write_feed(
-        list(merged.values()),
-        OUTPUT_PATH,
-        MAX_ITEMS,
+    offline = bool(os.environ.get("QUORA_PROFILE_HTML"))
+    kwargs = dict(
         feed_id=PROFILE_URL,
         title=FEED_TITLE,
         link=PROFILE_URL,
         description=f"Answers by Alan Kay on Quora (auto-generated from {PROFILE_URL})",
         language="en",
     )
+
+    try:
+        html, source = common.fetch_page(PROFILE_URL, "QUORA_PROFILE_HTML")
+    except Exception as exc:  # noqa: BLE001
+        return common.write_warning_feed(
+            OUTPUT_PATH, MAX_ITEMS, PROFILE_URL, exc, **kwargs
+        )
+
+    items = parse_direct(html) if source == "direct" else []
+    if not items and not offline:
+        if source == "direct":
+            try:
+                html = common.fetch_jina(PROFILE_URL)
+            except Exception as exc:  # noqa: BLE001
+                return common.write_warning_feed(
+                    OUTPUT_PATH, MAX_ITEMS, PROFILE_URL, exc, **kwargs
+                )
+        items = parse_dom(html)
+
+    if not items:
+        # Rate-limit pages and layout changes look identical in "0 answers";
+        # log what was actually fetched so CI can tell them apart.
+        log.error("page excerpt: %s", re.sub(r"\s+", " ", html[:300]))
+        exc = RuntimeError(
+            "no answers parsed — page layout may have changed; keeping previous feed"
+        )
+        return common.write_warning_feed(
+            OUTPUT_PATH, MAX_ITEMS, PROFILE_URL, exc, **kwargs
+        )
+
+    merged = common.merge_items(
+        common.without_warning(common.load_previous(OUTPUT_PATH)), items
+    )
+    common.write_feed(list(merged.values()), OUTPUT_PATH, MAX_ITEMS, **kwargs)
     return 0
 
 
