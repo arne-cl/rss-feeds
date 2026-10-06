@@ -503,11 +503,14 @@ class TestFailureWarning:
         assert "<item>" in xml
 
     def test_success_removes_stale_warning(self, tmp_path, monkeypatch):
+        common_mod = build_klum_feed.common
+        real_fetch_page = common_mod.fetch_page
         monkeypatch.delenv("KLUM_NEWS_HTML", raising=False)
         self._fail_fetch(monkeypatch)
         redirect_output(monkeypatch, tmp_path)
         assert build_klum_feed.main() == 0
 
+        monkeypatch.setattr(common_mod, "fetch_page", real_fetch_page)
         monkeypatch.setenv("KLUM_NEWS_HTML", FIXTURE)
         run_offline(monkeypatch)
         assert build_klum_feed.main() == 0

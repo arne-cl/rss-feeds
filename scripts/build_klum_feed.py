@@ -435,33 +435,34 @@ def embed_content(items: list[dict], previous: dict[str, dict]) -> None:
 
 def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
-
-    try:
-        html, _source = common.fetch_page(PAGE_URL, "KLUM_NEWS_HTML")
-    except Exception as exc:  # noqa: BLE001
-        log.error("fetch failed: %s", exc)
-        return 1
-
-    previous = common.load_previous(OUTPUT_PATH)
-    items = parse_klum(html)
-    if not items:
-        log.error("no news items parsed — page layout may have changed; keeping previous feed")
-        return 1
-
-    embed_content(items, previous)
-    attach_media_lengths(items)
-    merged = common.merge_items(previous, items)
-    merged = prune_superseded(merged, items)
-    common.write_feed(
-        list(merged.values()),
-        OUTPUT_PATH,
-        MAX_ITEMS,
+    kwargs = dict(
         feed_id=PAGE_URL,
         title=FEED_TITLE,
         link=PAGE_URL,
         description=f"News von Günther Klum (auto-generated from {PAGE_URL})",
         language="de",
     )
+
+    try:
+        html, _source = common.fetch_page(PAGE_URL, "KLUM_NEWS_HTML")
+    except Exception as exc:  # noqa: BLE001
+        return common.write_warning_feed(OUTPUT_PATH, MAX_ITEMS, PAGE_URL, exc, **kwargs)
+
+    previous = common.load_previous(OUTPUT_PATH)
+    items = parse_klum(html)
+    if not items:
+        exc = RuntimeError(
+            "no news items parsed — page layout may have changed; keeping previous feed"
+        )
+        return common.write_warning_feed(OUTPUT_PATH, MAX_ITEMS, PAGE_URL, exc, **kwargs)
+
+    embed_content(items, previous)
+    attach_media_lengths(items)
+    merged = common.merge_items(
+        common.without_warning(previous), items
+    )
+    merged = prune_superseded(merged, items)
+    common.write_feed(list(merged.values()), OUTPUT_PATH, MAX_ITEMS, **kwargs)
     return 0
 
 
