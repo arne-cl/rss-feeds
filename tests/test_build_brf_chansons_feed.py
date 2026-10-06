@@ -363,10 +363,92 @@ class TestMainOffline:
             "https://1.brf.be/wp-content/"
         )
 
-    def test_broken_archive_keeps_previous_feed(self, monkeypatch, tmp_path):
+def redirect_output(monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        build_brf_chansons_feed, "OUTPUT_PATH", str(tmp_path / "brf1-chansons.xml")
+    )
+
+
+def run_offline(monkeypatch):
+    """Neutralize the live enrichment fetches (length HEAD requests)."""
+    monkeypatch.setenv("CHANSONS_PAGES_DIR", os.path.join(FIXTURES, "brf-chansons-pages"))
+    monkeypatch.setenv("CHANSONS_PLAY_DIR", os.path.join(FIXTURES, "brf-chansons-play"))
+    monkeypatch.setattr(build_brf_chansons_feed, "fetch_content_length", lambda url: 0)
+
+
+class TestFailureWarning:
+    """Soft failures must end up as an item inside the feed, exit 0."""
+
+    @staticmethod
+    def _fail_fetch(monkeypatch, message="direct fetch exploded"):
+        def boom(*args, **kwargs):
+            raise RuntimeError(message)
+
+        monkeypatch.setattr(build_brf_chansons_feed.common, "fetch_page", boom)
+
+    def test_fetch_failure_writes_warning_feed_and_exits_zero(
+        self, tmp_path, monkeypatch, capsys
+    ):
+        monkeypatch.delenv("CHANSONS_HTML", raising=False)
+        self._fail_fetch(monkeypatch)
+        redirect_output(monkeypatch, tmp_path)
+        assert build_brf_chansons_feed.main() == 0
+
+        xml = (tmp_path / "brf1-chansons.xml").read_text(encoding="utf-8")
+        assert "<title>Feed build failed</title>" in xml
+        assert "direct fetch exploded" in xml
+        assert "Traceback (most recent call last)" in xml
+        assert "<pubDate>" in xml
+        assert capsys.readouterr().out.count("::warning::") == 1
+
+    def test_broken_archive_writes_warning_feed(self, tmp_path, monkeypatch):
         empty = tmp_path / "empty.html"
         empty.write_text("<html></html>", encoding="utf-8")
         monkeypatch.setenv("CHANSONS_HTML", str(empty))
-        monkeypatch.setattr(build_brf_chansons_feed, "OUTPUT_PATH", str(tmp_path / "f.xml"))
-        assert build_brf_chansons_feed.main() == 1
-        assert not (tmp_path / "f.xml").exists()
+        redirect_output(monkeypatch, tmp_path)
+        assert build_brf_chansons_feed.main() == 0
+
+        xml = (tmp_path / "brf1-chansons.xml").read_text(encoding="utf-8")
+        assert "<title>Feed build failed</title>" in xml
+        assert xml.count("<item>") == 1
+
+    def test_repeated_failure_replaces_warning_entry(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("CHANSONS_HTML", raising=False)
+        self._fail_fetch(monkeypatch)
+        redirect_output(monkeypatch, tmp_path)
+        assert build_brf_chansons_feed.main() == 0
+        assert build_brf_chansons_feed.main() == 0
+
+        xml = (tmp_path / "brf1-chansons.xml").read_text(encoding="utf-8")
+        assert xml.count("<item>") == 1
+        assert xml.count("Feed build failed") == 1
+
+    def test_failure_keeps_previous_items(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("CHANSONS_HTML", ARCHIVE)
+        run_offline(monkeypatch)
+        redirect_output(monkeypatch, tmp_path)
+        assert build_brf_chansons_feed.main() == 0
+        xml = (tmp_path / "brf1-chansons.xml").read_text(encoding="utf-8")
+        items_before = xml.count("<item>")
+        assert items_before > 0
+
+        monkeypatch.delenv("CHANSONS_HTML")
+        self._fail_fetch(monkeypatch)
+        assert build_brf_chansons_feed.main() == 0
+
+        xml = (tmp_path / "brf1-chansons.xml").read_text(encoding="utf-8")
+        assert xml.count("<item>") == items_before + 1
+        assert "<title>Feed build failed</title>" in xml
+
+    def test_success_removes_stale_warning(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("CHANSONS_HTML", raising=False)
+        self._fail_fetch(monkeypatch)
+        redirect_output(monkeypatch, tmp_path)
+        assert build_brf_chansons_feed.main() == 0
+
+        monkeypatch.setenv("CHANSONS_HTML", ARCHIVE)
+        run_offline(monkeypatch)
+        assert build_brf_chansons_feed.main() == 0
+
+        xml = (tmp_path / "brf1-chansons.xml").read_text(encoding="utf-8")
+        assert "Feed build failed" not in xml
