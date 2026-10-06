@@ -273,29 +273,7 @@ SHOW_IMAGE = (
 
 def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
-
-    try:
-        html, _source = common.fetch_page(SHOW_URL, ARCHIVE_HTML_ENV)
-    except Exception as exc:  # noqa: BLE001
-        log.error("fetch failed: %s", exc)
-        return 1
-
-    previous = common.load_previous(OUTPUT_PATH)
-    items = parse_archive(html)
-    if not items:
-        log.error(
-            "no episodes parsed — page layout may have changed; "
-            "keeping previous feed"
-        )
-        return 1
-
-    enrich_items(items, previous)
-    attach_audio_lengths(items)
-    merged = common.merge_items(previous, items)
-    common.write_feed(
-        list(merged.values()),
-        OUTPUT_PATH,
-        MAX_ITEMS,
+    kwargs = dict(
         feed_id=SHOW_URL,
         title=FEED_TITLE,
         link=SHOW_URL,
@@ -307,6 +285,27 @@ def main() -> int:
         itunes_category="Music",
         itunes_explicit="no",
     )
+
+    try:
+        html, _source = common.fetch_page(SHOW_URL, ARCHIVE_HTML_ENV)
+    except Exception as exc:  # noqa: BLE001
+        return common.write_warning_feed(OUTPUT_PATH, MAX_ITEMS, SHOW_URL, exc, **kwargs)
+
+    previous = common.load_previous(OUTPUT_PATH)
+    items = parse_archive(html)
+    if not items:
+        exc = RuntimeError(
+            "no episodes parsed — page layout may have changed; "
+            "keeping previous feed"
+        )
+        return common.write_warning_feed(OUTPUT_PATH, MAX_ITEMS, SHOW_URL, exc, **kwargs)
+
+    enrich_items(items, previous)
+    attach_audio_lengths(items)
+    merged = common.merge_items(
+        common.without_warning(previous), items
+    )
+    common.write_feed(list(merged.values()), OUTPUT_PATH, MAX_ITEMS, **kwargs)
     return 0
 
 

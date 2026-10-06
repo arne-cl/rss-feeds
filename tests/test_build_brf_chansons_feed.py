@@ -441,11 +441,14 @@ class TestFailureWarning:
         assert "<title>Feed build failed</title>" in xml
 
     def test_success_removes_stale_warning(self, tmp_path, monkeypatch):
+        common_mod = build_brf_chansons_feed.common
+        real_fetch_page = common_mod.fetch_page
         monkeypatch.delenv("CHANSONS_HTML", raising=False)
         self._fail_fetch(monkeypatch)
         redirect_output(monkeypatch, tmp_path)
         assert build_brf_chansons_feed.main() == 0
 
+        monkeypatch.setattr(common_mod, "fetch_page", real_fetch_page)
         monkeypatch.setenv("CHANSONS_HTML", ARCHIVE)
         run_offline(monkeypatch)
         assert build_brf_chansons_feed.main() == 0
