@@ -624,3 +624,128 @@ class TestBuildFeedItunes:
             language="de",
         ).decode("utf-8")
         assert "<item>" in xml
+
+
+class TestBuildWarningItem:
+    def test_item_fields(self):
+        try:
+            raise RuntimeError("boom")
+        except RuntimeError as exc:
+            item = common.build_warning_item("https://example.com/source/", exc)
+        assert item["id"] == "https://example.com/source/#build-status"
+        assert item["title"] == "Feed build failed"
+        assert item["link"] == "https://example.com/source/"
+        assert item["description"] == "boom"
+        assert item["published"].tzinfo is not None
+
+    def test_content_contains_traceback(self):
+        try:
+            raise RuntimeError("boom")
+        except RuntimeError as exc:
+            item = common.build_warning_item("https://example.com/s/", exc)
+        assert "Traceback (most recent call last)" in item["content"]
+        assert "RuntimeError: boom" in item["content"]
+
+    def test_content_escapes_html(self):
+        try:
+            raise RuntimeError("<script>alert(1)</script>")
+        except RuntimeError as exc:
+            item = common.build_warning_item("https://example.com/s/", exc)
+        assert "<script>" not in item["content"]
+        assert "&lt;script&gt;" in item["content"]
+
+    def test_works_outside_except_block(self):
+        exc = ValueError("no active handler")
+        item = common.build_warning_item("https://example.com/s/", exc)
+        assert item["description"] == "no active handler"
+        assert "ValueError" in item["content"]
+
+
+class TestWithoutWarning:
+    def test_drops_build_status_entries(self):
+        previous = {
+            "https://example.com/a": {"id": "https://example.com/a"},
+            "https://example.com/a#build-status": {
+                "id": "https://example.com/a#build-status"
+            },
+        }
+        assert set(common.without_warning(previous)) == {"https://example.com/a"}
+
+    def test_keeps_link_containing_hash(self):
+        previous = {
+            "https://example.com/a#build": {"id": "https://example.com/a#build"},
+        }
+        assert set(common.without_warning(previous)) == {"https://example.com/a#build"}
+
+
+class TestWriteWarningFeed:
+    def kwargs(self):
+        return dict(
+            feed_id="https://example.com/source/",
+            title="Example feed",
+            link="https://example.com/source/",
+            description="An example feed",
+            language="en",
+        )
+
+    def test_writes_previous_items_plus_warning_and_returns_zero(self, tmp_path, capsys):
+        out = str(tmp_path / "feed.xml")
+        previous_path = write_feed(
+            tmp_path,
+            """<?xml version="1.0" encoding="UTF-8"?>
+            <rss version="2.0"><channel>
+              <item>
+                <title>Old post</title>
+                <link>https://example.com/a</link>
+                <description>hi</description>
+                <pubDate>Mon, 01 Sep 2025 10:00:00 GMT</pubDate>
+              </item>
+            </channel></rss>""",
+        )
+        previous = common.load_previous(previous_path)
+        common.write_feed(
+            list(previous.values()), out, 100, **self.kwargs()
+        )
+        common.write_warning_feed(
+            out, 100, "https://example.com/source/", RuntimeError("boom"), **self.kwargs()
+        )
+        assert capsys.readouterr().out.count("::warning::") == 1
+        items = common.load_previous(out)
+        assert set(items) == {
+            "https://example.com/a",
+            "https://example.com/source/#build-status",
+        }
+        warning = items["https://example.com/source/#build-status"]
+        assert warning["title"] == "Feed build failed"
+        assert warning["description"] == "boom"
+
+    def test_works_without_previous_feed(self, tmp_path):
+        out = str(tmp_path / "fresh.xml")
+        rc = common.write_warning_feed(
+            out, 100, "https://example.com/source/", RuntimeError("boom"), **self.kwargs()
+        )
+        assert rc == 0
+        items = common.load_previous(out)
+        assert set(items) == {"https://example.com/source/#build-status"}
+
+    def test_annotation_is_single_line(self, tmp_path, capsys):
+        out = str(tmp_path / "feed.xml")
+        common.write_warning_feed(
+            out, 100, "https://example.com/source/",
+            RuntimeError("line one\nline two"), **self.kwargs(),
+        )
+        out_text = capsys.readouterr().out
+        warning_line = next(l for l in out_text.splitlines() if "::warning::" in l)
+        assert "line one line two" in warning_line
+
+    def test_repeated_failure_keeps_single_warning(self, tmp_path):
+        out = str(tmp_path / "feed.xml")
+        common.write_warning_feed(
+            out, 100, "https://example.com/source/", RuntimeError("first"), **self.kwargs()
+        )
+        common.write_warning_feed(
+            out, 100, "https://example.com/source/", RuntimeError("second"), **self.kwargs()
+        )
+        items = common.load_previous(out)
+        assert set(items) == {"https://example.com/source/#build-status"}
+        assert items["https://example.com/source/#build-status"]["description"] == "second"

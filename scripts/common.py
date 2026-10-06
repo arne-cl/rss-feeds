@@ -5,11 +5,14 @@ Handles fetching (direct with Chrome TLS impersonation, r.jina.ai fallback),
 merging new items into the previous feed file, and RSS assembly via feedgen.
 """
 
+import html as html_mod
 import json
 import logging
 import os
 import re
+import sys
 import time
+import traceback
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 
@@ -190,6 +193,60 @@ def merge_items(previous: dict[str, dict], items: list[dict]) -> dict[str, dict]
         for key, value in merged.items()
         if key in new_ids or not superseded(value)
     }
+
+
+# --------------------------------------------------------------------------
+# Soft failures
+# --------------------------------------------------------------------------
+
+WARNING_ID_SUFFIX = "#build-status"
+WARNING_TITLE = "Feed build failed"
+
+
+def build_warning_item(warning_url: str, exc: Exception) -> dict:
+    """Item describing a failed build (stable id so reruns replace it)."""
+    stacktrace = "".join(
+        traceback.format_exception(type(exc), exc, exc.__traceback__)
+    )
+    return {
+        "id": warning_url + WARNING_ID_SUFFIX,
+        "title": WARNING_TITLE,
+        "link": warning_url,
+        "description": str(exc) or repr(exc),
+        "published": datetime.now(timezone.utc),
+        "content": (
+            "<p>The last feed update failed; the items below are the most "
+            "recent entries known.</p>\n"
+            f"<pre>{html_mod.escape(stacktrace, quote=False)}</pre>"
+        ),
+    }
+
+
+def without_warning(previous: dict[str, dict]) -> dict[str, dict]:
+    """Drop stale build-failure entries once the feed builds again."""
+    return {
+        key: value
+        for key, value in previous.items()
+        if not key.endswith(WARNING_ID_SUFFIX)
+    }
+
+
+def write_warning_feed(
+    output_path: str, max_items: int, warning_url: str, exc: Exception, **metadata
+) -> int:
+    """Record a failed build as an item in the feed, keeping previous items.
+
+    Also prints a GitHub Actions ``::warning::`` annotation (single line) so
+    the breakage is visible on the CI run, not only inside the feed XML.
+    Returns 0 so one flaky source does not abort the whole workflow.
+    """
+    log.error("feed build failed: %s", exc)
+    message = " ".join(str(exc).split()) or repr(exc)
+    print(f"::warning::{WARNING_TITLE}: {message}")
+    warning = build_warning_item(warning_url, exc)
+    merged = merge_items(load_previous(output_path), [warning])
+    write_feed(list(merged.values()), output_path, max_items, **metadata)
+    return 0
 
 
 # --------------------------------------------------------------------------
