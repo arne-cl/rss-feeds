@@ -30,7 +30,6 @@ import os
 import re
 import sys
 import logging
-import traceback
 from datetime import datetime, timezone
 
 from bs4 import BeautifulSoup
@@ -43,8 +42,6 @@ POST_URL_RE = re.compile(r"https://www\.instagram\.com/p/([A-Za-z0-9_-]{5,})/?")
 ACCESSIBILITY_DATE_RE = re.compile(r"on (\w+ \d{1,2}, \d{4})")
 TITLE_MAX_LEN = 80
 MAX_ITEMS = 100
-WARNING_ID_SUFFIX = "#build-status"
-WARNING_TITLE = "Feed build failed"
 
 FEEDS_DIR = os.path.normpath(
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "feeds")
@@ -258,36 +255,15 @@ def _feed_kwargs(account: str, meta: dict) -> dict:
     }
 
 
-def without_warning(previous: dict[str, dict]) -> dict[str, dict]:
-    """Drop stale build-failure entries once the feed builds again."""
-    return {
-        key: value
-        for key, value in previous.items()
-        if not key.endswith(WARNING_ID_SUFFIX)
-    }
-
-
 def write_warning_feed(account: str, exc: Exception) -> int:
     """Record a failed build as an item in the feed, keeping previous items."""
-    log.error("feed build failed: %s", exc)
-    stacktrace = traceback.format_exc()
-    url = instagram_url(account)
-    warning = {
-        "id": url + WARNING_ID_SUFFIX,
-        "title": WARNING_TITLE,
-        "link": url,
-        "description": str(exc) or repr(exc),
-        "published": datetime.now(timezone.utc),
-        "content": (
-            "<p>The last feed update failed; the items below are the most "
-            "recent posts known.</p>\n"
-            f"<pre>{html_mod.escape(stacktrace, quote=False)}</pre>"
-        ),
-    }
-    out = output_path(account)
-    merged = common.merge_items(common.load_previous(out), [warning])
-    common.write_feed(list(merged.values()), out, MAX_ITEMS, **_feed_kwargs(account, {}))
-    return 0
+    return common.write_warning_feed(
+        output_path(account),
+        MAX_ITEMS,
+        instagram_url(account),
+        exc,
+        **_feed_kwargs(account, {}),
+    )
 
 
 # --------------------------------------------------------------------------
@@ -332,7 +308,7 @@ def main(argv=None) -> int:
             return write_warning_feed(account, exc)
 
     meta = profile_metadata(page)
-    merged = common.merge_items(without_warning(common.load_previous(out)), items)
+    merged = common.merge_items(common.without_warning(common.load_previous(out)), items)
     common.write_feed(list(merged.values()), out, MAX_ITEMS, **_feed_kwargs(account, meta))
     return 0
 
