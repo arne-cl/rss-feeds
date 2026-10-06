@@ -7,12 +7,22 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <language>de</language>
-    <lastBuildDate>Fri, 02 Oct 2026 15:04:15 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 06 Oct 2026 09:17:44 +0000</lastBuildDate>
     <itunes:author>BRF1</itunes:author>
     <itunes:category text="Music"/>
     <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2015/06/CLF-1420x968.jpg"/>
     <itunes:explicit>no</itunes:explicit>
     <itunes:summary>Eine Sendung, die, wenn es sie nicht schon seit über 30 Jahren geben würde, für Ostbelgien erfunden werden müsste. Am Schnittpunkt der Kulturen stellt der BRF französische Chansons, deutschsprachige Lieder und internationale Folk- und Worldmusic vor. Montag, 20 - 21 Uhr.</itunes:summary>
+    <item>
+      <title>Chansons, Lieder und Folk: 5. Oktober</title>
+      <link>https://1.brf.be/sendungen/chansons/1228132/</link>
+      <description>Mit Maaru Will.</description>
+      <content:encoded>&lt;p&gt;Maaru Will&lt;/p&gt;</content:encoded>
+      <guid isPermaLink="false">https://1.brf.be/sendungen/chansons/1228132/</guid>
+      <enclosure url="https://streaming2.brf.be/audio/2026/41/7acbd92c3b42f724442aa2c8b350c774.mp3" length="56388132" type="audio/mpeg"/>
+      <pubDate>Mon, 05 Oct 2026 21:00:00 +0200</pubDate>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2021/05/MarkusWill_ThierryCornelyBRF-600x400.jpg"/>
+    </item>
     <item>
       <title>Chansons, Lieder und Folk: Nichtseattle – Liebe als radikale, solidarische Praxis</title>
       <link>https://1.brf.be/sendungen/chansons/1227507/</link>
@@ -31,7 +41,7 @@
       <guid isPermaLink="false">https://1.brf.be/sendungen/chansons/1226713/</guid>
       <enclosure url="https://streaming2.brf.be/audio/2026/39/76c260b84f83390775881cfee986bc80.mp3" length="56429853" type="audio/mpeg"/>
       <pubDate>Mon, 21 Sep 2026 21:00:00 +0200</pubDate>
-      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2026/09/jxf-hi-res-credit-paige-prather-578x400.jpg"/>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2026/09/jxf-hi-res-credit-paige-prather-520x360.jpg"/>
     </item>
     <item>
       <title>Chansons, Lieder und Folk: Pokey LaFarge und sein skelettierter Rhythm &amp; Blues</title>
@@ -130,7 +140,6 @@
       <guid isPermaLink="false">https://1.brf.be/sendungen/chansons/1221394/</guid>
       <enclosure url="https://streaming2.brf.be/audio/2026/29/60fccbcce50ca6f3c17e101b6a5f9a41.mp3" length="56214892" type="audio/mpeg"/>
       <pubDate>Mon, 13 Jul 2026 21:00:00 +0200</pubDate>
-      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2026/07/person-tragt-gelbe-gummistiefel-im-uberfluteten-raum-1103737-540x360.jpg"/>
     </item>
   </channel>
 </rss>

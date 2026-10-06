@@ -7,7 +7,17 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 30 Sep 2026 20:22:21 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 06 Oct 2026 09:17:39 +0000</lastBuildDate>
+    <item>
+      <title>Feed build failed</title>
+      <link>https://www.quora.com/profile/Alan-Kay-11</link>
+      <description>no answers parsed — page layout may have changed; keeping previous feed</description>
+      <content:encoded>&lt;p&gt;The last feed update failed; the items below are the most recent entries known.&lt;/p&gt;
+&lt;pre&gt;RuntimeError: no answers parsed — page layout may have changed; keeping previous feed
+&lt;/pre&gt;</content:encoded>
+      <guid isPermaLink="false">https://www.quora.com/profile/Alan-Kay-11#build-status</guid>
+      <pubDate>Tue, 06 Oct 2026 09:17:39 +0000</pubDate>
+    </item>
     <item>
       <title>Hi Dr Kay, I've been researching the development of the GUI for a project recently and I've been wondering something: why did you feel that windows needed to be able to overlap in the first place? What was wrong with only having them side by side?</title>
       <link>https://www.quora.com/Hi-Dr-Kay-Ive-been-researching-the-development-of-the-GUI-for-a-project-recently-and-Ive-been-wondering-something-why-did-you-feel-that-windows-needed-to-be-able-to-overlap-in-the-first-place-What-was-wrong-with/answer/Alan-Kay-11</link>

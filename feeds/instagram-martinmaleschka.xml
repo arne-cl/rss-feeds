@@ -9,7 +9,20 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 03 Oct 2026 10:00:31 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 06 Oct 2026 09:18:16 +0000</lastBuildDate>
+    <item>
+      <title>Feed build failed</title>
+      <link>https://www.instagram.com/martinmaleschka/</link>
+      <description>no posts parsed — page layout may have changed; keeping previous feed</description>
+      <content:encoded>&lt;p&gt;The last feed update failed; the items below are the most recent entries known.&lt;/p&gt;
+&lt;pre&gt;Traceback (most recent call last):
+  File "/home/runner/work/rss-feeds/rss-feeds/scripts/build_instagram_feed.py", line 304, in main
+    raise RuntimeError(
+RuntimeError: no posts parsed — page layout may have changed; keeping previous feed
+&lt;/pre&gt;</content:encoded>
+      <guid isPermaLink="false">https://www.instagram.com/martinmaleschka/#build-status</guid>
+      <pubDate>Tue, 06 Oct 2026 09:18:16 +0000</pubDate>
+    </item>
     <item>
       <title>LA PATRIMOINE ARCHITECTURAL DE LA RDA: UNE HISTOIRE ALLEMANDE</title>
       <link>https://www.instagram.com/p/DdqN0n_ja75/</link>
