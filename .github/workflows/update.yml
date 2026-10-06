@@ -33,9 +33,10 @@ jobs:
           python scripts/build_quora_feed.py
           python scripts/build_klum_feed.py
           python scripts/build_brf_chansons_feed.py
-          # Instagram is the flakiest source, but a failed build is recorded
-          # as a "Feed build failed" item inside the feed (exit code 0), so
-          # it neither blocks the other feeds nor fails the workflow.
+          # All builders record soft failures (fetch, jina fallback, unparseable
+          # page) as a rolling "Feed build failed" item inside their feed and
+          # emit a ::warning:: annotation, so one flaky source neither blocks
+          # the other feeds nor fails the workflow.
           for account in tiny_ruins kultur_bei_racha_roger martinmaleschka tumvlt jamborjoanna; do
             python scripts/build_instagram_feed.py "$account"
           done
