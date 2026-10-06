@@ -410,3 +410,107 @@ class TestAttachMediaLengths:
                   "description": "t", "published": None}]
         build_klum_feed.attach_media_lengths(items)
         assert "enclosure" not in items[0]
+
+
+def redirect_output(monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        build_klum_feed, "OUTPUT_PATH", str(tmp_path / "klum-news.xml")
+    )
+
+
+def run_offline(monkeypatch):
+    """Neutralize the live enrichment fetches (article pages, HEAD requests)."""
+    monkeypatch.setenv("KLUM_PAGES_DIR", PAGES_DIR)
+    monkeypatch.setattr(
+        build_klum_feed,
+        "fetch_content_length",
+        lambda url: 0,
+    )
+
+
+class TestMain:
+    def test_offline_run_writes_feed(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("KLUM_NEWS_HTML", FIXTURE)
+        run_offline(monkeypatch)
+        redirect_output(monkeypatch, tmp_path)
+        assert build_klum_feed.main() == 0
+
+        xml = (tmp_path / "klum-news.xml").read_text(encoding="utf-8")
+        assert "<title>Günther Klum News</title>" in xml
+        assert "<item>" in xml
+
+
+class TestFailureWarning:
+    """Soft failures must end up as an item inside the feed, exit 0."""
+
+    @staticmethod
+    def _fail_fetch(monkeypatch, message="direct fetch exploded"):
+        def boom(*args, **kwargs):
+            raise RuntimeError(message)
+
+        monkeypatch.setattr(build_klum_feed.common, "fetch_page", boom)
+
+    def test_fetch_failure_writes_warning_feed_and_exits_zero(
+        self, tmp_path, monkeypatch, capsys
+    ):
+        monkeypatch.delenv("KLUM_NEWS_HTML", raising=False)
+        self._fail_fetch(monkeypatch)
+        redirect_output(monkeypatch, tmp_path)
+        assert build_klum_feed.main() == 0
+
+        xml = (tmp_path / "klum-news.xml").read_text(encoding="utf-8")
+        assert "<title>Feed build failed</title>" in xml
+        assert "direct fetch exploded" in xml
+        assert "Traceback (most recent call last)" in xml
+        assert "<pubDate>" in xml
+        assert capsys.readouterr().out.count("::warning::") == 1
+
+    def test_unparseable_page_writes_warning_feed(self, tmp_path, monkeypatch):
+        junk = tmp_path / "junk.html"
+        junk.write_text("<html>broken</html>", encoding="utf-8")
+        monkeypatch.setenv("KLUM_NEWS_HTML", str(junk))
+        run_offline(monkeypatch)
+        redirect_output(monkeypatch, tmp_path)
+        assert build_klum_feed.main() == 0
+
+        xml = (tmp_path / "klum-news.xml").read_text(encoding="utf-8")
+        assert "<title>Feed build failed</title>" in xml
+        assert xml.count("<item>") == 1
+
+    def test_repeated_failure_replaces_warning_entry(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("KLUM_NEWS_HTML", raising=False)
+        self._fail_fetch(monkeypatch)
+        redirect_output(monkeypatch, tmp_path)
+        assert build_klum_feed.main() == 0
+        assert build_klum_feed.main() == 0
+
+        xml = (tmp_path / "klum-news.xml").read_text(encoding="utf-8")
+        assert xml.count("<item>") == 1
+        assert xml.count("Feed build failed") == 1
+
+    def test_failure_keeps_previous_items(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("KLUM_NEWS_HTML", FIXTURE)
+        run_offline(monkeypatch)
+        redirect_output(monkeypatch, tmp_path)
+        assert build_klum_feed.main() == 0
+
+        monkeypatch.delenv("KLUM_NEWS_HTML")
+        self._fail_fetch(monkeypatch)
+        assert build_klum_feed.main() == 0
+
+        xml = (tmp_path / "klum-news.xml").read_text(encoding="utf-8")
+        assert "<title>Feed build failed</title>" in xml
+        assert "<item>" in xml
+
+    def test_success_removes_stale_warning(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("KLUM_NEWS_HTML", raising=False)
+        self._fail_fetch(monkeypatch)
+        redirect_output(monkeypatch, tmp_path)
+        assert build_klum_feed.main() == 0
+
+        monkeypatch.setenv("KLUM_NEWS_HTML", FIXTURE)
+        run_offline(monkeypatch)
+        assert build_klum_feed.main() == 0
+
+        xml = (tmp_path / "klum-news.xml").read_text(encoding="utf-8")
+        assert "Feed build failed" not in xml
