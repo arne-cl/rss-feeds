@@ -27,12 +27,13 @@ log = logging.getLogger("feed_common")
 # Fetching
 # --------------------------------------------------------------------------
 
-def fetch_direct(url: str) -> str:
+def fetch_direct(url: str, cookies: dict | None = None) -> str:
     r = creq.get(
         url,
         impersonate="chrome",
         timeout=30,
         headers={"Accept": "text/html", "Accept-Language": "en-US,en;q=0.9"},
+        cookies=cookies or {},
     )
     r.raise_for_status()
     return r.text

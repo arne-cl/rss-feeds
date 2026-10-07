@@ -274,3 +274,125 @@ class TestFailureWarning:
 
         xml = (tmp_path / "instagram-tiny_ruins.xml").read_text(encoding="utf-8")
         assert "<title>Tiny Ruins on Instagram</title>" in xml
+
+
+class _FakeResponse:
+    def __init__(self, text):
+        self.text = text
+
+    def raise_for_status(self):
+        pass
+
+
+class TestSessionCookieFallback:
+    """INSTAGRAM_SESSIONID retry when the anonymous fetch hits a login wall."""
+
+    JINA_HTML = '<a href="https://www.instagram.com/p/AbCdEf123/">fallback</a>'
+
+    @staticmethod
+    def _login_wall_fetch(monkeypatch):
+        monkeypatch.setattr(
+            build_instagram_feed.common,
+            "fetch_page",
+            lambda *a, **k: ("<html>login wall</html>", "direct"),
+        )
+
+    @staticmethod
+    def _mock_creq_get(monkeypatch, cookie_html, anonymous_ok=False):
+        """creq.get returns cookie_html when a sessionid cookie is present."""
+
+        def fake_get(url, **kwargs):
+            if kwargs.get("cookies", {}).get("sessionid"):
+                return _FakeResponse(cookie_html)
+            assert anonymous_ok, "unexpected anonymous direct fetch"
+            return _FakeResponse("<html>login wall</html>")
+
+        monkeypatch.setattr(build_instagram_feed.common.creq, "get", fake_get)
+
+    def test_fetch_with_session_passes_cookie(self, monkeypatch):
+        captured = {}
+
+        def fake_get(url, **kwargs):
+            captured.update(kwargs)
+            return _FakeResponse("session page")
+
+        monkeypatch.setattr(build_instagram_feed.common.creq, "get", fake_get)
+        monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
+
+        url = build_instagram_feed.instagram_url("tiny_ruins")
+        assert build_instagram_feed.fetch_with_session(url) == "session page"
+        assert captured["cookies"] == {"sessionid": "s3cret"}
+
+    def test_fetch_with_session_none_without_env(self, monkeypatch):
+        monkeypatch.delenv("INSTAGRAM_SESSIONID", raising=False)
+
+        def boom(url, **kwargs):
+            raise AssertionError("must not fetch without a session id")
+
+        monkeypatch.setattr(build_instagram_feed.common.creq, "get", boom)
+        assert build_instagram_feed.fetch_with_session("https://x/") is None
+
+    def test_login_wall_retries_with_session_cookie(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("INSTAGRAM_PROFILE_HTML", raising=False)
+        self._login_wall_fetch(monkeypatch)
+        with open(FIXTURE, encoding="utf-8") as f:
+            self._mock_creq_get(monkeypatch, f.read())
+        monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
+        monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
+
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+
+        xml = (tmp_path / "instagram-tiny_ruins.xml").read_text(encoding="utf-8")
+        assert xml.count("<item>") == 12
+        assert "Feed build failed" not in xml
+
+    def test_session_retry_failure_falls_through_to_jina(
+        self, tmp_path, monkeypatch
+    ):
+        monkeypatch.delenv("INSTAGRAM_PROFILE_HTML", raising=False)
+        self._login_wall_fetch(monkeypatch)
+        self._mock_creq_get(monkeypatch, "<html>still login wall</html>")
+        monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
+        monkeypatch.setattr(
+            build_instagram_feed.common,
+            "fetch_jina",
+            lambda url: self.JINA_HTML,
+        )
+        monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
+
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+
+        xml = (tmp_path / "instagram-tiny_ruins.xml").read_text(encoding="utf-8")
+        assert xml.count("<item>") == 1
+        assert "Feed build failed" not in xml
+
+    def test_no_cookie_skips_session_retry(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("INSTAGRAM_PROFILE_HTML", raising=False)
+        monkeypatch.delenv("INSTAGRAM_SESSIONID", raising=False)
+        self._login_wall_fetch(monkeypatch)
+        self._mock_creq_get(monkeypatch, "<html>unused</html>", anonymous_ok=False)
+        monkeypatch.setattr(
+            build_instagram_feed.common,
+            "fetch_jina",
+            lambda url: self.JINA_HTML,
+        )
+        monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
+
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+
+        xml = (tmp_path / "instagram-tiny_ruins.xml").read_text(encoding="utf-8")
+        assert xml.count("<item>") == 1
+
+    def test_offline_run_skips_session_retry(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("INSTAGRAM_PROFILE_HTML", "<html>login wall</html>")
+        monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
+
+        def boom(url, **kwargs):
+            raise AssertionError("offline mode must not fetch")
+
+        monkeypatch.setattr(build_instagram_feed.common.creq, "get", boom)
+        monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+
+        xml = (tmp_path / "instagram-tiny_ruins.xml").read_text(encoding="utf-8")
+        assert "<title>Feed build failed</title>" in xml

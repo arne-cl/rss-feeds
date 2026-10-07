@@ -7,7 +7,9 @@ Instagram provides no feeds and blocks most scrapers, so this script:
    Chrome TLS impersonation (curl_cffi) and parses the media objects embedded
    in the page's ``<script type="application/json">`` blobs (post shortcode,
    caption text, image URL, and a date string inside accessibility_caption).
-2. Falls back to the r.jina.ai reader proxy and parses the rendered DOM
+2. On a login wall (0 media nodes), retries the direct fetch once with the
+   ``INSTAGRAM_SESSIONID`` cookie, if set, and parses the embedded JSON again.
+3. Falls back to the r.jina.ai reader proxy and parses the rendered DOM
    (post links, image alt texts as titles).
 
 The profile page only shows the latest few posts, so newly parsed items are
@@ -21,6 +23,7 @@ item again.
 
 Usage: python scripts/build_instagram_feed.py <account>
 Optional env: JINA_API_KEY (avoids r.jina.ai rate limits on shared IPs)
+              INSTAGRAM_SESSIONID (login-wall fallback for the direct fetch)
               INSTAGRAM_PROFILE_HTML=<file> (parse a saved page copy offline)
 """
 
@@ -67,6 +70,18 @@ def instagram_url(account: str) -> str:
 
 def output_path(account: str) -> str:
     return os.path.join(FEEDS_DIR, f"instagram-{account.lower()}.xml")
+
+
+# --------------------------------------------------------------------------
+# Fetching
+# --------------------------------------------------------------------------
+
+def fetch_with_session(url: str) -> str | None:
+    """Direct fetch with the INSTAGRAM_SESSIONID cookie, or None if unset."""
+    session_id = os.environ.get("INSTAGRAM_SESSIONID")
+    if not session_id:
+        return None
+    return common.fetch_direct(url, cookies={"sessionid": session_id})
 
 
 # --------------------------------------------------------------------------
@@ -291,6 +306,12 @@ def main(argv=None) -> int:
         return write_warning_feed(account, exc)
 
     items = parse_direct(page)
+    if not items and not offline:
+        session_page = fetch_with_session(url)
+        if session_page is not None:
+            items = parse_direct(session_page)
+            if items:
+                page = session_page
     if not items and not offline:
         if source == "direct":
             try:
