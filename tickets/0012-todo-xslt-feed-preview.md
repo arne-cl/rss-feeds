@@ -64,9 +64,42 @@ documents, so the plan is a stylesheet + that PI in the generated feeds.
   `load_previous` round-trip on a PI-bearing feed). 192 passed.
 - `xsltproc` not installed; used `lxml.etree.XSLT` to transform
   `feeds/instagram-daxwerner.xml` and inspected the output HTML.
-- Visual check in Firefox still to be confirmed by the user
-  (`firefox feeds/instagram-daxwerner.xml`).
+- ~~Visual check in Firefox still to be confirmed by the user~~
+  **REOPENED**: user reported "looks terrible, no images in Firefox;
+  doesn't render at all in Chromium".
+
+## Reopened: file:// blocks the stylesheet (2026-10-07)
+
+Headless-browser screenshots (same engines as the user's: Firefox 157,
+Chromium 153) reproduce both failures and pin the cause:
+
+- file:// + external `.xsl` is **blocked in both browsers**. My earlier
+  claim "Firefox allows file:// stylesheets from the same directory" is
+  wrong for these versions: the real feed rendered as raw inline XML
+  text (even channel `docs`/`generator` text nodes visible), a minimal
+  `<doc/>` pair rendered blank. Chromium has no `--allow-file-access-
+  from-files` passed by default; Firefox has no equivalent flag at all.
+- libxslt (`lxml.etree.XSLT`) verification could never catch this — it
+  tests the transform, not the browser's file:// security policy.
+- Over HTTP (`python3 -m http.server`) the same mini fixture renders
+  fully in Firefox: XSLT + inline CSS + external CSS + inline JS +
+  external JS all work. So the committed feeds + stylesheet are fine;
+  only the *transport* was wrong.
+- Escape hatch tested and working in BOTH browsers from file://:
+  `href="data:text/xsl;base64,…"` PI (self-contained stylesheet).
+  Rejected for now — user prefers a local HTTP server over a ~3.4 KB
+  base64 blob per feed file.
+
+## New plan
+
+1. `scripts/preview_feeds.py`: serve `feeds/` on
+   `http://127.0.0.1:8321` (default), list feed URLs, optionally open
+   one feed directly in the browser. No feed/stylesheet changes.
+2. Acceptance: headless Firefox + Chromium (`--virtual-time-budget` so
+   CDN images load) screenshots of a real carousel entry showing **all
+   slides rendered** — checked before presenting to the user.
+3. README rewrite; kill diagnostic server on port 8775.
 
 ## Status
 
-done
+todo (round 2)
