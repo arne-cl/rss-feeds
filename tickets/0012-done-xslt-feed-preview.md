@@ -100,6 +100,33 @@ Chromium 153) reproduce both failures and pin the cause:
    slides rendered** — checked before presenting to the user.
 3. README rewrite; kill diagnostic server on port 8775.
 
+## Verification (round 2)
+
+- Red/green: 6 new tests for `preview_feeds.py` (`feeds_dir`,
+  `feed_links`, arg parsing). 198 passed.
+- Server smoke-tested: demo feed, stylesheet, images all HTTP 200.
+- **Acceptance evidence** (headless screenshots, checked before
+  presenting): `feeds/demo-carousel.xml` — built offline through the
+  real pipeline (`_api_item` with a synthetic `edge_sidecar_to_children`
+  node, the web_profile_info shape, since neither the committed feeds
+  nor the fixtures contain a real multi-slide carousel yet; every
+  committed item currently holds exactly 1 img = cover only).
+  - Chromium 153: all 4 slide images rendered, caption, permalink,
+    video item shows poster + working player (`--virtual-time-budget`
+    let the mp4 load).
+  - Firefox 157: same — 4 slides, poster + controls.
+  - Real `instagram-daxwerner.xml`: styled entries, CDN images load,
+    captions with `<br>` line breaks.
+- Screenshots: /tmp/opencode/demo-{chromium,ff}.png,
+  /tmp/opencode/daxwerner-chromium.png.
+- Caveat surfaced: multi-slide content only materializes in feeds once
+  a build runs with a valid `INSTAGRAM_SESSIONID` (cover-only direct
+  parses never gain slides — 1 img vs 1 img, so nothing richer to
+  restore). The preview shows whatever slides are stored.
+- Demo artifacts (`feeds/demo-*`, untracked) kept only for the user's
+  live review at http://127.0.0.1:8399/demo-carousel.xml; remove after
+  confirmation (before the next scheduled build!).
+
 ## Status
 
-todo (round 2)
+done (round 2)
