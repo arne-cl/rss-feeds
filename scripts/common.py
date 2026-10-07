@@ -257,6 +257,21 @@ def write_warning_feed(
 # Feed assembly
 # --------------------------------------------------------------------------
 
+PREVIEW_PI = b"<?xml-stylesheet type='text/xsl' href='feed-preview.xsl'?>"
+
+
+def inject_preview_pi(rss: bytes) -> bytes:
+    """Add the Firefox preview stylesheet PI right after the XML declaration.
+
+    Firefox applies feeds/feed-preview.xsl when a feed file is opened
+    locally; feed readers and raw.githubusercontent.com ignore the PI.
+    """
+    head, sep, rest = rss.partition(b"?>\n")
+    if not sep:
+        return rss
+    return head + sep + PREVIEW_PI + b"\n" + rest
+
+
 def sort_key(item: dict):
     pub = item["published"]
     if pub is None:
@@ -327,7 +342,7 @@ def build_feed(
             fe.published(item["published"])
             fe.updated(item["published"])
 
-    return fg.rss_str(pretty=True)
+    return inject_preview_pi(fg.rss_str(pretty=True))
 
 
 def write_feed(ordered: list[dict], output_path: str, max_items: int, **metadata) -> None:

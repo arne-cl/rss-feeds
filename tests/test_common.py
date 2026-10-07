@@ -149,6 +149,24 @@ class TestLoadPrevious:
         prev = common.load_previous(path)
         assert "enclosure" not in prev["https://example.com/b"]
 
+    def test_feed_with_xml_stylesheet_pi_round_trips(self, tmp_path):
+        """The preview PI must not confuse feed parsing/merging."""
+        path = write_feed(
+            tmp_path,
+            """<?xml version="1.0" encoding="UTF-8"?>
+            <?xml-stylesheet type='text/xsl' href='feed-preview.xsl'?>
+            <rss version="2.0"><channel>
+              <item>
+                <title>Styled</title>
+                <link>https://example.com/a</link>
+                <description>x</description>
+              </item>
+            </channel></rss>""",
+        )
+        prev = common.load_previous(path)
+        assert set(prev) == {"https://example.com/a"}
+        assert prev["https://example.com/a"]["title"] == "Styled"
+
 
 class TestSortKey:
     def test_none_sorts_oldest(self):
@@ -447,6 +465,22 @@ class TestBuildFeed:
         assert (
             "<pubDate>Mon, 01 Sep 2025 10:00:00 +0000</pubDate>" in xml
         )  # published date present
+
+    def test_xml_stylesheet_pi_directly_after_xml_declaration(self):
+        """Firefox applies the XSLT preview to locally opened feed files."""
+        xml = common.build_feed(
+            [],
+            feed_id="https://example.com/",
+            title="T",
+            link="https://example.com/",
+            description="d",
+            language="en",
+        ).decode("utf-8")
+        lines = xml.splitlines()
+        assert lines[0].startswith("<?xml")
+        assert lines[1] == (
+            "<?xml-stylesheet type='text/xsl' href='feed-preview.xsl'?>"
+        )
 
     def test_requires_all_metadata(self):
         items = []
