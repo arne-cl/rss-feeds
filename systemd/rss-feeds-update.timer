@@ -1,0 +1,13 @@
+[Unit]
+Description=Rebuild rss-feeds shortly after boot and at most once a day
+
+[Timer]
+# Fire 5 minutes after boot, then again 24h after each completed run, so the
+# machine's irregular usage pattern is fine. Persistent=true catches missed
+# runs (machine off over a scheduled boundary) on the next boot.
+OnBootSec=5min
+OnUnitInactiveSec=1d
+Persistent=true
+
+[Install]
+WantedBy=timers.target

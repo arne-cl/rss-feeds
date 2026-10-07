@@ -18,14 +18,25 @@ Subscribe with the raw URL above.
 Shared fetch/merge/RSS-assembly logic lives in `scripts/common.py`; each feed
 has its own builder script with the site-specific parsing.
 
-The feed is refreshed weekly by
-[.github/workflows/update.yml](.github/workflows/update.yml) (Mondays 06:17
-UTC), which commits the updated XML if anything changed. Trigger it manually
-via the Actions tab → "Update feeds" → "Run workflow".
+Builds run on a home machine (GitHub's runner IPs are blocked by Instagram
+and Quora), driven by a systemd user timer: it fires 5 minutes after boot and
+then at most once per day (`Persistent=true`, so a missed run happens on the
+next boot). Install with:
 
-If the jina.ai fallback gets rate-limited on GitHub's shared runner IPs, add a
-free [jina.ai API key](https://jina.ai/reader) as the repository secret
-`JINA_API_KEY`.
+```sh
+mkdir -p ~/.config/systemd/user ~/.config/rss-feeds
+cp systemd/rss-feeds-update.* ~/.config/systemd/user/
+systemctl --user daemon-reload
+systemctl --user enable --now rss-feeds-update.timer
+loginctl enable-linger "$USER"
+```
+
+Optional secrets go into `~/.config/rss-feeds/env` (not committed):
+`JINA_API_KEY` avoids r.jina.ai rate limits; `INSTAGRAM_SESSIONID` is used as
+a login-wall fallback for the Instagram builders.
+
+To run everything by hand: `scripts/update_local.sh` (pull, build, commit,
+push) or the individual builder commands under "Local development" below.
 
 ## Local development
 

@@ -1,0 +1,8 @@
+[Unit]
+Description=Rebuild rss-feeds and push
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/repos/rss-feeds
+ExecStart=%h/repos/rss-feeds/scripts/update_local.sh
+EnvironmentFile=-%h/.config/rss-feeds/env
