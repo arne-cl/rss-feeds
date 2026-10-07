@@ -32,9 +32,13 @@ loginctl enable-linger "$USER"
 ```
 
 Optional secrets go into `~/.config/rss-feeds/env` (not committed):
-`JINA_API_KEY` avoids r.jina.ai rate limits; `INSTAGRAM_SESSIONID` lets the
-Instagram builders prefer the session API, which provides exact dates and
-every slide of carousel posts (fallback: anonymous scrape).
+`JINA_API_KEY` avoids r.jina.ai rate limits; `INSTAGRAM_SESSIONID` is
+required for real data: Instagram no longer serves media JSON on
+profile pages and has neutered the `web_profile_info` API, so the
+builders enrich each fresh post from its **permalink page** (fetched
+with the session cookie), which is the only remaining source for exact
+dates and every carousel slide. Check the session with
+`scripts/check_instagram_session.py` (exit 0 = works).
 
 To run everything by hand: `scripts/update_local.sh` (pull, build, commit,
 push) or the individual builder commands under "Local development" below.

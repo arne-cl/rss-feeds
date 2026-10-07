@@ -59,8 +59,22 @@ soft failure per post (item keeps its cover-only content).
 
 ## Hurdles
 
-- (to be filled during implementation)
+- The `__a=1&__d=dis` "200" detour: that response is a media-free shell
+  page (416 KB, zero media keys) — recorded here so nobody retries it.
+- First permalink blob-walk searched for `edge_sidecar_to_children` /
+  `__isXIGPolarisMedia` (web_profile_info shapes) and found nothing —
+  permalink pages embed the *app-API* node shape (`carousel_media`,
+  `image_versions2`, `caption.text`, `taken_at`), which `_api_item`
+  already handles.
+- Enrichment made four pre-existing session-flow tests hit the network
+  (real permalink fetches, 86s suite) — they now stub
+  `enrich_with_slides` (or `time.sleep` where the fake fetch path is
+  the point); suite back to 8s, offline.
+- Real daxwerner rebuild: 12 items, four carousel entries regained
+  slides (3/3/10/2 imgs), exact `taken_at` dates (e.g. Ddbjry0jnuO →
+  Fri, 18 Sep 2026). Verified rendered in headless Chromium + Firefox
+  via the preview server (screenshots `/tmp/opencode/dax-slides-*`).
 
 ## Status
 
-todo
+done pending full-account rebuild + feed commit
