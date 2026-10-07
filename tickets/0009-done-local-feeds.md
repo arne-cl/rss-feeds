@@ -29,8 +29,27 @@ instead of cron (machine is used irregularly) via a systemd user timer.
 
 ## Hurdles
 
-- TBD
+- The old CI warning items were merged into the feeds as items; the first
+  successful local build dropped them again automatically (designed
+  `#build-status` replacement).
+- `kultur_bei_racha_roger` serves a profile shell without embedded media
+  even from a residential IP (same as ticket 0007) — stays a soft-failure
+  warning feed until an `INSTAGRAM_SESSIONID` is configured in
+  `~/.config/rss-feeds/env`.
+- First characterisation tests (`session_retry_failure_falls_through_to_jina`,
+  `no_cookie_skips_session_retry`) pass before the implementation too — they
+  pin behaviour that must survive the retry wiring, not new behaviour.
+
+## Verification
+
+- `.venv/bin/pytest`: 163 passed (157 baseline + 6 new session-cookie tests,
+  red→green).
+- Live run of `scripts/update_local.sh`: Quora, Klum, BRF + 4/5 Instagram
+  feeds rebuilt clean (stale CI warning items removed), committed and pushed
+  (`ef3ec01..d401428`).
+- Timer not yet installed on this machine — follow README install steps
+  (`systemctl --user enable --now rss-feeds-update.timer` + linger).
 
 ## Status
 
-todo
+done
