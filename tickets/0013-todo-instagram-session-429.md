@@ -55,8 +55,21 @@ from the session API. Root cause chain, verified 2026-10-07:
 
 ## Hurdles
 
-- (to be filled during implementation)
+- Retry loop bug caught by tests: first attempt logged the not-yet-known
+  backoff delay (`%d` on `None`); restructured to index retry delays by
+  attempt number.
+- `test_api_failure_falls_through_to_jina` became 40s slow (its
+  `RuntimeError("429 …")` message now legitimately triggers the retry
+  backoff) — stubbed `time.sleep` there; overall suite back to ~7s.
+- Committed once with a failing test because `pytest | tail` masked the
+  exit code; re-ran, fixed the fake-response bug in the new test, and
+  amended practice: check `${PIPESTATUS[0]}` / avoid piping pytest.
+- Live checker run confirms the toolchain end-to-end: backoff fires
+  twice, then `rate_limited: daxwerner — HTTPError: HTTP Error 429:`
+  exit 2. Throttle still active at ~16:20 (3h after the 12:45 build) —
+  Phase C (rebuild + real-feed screenshots) blocked until the user
+  swaps in a fresh sessionid (Phase B) or the throttle lifts.
 
 ## Status
 
-todo
+todo (Phase A done; Phase B = user login; Phase C = rebuild + screenshots)
