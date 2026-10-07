@@ -15,13 +15,13 @@ Subscribe with the raw URL above.
 
 ## How it works
 
-Shared fetch/merge/RSS-assembly logic lives in `scripts/common.py`; each feed
-has its own builder script with the site-specific parsing.
+Each feed has its own builder script with the site-specific parsing. Shared
+fetch/merge/RSS-assembly logic lives in `scripts/common.py`.
 
-Builds run on a home machine (GitHub's runner IPs are blocked by Instagram
-and Quora), driven by a systemd user timer: it fires 5 minutes after boot and
-then at most once per day (`Persistent=true`, so a missed run happens on the
-next boot). Install with:
+Builds run on a local machine because GitHub's runner IPs are blocked
+by Instagram and Quora). They are triggered by a systemd user timer (5 minutes
+after boot, then again 24h after each completed run). 
+`Persistent=true` will catch missed runs on the next boot). Install with:
 
 ```sh
 mkdir -p ~/.config/systemd/user ~/.config/rss-feeds
@@ -49,14 +49,5 @@ python3 -m venv .venv
 .venv/bin/python scripts/build_instagram_feed.py tiny_ruins
 ```
 
-Set `QUORA_PROFILE_HTML=<file>` or `KLUM_NEWS_HTML=<file>` to run against a
-saved page copy instead of fetching the site. For the Klum builder,
-`KLUM_PAGES_DIR=<dir>` enables offline mode for the article pages too
-(saved copies named `<slug>.html`; no requests at all). For the Instagram
-builder, pass the account as the only argument (e.g. `tiny_ruins` above) and
-set `INSTAGRAM_PROFILE_HTML=<file>` to run offline. For the BRF builder,
-`CHANSONS_HTML=<file>` replaces the archive page, `CHANSONS_PAGES_DIR=<dir>`
-(saved copies named `<episode-id>.html`) and `CHANSONS_PLAY_DIR=<dir>`
-(named `<play-hash>.html`) enable offline mode for episodes and audio
-resolution. The saved copies
-used by the tests live in `tests/fixtures/` (`.venv/bin/pytest`).
+All build scripts can be tested against local HTML files (for details see the
+respective module docstrings) and `tests/fixtures/`.
