@@ -290,6 +290,11 @@ API_FIXTURE = os.path.join(
     "fixtures",
     "instagram-tiny-ruins-api.json",
 )
+TIMELINE_FIXTURE = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    "fixtures",
+    "instagram-tiny-ruins-timeline.json",
+)
 
 
 class TestParseApi:
@@ -365,6 +370,39 @@ class TestParseApi:
         assert build_instagram_feed.parse_api("<html>rate limited</html>") == []
         assert build_instagram_feed.parse_api('{"data": {"user": null}}') == []
         assert build_instagram_feed.parse_api("{}") == []
+
+
+class TestParseTimeline:
+    """Real captured /api/graphql timeline shape (xdt nodes)."""
+
+    @staticmethod
+    def parse_timeline_fixture():
+        with open(TIMELINE_FIXTURE, encoding="utf-8") as f:
+            return build_instagram_feed.parse_api(f.read())
+
+    def test_three_posts_from_timeline_connection(self):
+        items = self.parse_timeline_fixture()
+        assert [i["link"] for i in items] == [
+            "https://www.instagram.com/p/CrktkZ_rqou/",
+            "https://www.instagram.com/p/DVjUvmekdgi/",
+            "https://www.instagram.com/p/DE7NBK1yhhx/",
+        ]
+
+    def test_carousel_item(self):
+        item = self.parse_timeline_fixture()[0]
+        assert item["title"].startswith("\u2018Ceremony\u2019 - she\u2019s here!")
+        assert item["enclosure"]["type"] == "image/jpeg"
+        assert item["enclosure"]["url"].startswith("https://scontent")
+
+    def test_video_item_uses_video_version(self):
+        item = self.parse_timeline_fixture()[1]
+        assert item["enclosure"]["type"] == "video/mp4"
+        assert "video" in item["enclosure"]["url"] or "scontent" in item["enclosure"]["url"]
+
+    def test_dates_are_taken_at_utc(self):
+        items = self.parse_timeline_fixture()
+        assert items[0]["published"] == datetime(2023, 4, 28, 8, 46, 16, tzinfo=timezone.utc)
+        assert all(i["published"] is not None for i in items)
 
 
 class TestSessionApiFallback:

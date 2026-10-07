@@ -84,6 +84,40 @@ API_PROFILE_URL = (
 )
 
 
+def _payload_node_lists(payload: dict) -> list[list]:
+    """Media node lists from the known API response shapes.
+
+    web_profile_info nests edges under data.user.edge_owner_to_timeline_media;
+    the (sniffed) app GraphQL uses data.xdt_api__v1__feed__user_timeline_graphql_connection.
+    """
+    data = payload.get("data") or {}
+    lists = []
+    media = (data.get("user") or {}).get("edge_owner_to_timeline_media")
+    if isinstance(media, dict) and media.get("edges"):
+        lists.append(media["edges"])
+    for key in ("xdt_api__v1__feed__user_timeline_graphql_connection",):
+        conn = data.get(key)
+        if isinstance(conn, dict) and conn.get("edges"):
+            lists.append(conn["edges"])
+    return lists
+
+
+def _api_media_url(node: dict) -> str:
+    video_url = node.get("video_url") or ""
+    if video_url:
+        return video_url
+    vv = node.get("video_versions") or []
+    if vv and isinstance(vv[0], dict) and vv[0].get("url"):
+        return vv[0]["url"]
+    if node.get("display_url"):
+        return node["display_url"]
+    candidates = (node.get("image_versions2") or {}).get("candidates") or []
+    for cand in candidates:
+        if isinstance(cand, dict) and cand.get("url"):
+            return cand["url"]
+    return ""
+
+
 def fetch_api_profile(account: str) -> str | None:
     """web_profile_info JSON via the INSTAGRAM_SESSIONID cookie, or None."""
     session_id = os.environ.get("INSTAGRAM_SESSIONID")
@@ -213,18 +247,7 @@ def _api_item(node: dict) -> dict | None:
     if isinstance(taken, (int, float)):
         published = datetime.fromtimestamp(taken, tz=timezone.utc)
 
-    media_url = (
-        node.get("video_url")
-        or node.get("display_url")
-        or next(
-            (
-                c.get("url", "")
-                for c in (node.get("image_versions2") or {}).get("candidates") or []
-                if isinstance(c, dict)
-            ),
-            "",
-        )
-    )
+    media_url = _api_media_url(node)
     item = {
         "id": url,
         "title": _item_title(code, caption, node.get("media_type")),
@@ -233,9 +256,10 @@ def _api_item(node: dict) -> dict | None:
         "published": published,
     }
     if media_url:
+        is_video = bool(node.get("video_url") or node.get("video_versions"))
         item["enclosure"] = {
             "url": media_url,
-            "type": "video/mp4" if node.get("video_url") else "image/jpeg",
+            "type": "video/mp4" if is_video else "image/jpeg",
             "length": 0,
         }
         escaped_caption = html_mod.escape(caption).replace("\n", "<br>")
@@ -254,15 +278,14 @@ def parse_api(text: str) -> list[dict]:
         payload = None
     if not isinstance(payload, dict):
         return []
-    user = (payload.get("data") or {}).get("user") or {}
-    edges = (user.get("edge_owner_to_timeline_media") or {}).get("edges") or []
     items, seen = [], set()
-    for edge in edges:
-        node = edge.get("node") if isinstance(edge, dict) else None
-        item = _api_item(node) if node else None
-        if item and item["id"] not in seen:
-            seen.add(item["id"])
-            items.append(item)
+    for edges in _payload_node_lists(payload):
+        for edge in edges:
+            node = edge.get("node") if isinstance(edge, dict) else None
+            item = _api_item(node) if node else None
+            if item and item["id"] not in seen:
+                seen.add(item["id"])
+                items.append(item)
     log.info("api JSON parse: %d post(s)", len(items))
     return items
 
