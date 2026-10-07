@@ -41,6 +41,7 @@ import os
 import re
 import sys
 import logging
+import time
 from datetime import datetime, timezone
 
 from bs4 import BeautifulSoup
@@ -168,15 +169,33 @@ def _item_content(post_url: str, caption: str, slides: list[dict]) -> str:
 
 
 def fetch_api_profile(account: str) -> str | None:
-    """web_profile_info JSON via the INSTAGRAM_SESSIONID cookie, or None."""
+    """web_profile_info JSON via the INSTAGRAM_SESSIONID cookie, or None.
+
+    429 throttles get a bounded backoff (10s, 30s); other errors and a
+    still-throttled session after the last retry raise immediately so
+    main() can fall back to the weaker parses.
+    """
     session_id = os.environ.get("INSTAGRAM_SESSIONID")
     if not session_id:
         return None
-    return common.fetch_direct(
-        API_PROFILE_URL.format(account=account),
-        cookies={"sessionid": session_id},
-        headers={"x-ig-app-id": IG_APP_ID, "Accept": "application/json"},
-    )
+    headers = {"x-ig-app-id": IG_APP_ID, "Accept": "application/json"}
+    url = API_PROFILE_URL.format(account=account)
+    delays = (10, 30)
+    for attempt in range(len(delays) + 1):
+        try:
+            return common.fetch_direct(
+                url, cookies={"sessionid": session_id}, headers=headers
+            )
+        except Exception as exc:  # noqa: BLE001
+            if common.status_of(exc) != 429 or attempt == len(delays):
+                raise
+            log.warning(
+                "web_profile_info 429 for %s, retrying in %ds",
+                account,
+                delays[attempt],
+            )
+            time.sleep(delays[attempt])
+    raise RuntimeError("unreachable")
 
 
 # --------------------------------------------------------------------------

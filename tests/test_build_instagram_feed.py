@@ -821,3 +821,74 @@ class TestSessionApiFallback:
 
         xml = (tmp_path / "instagram-tiny_ruins.xml").read_text(encoding="utf-8")
         assert "<title>Feed build failed</title>" in xml
+
+
+class Throttled(Exception):
+    def __init__(self, status):
+        super().__init__(f"HTTP Error {status}: ")
+        self.response = type("Resp", (), {"status_code": status})()
+
+
+class TestFetchApiProfileRetry:
+    """429s get a bounded backoff; other errors fail immediately."""
+
+    @staticmethod
+    def _fake_time(monkeypatch):
+        sleeps = []
+
+        class FakeTime:
+            @staticmethod
+            def sleep(seconds):
+                sleeps.append(seconds)
+
+        monkeypatch.setattr(build_instagram_feed, "time", FakeTime)
+        return sleeps
+
+    def test_retries_429_then_succeeds(self, monkeypatch):
+        sleeps = self._fake_time(monkeypatch)
+        calls = []
+
+        def flaky(url, **kwargs):
+            calls.append(url)
+            if len(calls) < 3:
+                raise Throttled(429)
+            return "{}"
+
+        monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
+        monkeypatch.setattr(build_instagram_feed.common.creq, "get", flaky)
+
+        assert build_instagram_feed.fetch_api_profile("tiny_ruins") == "{}"
+        assert len(calls) == 3
+        assert sleeps == [10, 30]
+
+    def test_raises_after_last_retry(self, monkeypatch):
+        sleeps = self._fake_time(monkeypatch)
+        calls = []
+
+        def always_429(url, **kwargs):
+            calls.append(url)
+            raise Throttled(429)
+
+        monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
+        monkeypatch.setattr(build_instagram_feed.common.creq, "get", always_429)
+
+        with pytest.raises(Throttled):
+            build_instagram_feed.fetch_api_profile("tiny_ruins")
+        assert len(calls) == 3
+        assert sleeps == [10, 30]
+
+    def test_no_retry_for_other_errors(self, monkeypatch):
+        sleeps = self._fake_time(monkeypatch)
+        calls = []
+
+        def unauthorized(url, **kwargs):
+            calls.append(url)
+            raise Throttled(401)
+
+        monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
+        monkeypatch.setattr(build_instagram_feed.common.creq, "get", unauthorized)
+
+        with pytest.raises(Throttled):
+            build_instagram_feed.fetch_api_profile("tiny_ruins")
+        assert len(calls) == 1
+        assert sleeps == []

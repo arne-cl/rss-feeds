@@ -15,11 +15,11 @@ Usage: python scripts/check_instagram_session.py [account]
 
 import argparse
 import os
-import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import build_instagram_feed as b
+from common import status_of
 
 OK = 0
 RATE_LIMITED = 2
@@ -36,15 +36,6 @@ def classify(status: int) -> str:
     if status in (401, 403):
         return "auth_failed"
     return "error"
-
-
-def status_of(exc: Exception) -> int | None:
-    response = getattr(exc, "response", None)
-    code = getattr(response, "status_code", None)
-    if code:
-        return int(code)
-    m = re.search(r"\b(\d{3})\b", str(exc))
-    return int(m.group(1)) if m else None
 
 
 def count_posts(text: str) -> int:

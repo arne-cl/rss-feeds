@@ -61,6 +61,16 @@ def fetch_jina(url: str) -> str:
     raise last_exc
 
 
+def status_of(exc: Exception) -> int | None:
+    """HTTP status code of an exception raised by fetch_direct, if any."""
+    response = getattr(exc, "response", None)
+    code = getattr(response, "status_code", None)
+    if code:
+        return int(code)
+    m = re.search(r"\b(\d{3})\b", str(exc))
+    return int(m.group(1)) if m else None
+
+
 def fetch_page(url: str, local_html_env: str) -> tuple[str, str]:
     """Fetch url, or read a local file if the env var local_html_env is set.
 

@@ -168,6 +168,23 @@ class TestLoadPrevious:
         assert prev["https://example.com/a"]["title"] == "Styled"
 
 
+class TestStatusOf:
+    def test_from_response_attribute(self):
+        class Resp:
+            status_code = 429
+
+        class Exc(Exception):
+            response = Resp()
+
+        assert common.status_of(Exc()) == 429
+
+    def test_from_message(self):
+        assert common.status_of(Exception("HTTP Error 429: ")) == 429
+
+    def test_unknown(self):
+        assert common.status_of(Exception("no code here")) is None
+
+
 class TestSortKey:
     def test_none_sorts_oldest(self):
         none_key = common.sort_key({"published": None})
