@@ -102,20 +102,63 @@ def _payload_node_lists(payload: dict) -> list[list]:
     return lists
 
 
-def _api_media_url(node: dict) -> str:
-    video_url = node.get("video_url") or ""
-    if video_url:
-        return video_url
+def _poster_url(node: dict) -> str:
+    return (
+        node.get("display_url")
+        or node.get("display_uri")
+        or ((node.get("image_versions2") or {}).get("candidates") or [{}])[0].get("url")
+        or ""
+    )
+
+
+def _video_url(node: dict) -> str:
+    if node.get("video_url"):
+        return node["video_url"]
     vv = node.get("video_versions") or []
     if vv and isinstance(vv[0], dict) and vv[0].get("url"):
         return vv[0]["url"]
-    if node.get("display_url"):
-        return node["display_url"]
-    candidates = (node.get("image_versions2") or {}).get("candidates") or []
-    for cand in candidates:
-        if isinstance(cand, dict) and cand.get("url"):
-            return cand["url"]
     return ""
+
+
+def _api_media_url(node: dict) -> str:
+    return _video_url(node) or _poster_url(node)
+
+
+def _carousel_children(node: dict) -> list[dict]:
+    """Child media dicts of a carousel, in slide order, in any known shape."""
+    children = node.get("carousel_media")
+    if isinstance(children, list) and children:
+        return [c for c in children if isinstance(c, dict)]
+    edges = (node.get("edge_sidecar_to_children") or {}).get("edges") or []
+    nodes = [(e or {}).get("node") or {} for e in edges]
+    return [n for n in nodes if n]
+
+
+def _slide_html(child: dict) -> str:
+    """Poster <img> plus a <video controls> tag for video slides."""
+    parts = []
+    poster = _poster_url(child)
+    alt = child.get("accessibility_caption") or ""
+    if poster:
+        alt_attr = f' alt="{html_mod.escape(alt, quote=True)}"' if alt else ""
+        parts.append(f'<img src="{html_mod.escape(poster, quote=True)}"{alt_attr} />')
+    video = _video_url(child)
+    if video:
+        parts.append(
+            f'<video controls preload="none" src="{html_mod.escape(video, quote=True)}">'
+            "</video>"
+        )
+    return "\n".join(parts)
+
+
+def _item_content(post_url: str, caption: str, slides: list[dict]) -> str:
+    escaped_caption = html_mod.escape(caption).replace("\n", "<br>")
+    body = "\n".join(html for html in (_slide_html(s) for s in slides) if html)
+    return (
+        f"{body}\n"
+        f"<p>{escaped_caption}</p>\n"
+        f'<p><a href="{post_url}">View on Instagram</a></p>'
+    )
 
 
 def fetch_api_profile(account: str) -> str | None:
@@ -185,7 +228,6 @@ def _item_from_node(node: dict):
         return None
     url = f"https://www.instagram.com/p/{code}/"
     caption = (node.get("caption") or {}).get("text") or ""
-    image_url = node.get("display_uri") or ""
     item = {
         "id": url,
         "title": _item_title(code, caption, node.get("media_type")),
@@ -193,14 +235,13 @@ def _item_from_node(node: dict):
         "description": caption,
         "published": parse_accessibility_date(node.get("accessibility_caption")),
     }
-    if image_url:
-        item["enclosure"] = {"url": image_url, "type": "image/jpeg", "length": 0}
-        escaped_caption = html_mod.escape(caption).replace("\n", "<br>")
-        item["content"] = (
-            f'<img src="{html_mod.escape(image_url, quote=True)}" />\n'
-            f"<p>{escaped_caption}</p>\n"
-            f'<p><a href="{url}">View on Instagram</a></p>'
-        )
+    children = _carousel_children(node)
+    slides = children or [node]
+    first = slides[0]
+    media_url = _poster_url(first) or _poster_url(node)
+    if media_url:
+        item["enclosure"] = {"url": media_url, "type": "image/jpeg", "length": 0}
+        item["content"] = _item_content(url, caption, slides)
     return item
 
 
@@ -247,7 +288,10 @@ def _api_item(node: dict) -> dict | None:
     if isinstance(taken, (int, float)):
         published = datetime.fromtimestamp(taken, tz=timezone.utc)
 
-    media_url = _api_media_url(node)
+    children = _carousel_children(node)
+    slides = children or [node]
+    first = slides[0]
+    media_url = _api_media_url(first) or _api_media_url(node)
     item = {
         "id": url,
         "title": _item_title(code, caption, node.get("media_type")),
@@ -256,18 +300,13 @@ def _api_item(node: dict) -> dict | None:
         "published": published,
     }
     if media_url:
-        is_video = bool(node.get("video_url") or node.get("video_versions"))
+        is_video = bool(_video_url(first))
         item["enclosure"] = {
             "url": media_url,
             "type": "video/mp4" if is_video else "image/jpeg",
             "length": 0,
         }
-        escaped_caption = html_mod.escape(caption).replace("\n", "<br>")
-        item["content"] = (
-            f'<img src="{html_mod.escape(media_url, quote=True)}" />\n'
-            f"<p>{escaped_caption}</p>\n"
-            f'<p><a href="{url}">View on Instagram</a></p>'
-        )
+        item["content"] = _item_content(url, caption, slides)
     return item
 
 

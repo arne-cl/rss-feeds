@@ -405,6 +405,143 @@ class TestParseTimeline:
         assert all(i["published"] is not None for i in items)
 
 
+class TestCarouselSlides:
+    """Carousel posts (media_type 8) must embed every slide, not just the cover."""
+
+    @staticmethod
+    def timeline_item(code):
+        with open(TIMELINE_FIXTURE, encoding="utf-8") as f:
+            items = build_instagram_feed.parse_api(f.read())
+        return next(i for i in items if i["link"].endswith(f"/p/{code}/"))
+
+    @staticmethod
+    def api_json(node):
+        return json.dumps(
+            {"data": {"user": {"edge_owner_to_timeline_media": {"edges": [{"node": node}]}}}}
+        )
+
+    def test_carousel_embeds_all_slides(self):
+        item = self.timeline_item("CrktkZ_rqou")
+        assert item["content"].count("<img ") == 2
+        assert "661088717_18178614697382086_4411761568083933789" in item["content"]
+        assert "650715470_18035675546783978_3577839567541904417" in item["content"]
+
+    def test_carousel_enclosure_is_first_slide(self):
+        item = self.timeline_item("CrktkZ_rqou")
+        assert "661088717_18178614697382086_4411761568083933789" in item["enclosure"]["url"]
+        assert item["enclosure"]["type"] == "image/jpeg"
+
+    def test_sidecar_children_embedded(self):
+        raw = self.api_json(
+            {
+                "shortcode": "SideCar12",
+                "taken_at_timestamp": 1700000000,
+                "caption": {"text": "sidecar post"},
+                "edge_sidecar_to_children": {
+                    "edges": [
+                        {
+                            "node": {
+                                "display_url": "https://cdn/slide1.jpg",
+                                "accessibility_caption": "first slide",
+                            }
+                        },
+                        {"node": {"display_url": "https://cdn/slide2.jpg"}},
+                    ]
+                },
+            }
+        )
+        (item,) = build_instagram_feed.parse_api(raw)
+        assert item["content"].count("<img ") == 2
+        assert 'alt="first slide"' in item["content"]
+        assert '<img src="https://cdn/slide1.jpg"' in item["content"]
+        assert '<img src="https://cdn/slide2.jpg"' in item["content"]
+        assert item["enclosure"]["url"] == "https://cdn/slide1.jpg"
+
+    def test_sidecar_video_slide_poster_then_video(self):
+        raw = self.api_json(
+            {
+                "shortcode": "CarViDeo1",
+                "taken_at_timestamp": 1700000000,
+                "caption": {"text": "mixed media"},
+                "edge_sidecar_to_children": {
+                    "edges": [
+                        {
+                            "node": {
+                                "display_url": "https://cdn/poster.jpg",
+                                "video_url": "https://cdn/clip.mp4",
+                            }
+                        },
+                        {"node": {"display_url": "https://cdn/slide2.jpg"}},
+                    ]
+                },
+            }
+        )
+        (item,) = build_instagram_feed.parse_api(raw)
+        content = item["content"]
+        assert '<img src="https://cdn/poster.jpg"' in content
+        assert '<video controls preload="none" src="https://cdn/clip.mp4">' in content
+        assert content.index("<img ") < content.index("<video ")
+        assert content.index("<video ") < content.index("slide2.jpg")
+        assert item["enclosure"]["url"] == "https://cdn/clip.mp4"
+        assert item["enclosure"]["type"] == "video/mp4"
+
+    def test_video_post_embeds_poster_then_video_tag(self):
+        item = self.timeline_item("DVjUvmekdgi")
+        content = item["content"]
+        assert content.startswith("<img ")
+        assert "626277993_1338277208336461_" in content
+        assert '<video controls preload="none" src="https://scontent' in content
+        assert item["enclosure"]["type"] == "video/mp4"
+
+    def test_video_slide_via_xdt_carousel_media(self):
+        raw = self.api_json(
+            {
+                "code": "XdtCarVid1",
+                "taken_at": 1700000000,
+                "caption": {"text": "xdt mixed carousel"},
+                "carousel_media": [
+                    {
+                        "media_type": 2,
+                        "video_versions": [{"url": "https://cdn/clip2.mp4"}],
+                        "image_versions2": {"candidates": [{"url": "https://cdn/poster2.jpg"}]},
+                    },
+                    {
+                        "media_type": 1,
+                        "image_versions2": {"candidates": [{"url": "https://cdn/slideB.jpg"}]},
+                    },
+                ],
+            }
+        )
+        (item,) = build_instagram_feed.parse_api(raw)
+        content = item["content"]
+        assert content.count("<img ") == 2
+        assert '<video controls preload="none" src="https://cdn/clip2.mp4">' in content
+        assert item["enclosure"]["url"] == "https://cdn/clip2.mp4"
+
+    def test_direct_parse_video_post_keeps_poster_image(self):
+        with open(FIXTURE, encoding="utf-8") as f:
+            items = build_instagram_feed.parse_direct(f.read())
+        (item,) = [i for i in items if i["link"].endswith("/p/DBfhEU2uKqN/")]
+        assert item["content"].startswith("<img ")
+        assert "<video" not in item["content"]
+
+    def test_direct_parse_embeds_children_when_present(self):
+        html = (
+            '<script type="application/json">'
+            '{"data": {"node": {"__isXIGPolarisMedia": "XIGPolarisCarouselMedia",'
+            ' "code": "DirCar123", "media_type": 8, "display_uri": "https://cdn/cover.jpg",'
+            ' "carousel_media": ['
+            '{"display_uri": "https://cdn/s1.jpg", "accessibility_caption": "one"},'
+            '{"display_uri": "https://cdn/s2.jpg"}]}}}'
+            "</script>"
+        )
+        (item,) = build_instagram_feed.parse_direct(html)
+        assert item["content"].count("<img ") == 2
+        assert '<img src="https://cdn/s1.jpg" alt="one" />' in item["content"]
+        assert '<img src="https://cdn/s2.jpg"' in item["content"]
+        assert item["enclosure"]["url"] == "https://cdn/s1.jpg"
+
+
 class TestSessionApiFallback:
     """INSTAGRAM_SESSIONID retry via the web_profile_info API."""
 
