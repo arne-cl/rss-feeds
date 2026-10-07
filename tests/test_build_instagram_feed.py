@@ -773,6 +773,9 @@ class TestSessionApiFallback:
             raise RuntimeError("429 too many requests")
 
         monkeypatch.setattr(build_instagram_feed.common.creq, "get", boom)
+        monkeypatch.setattr(
+            build_instagram_feed, "time", type("FakeTime", (), {"sleep": staticmethod(lambda s: None)})
+        )
         monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
         monkeypatch.setattr(
             build_instagram_feed.common,
@@ -852,7 +855,7 @@ class TestFetchApiProfileRetry:
             calls.append(url)
             if len(calls) < 3:
                 raise Throttled(429)
-            return "{}"
+            return _FakeResponse("{}")
 
         monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
         monkeypatch.setattr(build_instagram_feed.common.creq, "get", flaky)
