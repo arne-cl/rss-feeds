@@ -3,16 +3,22 @@
 
 Instagram provides no feeds and blocks most scrapers, so this script:
 
-1. Tries a direct fetch of ``https://www.instagram.com/<account>/`` with
-   Chrome TLS impersonation (curl_cffi) and parses the media objects embedded
-   in the page's ``<script type="application/json">`` blobs (post shortcode,
-   caption text, image URL, and a date string inside accessibility_caption).
-2. On a login wall or empty page (0 media nodes), fetches the private
-   ``web_profile_info`` JSON API once with the ``INSTAGRAM_SESSIONID``
-   cookie, if set, and parses the timeline edges (shortcodes, captions,
-   timestamps, media URLs).
+1. With ``INSTAGRAM_SESSIONID`` set, fetches the private ``web_profile_info``
+   JSON API first and parses the timeline edges (shortcodes, captions,
+   timestamps, media URLs, and every slide of carousel posts). This data is
+   strictly richer than the profile page's, so it is preferred when available.
+2. Falls back to a direct fetch of ``https://www.instagram.com/<account>/``
+   with Chrome TLS impersonation (curl_cffi) and parses the media objects
+   embedded in the page's ``<script type="application/json">`` blobs (post
+   shortcode, caption text, cover image, and a date string inside
+   accessibility_caption).
 3. Falls back to the r.jina.ai reader proxy and parses the rendered DOM
    (post links, image alt texts as titles).
+
+Carousel posts embed one ``<img>`` per slide in the item content; the RSS
+enclosure is the first slide. Video slides show a poster image plus a
+``<video controls>`` tag. A fresh parse never overwrites richer content
+stored by an earlier build (e.g. after a sessionid expiry).
 
 The profile page only shows the latest few posts, so newly parsed items are
 merged into the previous feed file to keep history and preserve dates.
@@ -363,6 +369,27 @@ def parse_dom(html: str) -> list[dict]:
 # Profile metadata
 # --------------------------------------------------------------------------
 
+def _content_images(content: str | None) -> int:
+    return content.count("<img") if content else 0
+
+
+def restore_richer_content(items: list[dict], previous: dict[str, dict]) -> None:
+    """Keep the stored content/enclosure when a fresh parse saw fewer slides.
+
+    E.g. after a sessionid expiry the direct parse only sees carousel covers;
+    the previously stored API content must survive the merge instead of being
+    overwritten by the weaker reparse.
+    """
+    for item in items:
+        old = previous.get(item["id"])
+        if not old:
+            continue
+        if _content_images(old.get("content")) > _content_images(item.get("content")):
+            item["content"] = old["content"]
+            if old.get("enclosure"):
+                item["enclosure"] = old["enclosure"]
+
+
 def profile_metadata(html: str) -> dict:
     for blob in _iter_json_blobs(html):
         for node in _walk(blob):
@@ -459,13 +486,18 @@ def main(argv=None) -> int:
     except Exception as exc:  # noqa: BLE001
         return write_warning_feed(account, exc)
 
-    items = parse_direct(page)
-    if not items and not offline:
+    # The session API data is strictly richer (exact dates, captions, and all
+    # carousel slides — profile-page JSON only carries the cover), so prefer
+    # it whenever a session cookie is configured.
+    items = []
+    if not offline and os.environ.get("INSTAGRAM_SESSIONID"):
         try:
             api_text = fetch_api_profile(account)
             items = parse_api(api_text) if api_text is not None else []
         except Exception as exc:  # noqa: BLE001
-            log.warning("session api fallback failed (%s)", exc)
+            log.warning("session api fetch failed (%s)", exc)
+    if not items:
+        items = parse_direct(page)
     if not items and not offline:
         if source == "direct":
             try:
@@ -483,7 +515,9 @@ def main(argv=None) -> int:
             return write_warning_feed(account, exc)
 
     meta = profile_metadata(page)
-    merged = common.merge_items(common.without_warning(common.load_previous(out)), items)
+    previous = common.load_previous(out)
+    restore_richer_content(items, common.without_warning(previous))
+    merged = common.merge_items(common.without_warning(previous), items)
     common.write_feed(list(merged.values()), out, MAX_ITEMS, **_feed_kwargs(account, meta))
     return 0
 

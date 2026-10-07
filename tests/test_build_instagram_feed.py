@@ -542,6 +542,166 @@ class TestCarouselSlides:
         assert item["enclosure"]["url"] == "https://cdn/s1.jpg"
 
 
+class TestApiPreference:
+    """With INSTAGRAM_SESSIONID set, the richer API items win over the direct parse."""
+
+    RICH_SIDECAR = json.dumps(
+        {
+            "data": {
+                "user": {
+                    "edge_owner_to_timeline_media": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "shortcode": "DE7NBK1yhhx",
+                                    "taken_at_timestamp": 1696893950,
+                                    "caption": {"text": "rich sidecar caption"},
+                                    "edge_sidecar_to_children": {
+                                        "edges": [
+                                            {"node": {"display_url": "https://cdn/s1.jpg"}},
+                                            {"node": {"display_url": "https://cdn/s2.jpg"}},
+                                        ]
+                                    },
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    )
+
+    def test_session_set_prefers_api_items(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("INSTAGRAM_PROFILE_HTML", raising=False)
+        monkeypatch.setattr(
+            build_instagram_feed.common,
+            "fetch_page",
+            lambda *a, **k: (open(FIXTURE, encoding="utf-8").read(), "direct"),
+        )
+        monkeypatch.setattr(
+            build_instagram_feed, "fetch_api_profile", lambda account: self.RICH_SIDECAR
+        )
+        monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
+        monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
+
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+
+        xml = (tmp_path / "instagram-tiny_ruins.xml").read_text(encoding="utf-8")
+        assert xml.count("<item>") == 1
+        assert xml.count("&lt;img ") == 2
+
+    def test_api_failure_falls_back_to_direct_parse(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("INSTAGRAM_PROFILE_HTML", raising=False)
+        monkeypatch.setattr(
+            build_instagram_feed.common,
+            "fetch_page",
+            lambda *a, **k: (open(FIXTURE, encoding="utf-8").read(), "direct"),
+        )
+
+        def boom(account):
+            raise RuntimeError("api exploded")
+
+        monkeypatch.setattr(build_instagram_feed, "fetch_api_profile", boom)
+        monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
+        monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
+
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+
+        xml = (tmp_path / "instagram-tiny_ruins.xml").read_text(encoding="utf-8")
+        assert xml.count("<item>") == 12
+        assert "Feed build failed" not in xml
+
+    def test_no_session_uses_direct_parse(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("INSTAGRAM_PROFILE_HTML", raising=False)
+        monkeypatch.delenv("INSTAGRAM_SESSIONID", raising=False)
+        monkeypatch.setattr(
+            build_instagram_feed.common,
+            "fetch_page",
+            lambda *a, **k: (open(FIXTURE, encoding="utf-8").read(), "direct"),
+        )
+
+        def boom(account):
+            raise AssertionError("must not call the api without a session id")
+
+        monkeypatch.setattr(build_instagram_feed, "fetch_api_profile", boom)
+        monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
+
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+        xml = (tmp_path / "instagram-tiny_ruins.xml").read_text(encoding="utf-8")
+        assert xml.count("<item>") == 12
+
+    def test_richer_previous_content_survives_weaker_reparse(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("INSTAGRAM_PROFILE_HTML", raising=False)
+        monkeypatch.setattr(
+            build_instagram_feed.common,
+            "fetch_page",
+            lambda *a, **k: (open(FIXTURE, encoding="utf-8").read(), "direct"),
+        )
+        monkeypatch.setattr(
+            build_instagram_feed, "fetch_api_profile", lambda account: self.RICH_SIDECAR
+        )
+        monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
+        monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+
+        # sessionid gone: direct parse only sees the cover image again
+        monkeypatch.delenv("INSTAGRAM_SESSIONID")
+        monkeypatch.setenv("INSTAGRAM_PROFILE_HTML", FIXTURE)
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+
+        xml = (tmp_path / "instagram-tiny_ruins.xml").read_text(encoding="utf-8")
+        item = xml[xml.rfind("<item>", 0, xml.find("/p/DE7NBK1yhhx/")):]
+        item = item[: item.find("</item>")]
+        assert item.count("&lt;img ") == 2
+        assert "https://cdn/s1.jpg" in item
+        assert "https://cdn/s2.jpg" in item
+
+
+class TestRicherContentRestore:
+    """A fresh parse with fewer slides must not overwrite richer stored content."""
+
+    @staticmethod
+    def item(content="<img one>", enclosure=None):
+        return {
+            "id": "https://www.instagram.com/p/AbCdEf1/",
+            "title": "t",
+            "link": "https://www.instagram.com/p/AbCdEf1/",
+            "description": "",
+            "published": None,
+            "content": content,
+            "enclosure": enclosure or {"url": "https://cdn/a.jpg", "type": "image/jpeg", "length": 0},
+        }
+
+    def test_keeps_richer_previous_content_and_enclosure(self):
+        new = self.item()
+        old = self.item(
+            content="<img one>\n<img two>",
+            enclosure={"url": "https://cdn/b.mp4", "type": "video/mp4", "length": 0},
+        )
+        build_instagram_feed.restore_richer_content([new], {new["id"]: old})
+        assert new["content"] == "<img one>\n<img two>"
+        assert new["enclosure"]["url"] == "https://cdn/b.mp4"
+
+    def test_keeps_fresh_content_when_richer_or_equal(self):
+        new = self.item(content="<img one>\n<img two>")
+        old = self.item(content="<img one>")
+        build_instagram_feed.restore_richer_content([new], {new["id"]: old})
+        assert new["content"] == "<img one>\n<img two>"
+        assert new["enclosure"]["url"] == "https://cdn/a.jpg"
+
+    def test_ignores_items_missing_from_previous(self):
+        new = self.item()
+        build_instagram_feed.restore_richer_content([new], {})
+        assert new["content"] == "<img one>"
+
+    def test_tolerates_missing_content_fields(self):
+        new = self.item()
+        del new["content"]
+        old = self.item(content="<img one>\n<img two>")
+        build_instagram_feed.restore_richer_content([new], {new["id"]: old})
+        assert new["content"] == "<img one>\n<img two>"
+
+
 class TestSessionApiFallback:
     """INSTAGRAM_SESSIONID retry via the web_profile_info API."""
 
