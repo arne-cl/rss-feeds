@@ -74,7 +74,19 @@ soft failure per post (item keeps its cover-only content).
   slides (3/3/10/2 imgs), exact `taken_at` dates (e.g. Ddbjry0jnuO →
   Fri, 18 Sep 2026). Verified rendered in headless Chromium + Firefox
   via the preview server (screenshots `/tmp/opencode/dax-slides-*`).
+- Full staggered rebuild of all 12 accounts (45s apart, ~19 min):
+  **719 slides total** (was 131 cover-only images), carousels e.g.
+  martinmaleschka 11 items ≤20 slides, tumvlt 9, waveybobson 8,
+  ostmoderne 12. Only `kultur_bei_racha_roger` still broken
+  (pre-existing jina 403, zero previous items — separate issue).
+- Acceptance evidence: `/tmp/opencode/dax-carousel-final-ff.png`
+  (Firefox: full "Heute mit mehreren Slides" entry with all 3 slides,
+  exact date, caption, permalink) and
+  `/tmp/opencode/dax-slides-chromium.png` (Chromium, full page,
+  10-slide entry rendering incl. `<video>` players). Both verified
+  before showing the user. Live: `http://127.0.0.1:8399/…` while the
+  preview server runs.
 
 ## Status
 
-done pending full-account rebuild + feed commit
+done
