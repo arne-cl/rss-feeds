@@ -7,19 +7,19 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 06 Oct 2026 09:18:11 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 07 Oct 2026 08:19:16 +0000</lastBuildDate>
     <item>
       <title>Feed build failed</title>
       <link>https://www.instagram.com/kultur_bei_racha_roger/</link>
       <description>no posts parsed — page layout may have changed; keeping previous feed</description>
       <content:encoded>&lt;p&gt;The last feed update failed; the items below are the most recent entries known.&lt;/p&gt;
 &lt;pre&gt;Traceback (most recent call last):
-  File "/home/runner/work/rss-feeds/rss-feeds/scripts/build_instagram_feed.py", line 304, in main
+  File "/home/arne/repos/rss-feeds/scripts/build_instagram_feed.py", line 325, in main
     raise RuntimeError(
 RuntimeError: no posts parsed — page layout may have changed; keeping previous feed
 &lt;/pre&gt;</content:encoded>
       <guid isPermaLink="false">https://www.instagram.com/kultur_bei_racha_roger/#build-status</guid>
-      <pubDate>Tue, 06 Oct 2026 09:18:11 +0000</pubDate>
+      <pubDate>Wed, 07 Oct 2026 08:19:16 +0000</pubDate>
     </item>
   </channel>
 </rss>
