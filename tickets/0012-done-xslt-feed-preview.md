@@ -42,8 +42,31 @@ documents, so the plan is a stylesheet + that PI in the generated feeds.
 
 ## Hurdles
 
-- (to be filled during implementation)
+- First verified via an offline rebuild of `instagram-tiny_ruins.xml`
+  (saved fixture), but the diff showed the fixture's older CDN-signed
+  media URLs replacing the fresher ones from the last live build
+  (`restore_richer_content` only guards items with *fewer* `<img>`
+  tags, not older signatures). Reverted; instead the PI was injected
+  into all 15 committed feeds directly, verified byte-identical to
+  `inject_preview_pi(git show HEAD:<feed>)`. Zero URL churn, and every
+  feed is previewable without waiting for the next live build.
+- Firefox's Transformiix lacks `disable-output-escaping` (XSLT 1.0
+  only), which forces the JS `innerHTML` trick; verified the XSLT
+  against a real feed with `lxml.etree.XSLT` (libxslt, same 1.0 spec):
+  12 items → 12 raw-content/rendered div pairs, no namespace leak,
+  escaping round-trips exactly once into valid HTML.
+- The JS target must be a separate `.rendered` div — injecting into
+  the `<noscript>` element itself doesn't parse as markup.
+
+## Verification
+
+- Red/green: 2 new tests (PI position after the XML declaration;
+  `load_previous` round-trip on a PI-bearing feed). 192 passed.
+- `xsltproc` not installed; used `lxml.etree.XSLT` to transform
+  `feeds/instagram-daxwerner.xml` and inspected the output HTML.
+- Visual check in Firefox still to be confirmed by the user
+  (`firefox feeds/instagram-daxwerner.xml`).
 
 ## Status
 
-todo
+done

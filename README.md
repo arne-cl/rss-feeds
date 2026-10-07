@@ -52,3 +52,13 @@ python3 -m venv .venv
 
 All build scripts can be tested against local HTML files (for details see the
 respective module docstrings) and `tests/fixtures/`.
+
+## Previewing feeds in Firefox
+
+Every feed carries an `xml-stylesheet` PI pointing at `feeds/feed-preview.xsl`,
+so opening a `feeds/*.xml` file locally in Firefox renders a readable page —
+including every carousel slide and `<video>` tag (via a few lines of inline
+JS). Without JS you get the cover image and plain text. Feed readers ignore
+the PI, and raw.githubusercontent.com serves the XML as `text/plain`, so
+subscribers are unaffected. Note that Instagram CDN links expire after ~2
+weeks; older slides may then show alt text only.
