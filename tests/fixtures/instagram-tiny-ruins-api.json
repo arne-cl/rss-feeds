@@ -1,0 +1,74 @@
+{
+  "data": {
+    "user": {
+      "id": "3840196730",
+      "username": "tiny_ruins",
+      "full_name": "Tiny Ruins",
+      "edge_owner_to_timeline_media": {
+        "count": 347,
+        "page_info": {
+          "has_next_page": true,
+          "end_cursor": "QVFBQ1Zk"
+        },
+        "edges": [
+          {
+            "node": {
+              "__typename": "GraphImage",
+              "id": "3699999999999999001",
+              "shortcode": "DdoYr2_CY-5",
+              "taken_at_timestamp": 1790139600,
+              "display_url": "https://scontent.cdninstagram.com/v/t/fixtures_image_654x654.jpg",
+              "accessibility_caption": "Photo by Tiny Ruins on September 23, 2026.",
+              "is_video": false,
+              "edge_media_to_caption": {
+                "edges": [
+                  {
+                    "node": {
+                      "text": "TOTD 67 - Museum\nTiny Ruins - Me At The Museum [Bella Union]"
+                    }
+                  }
+                ]
+              },
+              "edge_media_to_comment": {"count": 3},
+              "edge_liked_by": {"count": 42}
+            }
+          },
+          {
+            "node": {
+              "__typename": "GraphVideo",
+              "id": "3000000000000000002",
+              "shortcode": "C0lI6pOrWJH",
+              "taken_at_timestamp": 1701950400,
+              "display_url": "https://scontent.cdninstagram.com/v/t/fixtures_video_poster_640x1136.jpg",
+              "video_url": "https://scontent.cdninstagram.com/o1/v/t/fixtures_video.mp4",
+              "accessibility_caption": "Video by Tiny Ruins on December 07, 2023.",
+              "is_video": true,
+              "video_view_count": 111,
+              "edge_media_to_caption": {
+                "edges": [
+                  {
+                    "node": {
+                      "text": "Get along to this tomorrow night!"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "__typename": "GraphImage",
+              "id": "3000000000000000003",
+              "shortcode": "EmptyCap1",
+              "taken_at_timestamp": 1699000000,
+              "display_url": "https://scontent.cdninstagram.com/v/t/fixtures_empty_654x654.jpg",
+              "is_video": false,
+              "edge_media_to_caption": {"edges": []}
+            }
+          }
+        ]
+      }
+    }
+  },
+  "status": "ok"
+}

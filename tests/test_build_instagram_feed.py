@@ -1,6 +1,7 @@
 """Tests for the Instagram feed builder."""
 
 import html as html_mod
+import json
 import os
 from datetime import datetime, timezone
 
@@ -284,8 +285,90 @@ class _FakeResponse:
         pass
 
 
-class TestSessionCookieFallback:
-    """INSTAGRAM_SESSIONID retry when the anonymous fetch hits a login wall."""
+API_FIXTURE = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    "fixtures",
+    "instagram-tiny-ruins-api.json",
+)
+
+
+class TestParseApi:
+    """web_profile_info JSON (INSTAGRAM_SESSIONID fallback channel)."""
+
+    @staticmethod
+    def parse_api_fixture():
+        with open(API_FIXTURE, encoding="utf-8") as f:
+            return build_instagram_feed.parse_api(f.read())
+
+    def test_items_from_edge_nodes(self):
+        items = self.parse_api_fixture()
+        assert [i["link"] for i in items] == [
+            "https://www.instagram.com/p/DdoYr2_CY-5/",
+            "https://www.instagram.com/p/C0lI6pOrWJH/",
+            "https://www.instagram.com/p/EmptyCap1/",
+        ]
+        assert all(i["id"] == i["link"] for i in items)
+
+    def test_caption_title_description_date(self):
+        item = self.parse_api_fixture()[0]
+        assert item["title"] == "TOTD 67 - Museum"
+        assert item["published"] == datetime(2026, 9, 23, 5, 0, tzinfo=timezone.utc)
+        assert item["description"].startswith("TOTD 67 - Museum")
+        assert "Bella Union" in item["description"]
+
+    def test_image_enclosure(self):
+        item = self.parse_api_fixture()[0]
+        assert item["enclosure"]["url"].endswith("fixtures_image_654x654.jpg")
+        assert item["enclosure"]["type"] == "image/jpeg"
+        assert '<img src="https://scontent' in item["content"]
+
+    def test_video_prefers_video_url(self):
+        item = self.parse_api_fixture()[1]
+        assert item["enclosure"]["url"].endswith("fixtures_video.mp4")
+        assert item["enclosure"]["type"] == "video/mp4"
+
+    def test_empty_caption_falls_back_to_media_kind(self):
+        item = self.parse_api_fixture()[2]
+        assert item["title"] == "Post EmptyCap1"
+        assert item["published"] == datetime(2023, 11, 3, 8, 26, 40, tzinfo=timezone.utc)
+
+    def test_tolerates_xdt_node_shape(self):
+        raw = json.dumps(
+            {
+                "data": {
+                    "user": {
+                        "edge_owner_to_timeline_media": {
+                            "edges": [
+                                {
+                                    "node": {
+                                        "code": "XdtCoDe123",
+                                        "taken_at": 1758601200,
+                                        "caption": {"text": "xdt style caption"},
+                                        "image_versions2": {
+                                            "candidates": [{"url": "https://cdn/x.jpg"}]
+                                        },
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        )
+        items = build_instagram_feed.parse_api(raw)
+        assert len(items) == 1
+        assert items[0]["link"] == "https://www.instagram.com/p/XdtCoDe123/"
+        assert items[0]["title"] == "xdt style caption"
+        assert items[0]["enclosure"]["url"] == "https://cdn/x.jpg"
+
+    def test_garbage_and_empty(self):
+        assert build_instagram_feed.parse_api("<html>rate limited</html>") == []
+        assert build_instagram_feed.parse_api('{"data": {"user": null}}') == []
+        assert build_instagram_feed.parse_api("{}") == []
+
+
+class TestSessionApiFallback:
+    """INSTAGRAM_SESSIONID retry via the web_profile_info API."""
 
     JINA_HTML = '<a href="https://www.instagram.com/p/AbCdEf123/">fallback</a>'
 
@@ -298,60 +381,63 @@ class TestSessionCookieFallback:
         )
 
     @staticmethod
-    def _mock_creq_get(monkeypatch, cookie_html, anonymous_ok=False):
-        """creq.get returns cookie_html when a sessionid cookie is present."""
-
+    def _mock_creq_get(monkeypatch, captured=None):
         def fake_get(url, **kwargs):
+            if captured is not None:
+                captured.update(url=url, **kwargs)
             if kwargs.get("cookies", {}).get("sessionid"):
-                return _FakeResponse(cookie_html)
-            assert anonymous_ok, "unexpected anonymous direct fetch"
-            return _FakeResponse("<html>login wall</html>")
+                with open(API_FIXTURE, encoding="utf-8") as f:
+                    return _FakeResponse(f.read())
+            raise AssertionError("unexpected anonymous direct fetch")
 
         monkeypatch.setattr(build_instagram_feed.common.creq, "get", fake_get)
 
-    def test_fetch_with_session_passes_cookie(self, monkeypatch):
+    def test_fetch_api_profile_passes_cookie_and_header(self, monkeypatch):
         captured = {}
-
-        def fake_get(url, **kwargs):
-            captured.update(kwargs)
-            return _FakeResponse("session page")
-
-        monkeypatch.setattr(build_instagram_feed.common.creq, "get", fake_get)
+        self._mock_creq_get(monkeypatch, captured)
         monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
 
-        url = build_instagram_feed.instagram_url("tiny_ruins")
-        assert build_instagram_feed.fetch_with_session(url) == "session page"
+        text = build_instagram_feed.fetch_api_profile("tiny_ruins")
+        assert "TOTD 67 - Museum" in text
+        assert (
+            captured["url"]
+            == "https://www.instagram.com/api/v1/users/web_profile_info/"
+            "?username=tiny_ruins"
+        )
         assert captured["cookies"] == {"sessionid": "s3cret"}
+        assert captured["headers"]["x-ig-app-id"]
 
-    def test_fetch_with_session_none_without_env(self, monkeypatch):
+    def test_fetch_api_profile_none_without_env(self, monkeypatch):
         monkeypatch.delenv("INSTAGRAM_SESSIONID", raising=False)
 
         def boom(url, **kwargs):
             raise AssertionError("must not fetch without a session id")
 
         monkeypatch.setattr(build_instagram_feed.common.creq, "get", boom)
-        assert build_instagram_feed.fetch_with_session("https://x/") is None
+        assert build_instagram_feed.fetch_api_profile("tiny_ruins") is None
 
-    def test_login_wall_retries_with_session_cookie(self, tmp_path, monkeypatch):
+    def test_login_wall_retries_with_session_api(self, tmp_path, monkeypatch):
         monkeypatch.delenv("INSTAGRAM_PROFILE_HTML", raising=False)
         self._login_wall_fetch(monkeypatch)
-        with open(FIXTURE, encoding="utf-8") as f:
-            self._mock_creq_get(monkeypatch, f.read())
+        self._mock_creq_get(monkeypatch)
         monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
         monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
 
         assert build_instagram_feed.main(["tiny_ruins"]) == 0
 
         xml = (tmp_path / "instagram-tiny_ruins.xml").read_text(encoding="utf-8")
-        assert xml.count("<item>") == 12
+        assert xml.count("<item>") == 3
         assert "Feed build failed" not in xml
+        assert "<title>tiny_ruins on Instagram</title>" in xml
 
-    def test_session_retry_failure_falls_through_to_jina(
-        self, tmp_path, monkeypatch
-    ):
+    def test_api_failure_falls_through_to_jina(self, tmp_path, monkeypatch):
         monkeypatch.delenv("INSTAGRAM_PROFILE_HTML", raising=False)
         self._login_wall_fetch(monkeypatch)
-        self._mock_creq_get(monkeypatch, "<html>still login wall</html>")
+
+        def boom(url, **kwargs):
+            raise RuntimeError("429 too many requests")
+
+        monkeypatch.setattr(build_instagram_feed.common.creq, "get", boom)
         monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
         monkeypatch.setattr(
             build_instagram_feed.common,
@@ -370,7 +456,11 @@ class TestSessionCookieFallback:
         monkeypatch.delenv("INSTAGRAM_PROFILE_HTML", raising=False)
         monkeypatch.delenv("INSTAGRAM_SESSIONID", raising=False)
         self._login_wall_fetch(monkeypatch)
-        self._mock_creq_get(monkeypatch, "<html>unused</html>", anonymous_ok=False)
+
+        def boom(url, **kwargs):
+            raise AssertionError("must not retry anonymously")
+
+        monkeypatch.setattr(build_instagram_feed.common.creq, "get", boom)
         monkeypatch.setattr(
             build_instagram_feed.common,
             "fetch_jina",

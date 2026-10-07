@@ -7,8 +7,10 @@ Instagram provides no feeds and blocks most scrapers, so this script:
    Chrome TLS impersonation (curl_cffi) and parses the media objects embedded
    in the page's ``<script type="application/json">`` blobs (post shortcode,
    caption text, image URL, and a date string inside accessibility_caption).
-2. On a login wall (0 media nodes), retries the direct fetch once with the
-   ``INSTAGRAM_SESSIONID`` cookie, if set, and parses the embedded JSON again.
+2. On a login wall or empty page (0 media nodes), fetches the private
+   ``web_profile_info`` JSON API once with the ``INSTAGRAM_SESSIONID``
+   cookie, if set, and parses the timeline edges (shortcodes, captions,
+   timestamps, media URLs).
 3. Falls back to the r.jina.ai reader proxy and parses the rendered DOM
    (post links, image alt texts as titles).
 
@@ -23,7 +25,7 @@ item again.
 
 Usage: python scripts/build_instagram_feed.py <account>
 Optional env: JINA_API_KEY (avoids r.jina.ai rate limits on shared IPs)
-              INSTAGRAM_SESSIONID (login-wall fallback for the direct fetch)
+              INSTAGRAM_SESSIONID (web_profile_info API fallback)
               INSTAGRAM_PROFILE_HTML=<file> (parse a saved page copy offline)
 """
 
@@ -76,12 +78,22 @@ def output_path(account: str) -> str:
 # Fetching
 # --------------------------------------------------------------------------
 
-def fetch_with_session(url: str) -> str | None:
-    """Direct fetch with the INSTAGRAM_SESSIONID cookie, or None if unset."""
+IG_APP_ID = "936619743392459"
+API_PROFILE_URL = (
+    "https://www.instagram.com/api/v1/users/web_profile_info/?username={account}"
+)
+
+
+def fetch_api_profile(account: str) -> str | None:
+    """web_profile_info JSON via the INSTAGRAM_SESSIONID cookie, or None."""
     session_id = os.environ.get("INSTAGRAM_SESSIONID")
     if not session_id:
         return None
-    return common.fetch_direct(url, cookies={"sessionid": session_id})
+    return common.fetch_direct(
+        API_PROFILE_URL.format(account=account),
+        cookies={"sessionid": session_id},
+        headers={"x-ig-app-id": IG_APP_ID, "Accept": "application/json"},
+    )
 
 
 # --------------------------------------------------------------------------
@@ -172,6 +184,86 @@ def parse_direct(html: str) -> list[dict]:
             if item:
                 items.append(item)
     log.info("direct JSON parse: %d post(s)", len(items))
+    return items
+
+
+# --------------------------------------------------------------------------
+# Parsing strategy 2: web_profile_info API JSON (sessionid cookie)
+# --------------------------------------------------------------------------
+
+def _api_caption(node: dict) -> str:
+    caption = node.get("caption")
+    if isinstance(caption, dict) and caption.get("text"):
+        return caption["text"]
+    edges = (node.get("edge_media_to_caption") or {}).get("edges") or []
+    if edges and isinstance(edges[0], dict):
+        return (edges[0].get("node") or {}).get("text") or ""
+    return ""
+
+
+def _api_item(node: dict) -> dict | None:
+    code = node.get("shortcode") or node.get("code")
+    if not code:
+        return None
+    url = f"https://www.instagram.com/p/{code}/"
+    caption = _api_caption(node)
+
+    published = None
+    taken = node.get("taken_at_timestamp") or node.get("taken_at")
+    if isinstance(taken, (int, float)):
+        published = datetime.fromtimestamp(taken, tz=timezone.utc)
+
+    media_url = (
+        node.get("video_url")
+        or node.get("display_url")
+        or next(
+            (
+                c.get("url", "")
+                for c in (node.get("image_versions2") or {}).get("candidates") or []
+                if isinstance(c, dict)
+            ),
+            "",
+        )
+    )
+    item = {
+        "id": url,
+        "title": _item_title(code, caption, node.get("media_type")),
+        "link": url,
+        "description": caption,
+        "published": published,
+    }
+    if media_url:
+        item["enclosure"] = {
+            "url": media_url,
+            "type": "video/mp4" if node.get("video_url") else "image/jpeg",
+            "length": 0,
+        }
+        escaped_caption = html_mod.escape(caption).replace("\n", "<br>")
+        item["content"] = (
+            f'<img src="{html_mod.escape(media_url, quote=True)}" />\n'
+            f"<p>{escaped_caption}</p>\n"
+            f'<p><a href="{url}">View on Instagram</a></p>'
+        )
+    return item
+
+
+def parse_api(text: str) -> list[dict]:
+    try:
+        payload = json.loads(text)
+    except ValueError:
+        payload = None
+    if not isinstance(payload, dict):
+        return []
+    user = (payload.get("data") or {}).get("user") or {}
+    edges = (user.get("edge_owner_to_timeline_media") or {}).get("edges") or []
+    items, seen = [], set()
+    for edge in edges:
+        node = edge.get("node") if isinstance(edge, dict) else None
+        item = _api_item(node) if node else None
+        if item and item["id"] not in seen:
+            seen.add(item["id"])
+            items.append(item)
+    log.info("api JSON parse: %d post(s)", len(items))
     return items
 
 
@@ -307,11 +399,11 @@ def main(argv=None) -> int:
 
     items = parse_direct(page)
     if not items and not offline:
-        session_page = fetch_with_session(url)
-        if session_page is not None:
-            items = parse_direct(session_page)
-            if items:
-                page = session_page
+        try:
+            api_text = fetch_api_profile(account)
+            items = parse_api(api_text) if api_text is not None else []
+        except Exception as exc:  # noqa: BLE001
+            log.warning("session api fallback failed (%s)", exc)
     if not items and not offline:
         if source == "direct":
             try:
