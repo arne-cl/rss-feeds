@@ -581,6 +581,9 @@ class TestApiPreference:
         monkeypatch.setattr(
             build_instagram_feed, "fetch_api_profile", lambda account: self.RICH_SIDECAR
         )
+        monkeypatch.setattr(
+            build_instagram_feed, "enrich_with_slides", lambda *a, **k: None
+        )
         monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
         monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
 
@@ -602,6 +605,9 @@ class TestApiPreference:
             raise RuntimeError("api exploded")
 
         monkeypatch.setattr(build_instagram_feed, "fetch_api_profile", boom)
+        monkeypatch.setattr(
+            build_instagram_feed, "enrich_with_slides", lambda *a, **k: None
+        )
         monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
         monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
 
@@ -639,6 +645,9 @@ class TestApiPreference:
         )
         monkeypatch.setattr(
             build_instagram_feed, "fetch_api_profile", lambda account: self.RICH_SIDECAR
+        )
+        monkeypatch.setattr(
+            build_instagram_feed, "enrich_with_slides", lambda *a, **k: None
         )
         monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
         monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
@@ -755,6 +764,7 @@ class TestSessionApiFallback:
         monkeypatch.delenv("INSTAGRAM_PROFILE_HTML", raising=False)
         self._login_wall_fetch(monkeypatch)
         self._mock_creq_get(monkeypatch)
+        monkeypatch.setattr(build_instagram_feed.time, "sleep", lambda s: None)
         monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
         monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
 
@@ -830,6 +840,180 @@ class Throttled(Exception):
     def __init__(self, status):
         super().__init__(f"HTTP Error {status}: ")
         self.response = type("Resp", (), {"status_code": status})()
+
+
+def permalink_html(code="AbCdEf12345", slides=3, taken_at=1735689600):
+    """Post page fixture: ScheduledServerJS blob with the app-API media node."""
+    children = [
+        {
+            "pk": str(1000 + i),
+            "id": f"1000{i}_{code}",
+            "code": f"{code}Child{i}",
+            "media_type": 1,
+            "image_versions2": {
+                "candidates": [{"url": f"https://cdn.example.com/{code}-{i}.jpg"}]
+            },
+            "accessibility_caption": f"Slide {i + 1} of {slides}",
+        }
+        for i in range(slides)
+    ]
+    media = {
+        "code": code,
+        "pk": "999001",
+        "id": f"999001_{code}",
+        "media_type": 8,
+        "taken_at": taken_at,
+        "caption": {"text": "Hello carousel"},
+        "carousel_media": children,
+        "image_versions2": {
+            "candidates": [{"url": f"https://cdn.example.com/{code}-cover.jpg"}]
+        },
+    }
+    payload = {
+        "require": [
+            [
+                "ScheduledServerJS",
+                "handle",
+                None,
+                [
+                    {
+                        "__bbox": {
+                            "complete": True,
+                            "result": {
+                                "data": {
+                                    "xdt_api__v1__media__shortcode__web_info": {
+                                        "items": [media]
+                                    }
+                                }
+                            },
+                        }
+                    }
+                ],
+            ]
+        ]
+    }
+    blob = json.dumps(payload, separators=(",", ":"))
+    return f'<html><script type="application/json" data-sjs>{blob}</script></html>'
+
+
+class TestParsePermalink:
+    def test_extracts_item_with_all_slides(self):
+        items = build_instagram_feed.parse_permalink(permalink_html())
+        assert len(items) == 1
+        item = items[0]
+        assert item["id"] == "https://www.instagram.com/p/AbCdEf12345/"
+        assert (item["content"] or "").count("<img") == 3
+        assert item["published"] == datetime(2025, 1, 1, tzinfo=timezone.utc)
+        assert item["title"].startswith("Hello carousel")
+        assert item["enclosure"]["type"] == "image/jpeg"
+
+    def test_single_post(self):
+        items = build_instagram_feed.parse_permalink(
+            permalink_html(code="SiNgLe111", slides=1)
+        )
+        assert (items[0]["content"] or "").count("<img") == 1
+
+    def test_page_without_blobs_is_empty(self):
+        assert build_instagram_feed.parse_permalink("<html>nothing</html>") == []
+
+    def test_garbage_blobs_are_tolerated(self):
+        html = '<script type="application/json">{broken</script>'
+        assert build_instagram_feed.parse_permalink(html) == []
+
+
+class TestEnrichWithSlides:
+    @staticmethod
+    def jina_item(code="AbCdEf12345"):
+        return {
+            "id": f"https://www.instagram.com/p/{code}/",
+            "link": f"https://www.instagram.com/p/{code}/",
+            "title": "alt text title",
+            "description": "",
+            "published": None,
+        }
+
+    def test_adopts_richer_content_and_missing_date(self):
+        items = [self.jina_item()]
+        calls = []
+
+        def fetch_html(code):
+            calls.append(code)
+            return permalink_html()
+
+        build_instagram_feed.enrich_with_slides(items, fetch_html, delay=0)
+        assert calls == ["AbCdEf12345"]
+        assert (items[0]["content"] or "").count("<img") == 3
+        assert items[0]["published"] == datetime(2025, 1, 1, tzinfo=timezone.utc)
+        assert items[0]["enclosure"]["type"] == "image/jpeg"
+
+    def test_existing_date_is_kept(self):
+        item = self.jina_item()
+        item["published"] = datetime(2024, 6, 1, tzinfo=timezone.utc)
+        build_instagram_feed.enrich_with_slides(
+            [item], lambda code: permalink_html(), delay=0
+        )
+        assert item["published"] == datetime(2024, 6, 1, tzinfo=timezone.utc)
+
+    def test_fetch_failure_keeps_item(self):
+        items = [self.jina_item()]
+
+        def boom(code):
+            raise RuntimeError("HTTP Error 404: ")
+
+        build_instagram_feed.enrich_with_slides(items, boom, delay=0)
+        assert "content" not in items[0]
+
+    def test_contentless_item_upgrades_from_single_slide(self):
+        items = [self.jina_item("SiNgLe111")]
+        build_instagram_feed.enrich_with_slides(
+            items,
+            lambda code: permalink_html(code="SiNgLe111", slides=1),
+            delay=0,
+        )
+        assert (items[0]["content"] or "").count("<img") == 1
+
+    def test_existing_richer_content_is_kept(self):
+        item = self.jina_item()
+        item["content"] = "<img a>\n<img b>\n<img c>\n<img d>"
+        build_instagram_feed.enrich_with_slides(
+            [item], lambda code: permalink_html(), delay=0
+        )
+        assert item["content"].count("<img") == 4
+
+    def test_fetch_cap(self):
+        items = [self.jina_item(f"Code{i:05d}") for i in range(5)]
+        calls = []
+
+        def fetch_html(code):
+            calls.append(code)
+            return permalink_html(code=code)
+
+        build_instagram_feed.enrich_with_slides(
+            items, fetch_html, max_fetches=2, delay=0
+        )
+        assert len(calls) == 2
+        assert "content" not in items[2]
+        assert "content" not in items[4]
+
+    def test_items_without_post_link_are_skipped(self):
+        item = self.jina_item()
+        item["link"] = "https://www.klum.com/news"
+        calls = []
+        build_instagram_feed.enrich_with_slides(
+            [item], lambda code: calls.append(code), delay=0
+        )
+        assert calls == []
+
+    def test_spacing_between_fetches(self, monkeypatch):
+        sleeps = []
+        monkeypatch.setattr(build_instagram_feed.time, "sleep", sleeps.append)
+        items = [self.jina_item(f"Code{i:05d}") for i in range(3)]
+        build_instagram_feed.enrich_with_slides(
+            items,
+            lambda code: permalink_html(code=code),
+            delay=5,
+        )
+        assert sleeps == [5, 5]
 
 
 class TestFetchApiProfileRetry:

@@ -20,6 +20,15 @@ enclosure is the first slide. Video slides show a poster image plus a
 ``<video controls>`` tag. A fresh parse never overwrites richer content
 stored by an earlier build (e.g. after a sessionid expiry).
 
+Data-path history: profile pages (anonymous and logged-in) no longer
+embed any media JSON, and the web_profile_info API only answers with a
+fake 429 HTML page unless called with ``__a=1&__d=dis`` — which then
+yields a media-free shell page. The only remaining slide source is the
+post permalink page fetched with the session cookie: it embeds the full
+app-API media node (``xdt_api__v1__media__shortcode__web_info``), which
+``_api_item`` parses. Fresh items are therefore enriched from their
+permalink pages (bounded, spaced, soft-failing) before the merge.
+
 The profile page only shows the latest few posts, so newly parsed items are
 merged into the previous feed file to keep history and preserve dates.
 
@@ -54,6 +63,8 @@ POST_URL_RE = re.compile(r"https://www\.instagram\.com/p/([A-Za-z0-9_-]{5,})/?")
 ACCESSIBILITY_DATE_RE = re.compile(r"on (\w+ \d{1,2}, \d{4})")
 TITLE_MAX_LEN = 80
 MAX_ITEMS = 100
+PERMALINK_MAX = 12
+PERMALINK_DELAY = 2
 
 FEEDS_DIR = os.path.normpath(
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "feeds")
@@ -355,6 +366,77 @@ def parse_api(text: str) -> list[dict]:
 
 
 # --------------------------------------------------------------------------
+# Parsing strategy 2b: post permalink pages (session cookie required)
+# --------------------------------------------------------------------------
+
+def parse_permalink(html: str) -> list[dict]:
+    """Items from post permalink pages (app-API node, all carousel slides).
+
+    Logged-in permalink pages embed the full media object under
+    ``xdt_api__v1__media__shortcode__web_info.items[]`` inside
+    ``application/json`` blobs — the same node shape the session API
+    used to deliver, which ``_api_item`` parses as-is.
+    """
+    items, seen = [], set()
+    for blob in _iter_json_blobs(html):
+        for node in _walk(blob):
+            if not isinstance(node, dict):
+                continue
+            info = node.get("xdt_api__v1__media__shortcode__web_info")
+            if not isinstance(info, dict):
+                continue
+            for entry in info.get("items") or []:
+                item = _api_item(entry) if isinstance(entry, dict) else None
+                if item and item["id"] not in seen:
+                    seen.add(item["id"])
+                    items.append(item)
+    log.info("permalink parse: %d item(s)", len(items))
+    return items
+
+
+def enrich_with_slides(
+    items: list[dict],
+    fetch_html,
+    max_fetches: int = PERMALINK_MAX,
+    delay: float = PERMALINK_DELAY,
+) -> None:
+    """Upgrade fresh items in place from their permalink pages.
+
+    Only strictly richer content (more ``<img>`` slides) replaces an
+    item; ``published`` and ``title`` are adopted only when missing, so
+    existing data never regresses. Fetch failures keep the item as-is;
+    fetches are capped at ``max_fetches`` per build and spaced by
+    ``delay`` seconds to stay polite.
+    """
+    fetched = 0
+    for i, item in enumerate(items):
+        if fetched >= max_fetches:
+            break
+        m = POST_URL_RE.match(item["link"])
+        if not m:
+            continue
+        fetched += 1
+        if fetched > 1:
+            time.sleep(delay)
+        try:
+            parsed = parse_permalink(fetch_html(m.group(1)))
+        except Exception as exc:  # noqa: BLE001
+            log.warning("permalink fetch failed for %s (%s)", item["link"], exc)
+            continue
+        if not parsed:
+            continue
+        rich = parsed[0]
+        if _content_images(rich.get("content")) > _content_images(item.get("content")):
+            item["content"] = rich["content"]
+            if rich.get("enclosure"):
+                item["enclosure"] = rich["enclosure"]
+            if item["published"] is None and rich["published"]:
+                item["published"] = rich["published"]
+            if not item["title"] and rich["title"]:
+                item["title"] = rich["title"]
+
+
+# --------------------------------------------------------------------------
 # Parsing strategy 2: rendered DOM (jina reader HTML)
 # --------------------------------------------------------------------------
 
@@ -532,6 +614,21 @@ def main(argv=None) -> int:
             )
         except RuntimeError as exc:
             return write_warning_feed(account, exc)
+
+    # Permalink enrichment: profile pages and the web_profile_info API no
+    # longer carry media data, so each fresh post's permalink page (fetched
+    # with the session cookie) is the only source for exact dates and all
+    # carousel slides. Bounded and spaced; failures keep cover-only items.
+    if not offline and os.environ.get("INSTAGRAM_SESSIONID"):
+        session_id = os.environ["INSTAGRAM_SESSIONID"]
+
+        def fetch_permalink(code):
+            return common.fetch_direct(
+                f"https://www.instagram.com/p/{code}/",
+                cookies={"sessionid": session_id},
+            )
+
+        enrich_with_slides(items, fetch_permalink)
 
     meta = profile_metadata(page)
     previous = common.load_previous(out)
