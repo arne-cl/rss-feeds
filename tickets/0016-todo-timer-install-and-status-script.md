@@ -52,12 +52,38 @@ TDD: tests in `tests/test_status.py` first (red), then implement
 
 ## Hurdles
 
-(to be filled during implementation)
+- **Push credentials**: the HTTPS credential cache (helper `cache`,
+  10h timeout) had expired and nothing else could push non-interactively
+  — no gh CLI, no other helpers; an existing `~/.config/systemd/user`
+  empty setup. Decision (repo owner): **GUI askpass + credential cache**
+  — `scripts/askpass_gui.sh` (zenity password dialog, 180s timeout,
+  clean failure without a graphical session) wired via repo-local
+  `git config core.askPass`; the owner answers the popup with their
+  existing `ghp_*` token after each boot (cache is gone on reboot).
+  Unattended boots while away still skip the push; a later successful
+  run pushes then.
+- github.com was missing from `~/.ssh/known_hosts` (added via
+  ssh-keyscan); the existing ed25519 key is *not* registered on GitHub
+  (`Permission denied (publickey)`) — SSH considered, rejected for now.
+- Two ~11MB PostScript junk files (`argparse`, `os`) sat untracked in
+  the repo root (accidental print output) — removed.
+- Session check (`check_instagram_session.py tiny_ruins`) during the
+  concurrent first timer run: `rate_limited` (429, web_profile_info) —
+  inconclusive, the run itself was using the rate budget; re-check
+  after the run.
+- The timer fired immediately on `enable --now`: `OnBootSec=5min` was
+  already in the past after today's boot, so systemd elapsed it at
+  once — convenient: the first run doubled as the end-to-end test.
 
 ## Verification
 
-(to be filled: session check result, list-timers output, journal
-excerpt, pytest count, example status output)
+(partial, to be completed)
+
+- `.venv/bin/pytest` baseline: 230 passed.
+- `systemctl --user list-timers rss-feeds-update.timer`: timer enabled,
+  first run started 2026-10-09 21:16:05 CEST right after enable; builds
+  ran clean (Quora, Klum, BRF, Instagram accounts in progress);
+  `loginctl show-user arne -p Linger` → `Linger=yes`.
 
 ## Status
 
