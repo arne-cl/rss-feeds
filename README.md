@@ -42,6 +42,13 @@ session id still works by running `scripts/check_instagram_session.py` (exit 0 =
 To run everything by hand: `scripts/update_local.sh` (pull, build, commit,
 push) or the individual builder commands under "Local development" below.
 
+For a health report (last run, items and build failures per feed, timer
+state): `scripts/status.py` — offline, exits non-zero on failures (1) or
+an inactive update timer (2); `--check-session` adds a live Instagram
+session check. Pushing needs credentials: the repo's `core.askPass`
+(`scripts/askpass_gui.sh`) pops up a password dialog when the credential
+cache is cold — enter your GitHub token there.
+
 ## Local development
 
 ```sh
