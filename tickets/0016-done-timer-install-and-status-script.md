@@ -74,17 +74,36 @@ TDD: tests in `tests/test_status.py` first (red), then implement
 - The timer fired immediately on `enable --now`: `OnBootSec=5min` was
   already in the past after today's boot, so systemd elapsed it at
   once — convenient: the first run doubled as the end-to-end test.
+- First run: all 14 feeds built and committed (`5277d6e`), but the
+  askpass dialog timed out (owner AFK) and a transient DNS failure
+  ("Could not resolve host: github.com", self-healed in ~1 min) cost
+  two failed push attempts before a manual `git push` succeeded once
+  the owner answered the dialog. Builds were never affected; the
+  commit sat safely local between attempts.
+- Session check post-run (21:47, ~5 min after the last Instagram
+  build): still `rate_limited` — web_profile_info stays throttled
+  well after a run. The cookie itself is fine: permalink fetches with
+  the same cookie succeeded throughout the run. Practical upshot:
+  run `check_instagram_session.py` *before* a build or much later
+  after one, not right after.
 
 ## Verification
 
-(partial, to be completed)
-
-- `.venv/bin/pytest` baseline: 230 passed.
-- `systemctl --user list-timers rss-feeds-update.timer`: timer enabled,
-  first run started 2026-10-09 21:16:05 CEST right after enable; builds
-  ran clean (Quora, Klum, BRF, Instagram accounts in progress);
-  `loginctl show-user arne -p Linger` → `Linger=yes`.
+- `.venv/bin/pytest`: 230 passed (baseline) → **257 passed** (27 new
+  `tests/test_status.py` tests, red→green).
+- Timer: `systemctl --user list-timers` →
+  `Sat 2026-10-10 21:42:05 CEST, 23h left` (OnUnitInactiveSec=1d);
+  `Linger=yes`.
+- End-to-end first run 21:16:05→21:39:03 CEST under the real service:
+  Quora, Klum, BRF + 11 Instagram accounts rebuilt, 14 files changed,
+  committed `5277d6e` and pushed to origin after askpass auth
+  (`a7033a5..5277d6e`).
+- `scripts/status.py` live: last update commit + per-feed table + 
+  `failed feeds: 0`, exit 0; `--check-session` reports
+  `rate_limited` post-run as expected (exit 1 path verified by tests).
+- New entries visible in the report after the run (daxwerner 12→13,
+  jamborjoanna 12→14, waveybobson 12→13).
 
 ## Status
 
-todo
+done
