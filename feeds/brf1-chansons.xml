@@ -8,21 +8,21 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <language>de</language>
-    <lastBuildDate>Wed, 07 Oct 2026 12:44:41 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 09 Oct 2026 19:16:08 +0000</lastBuildDate>
     <itunes:author>BRF1</itunes:author>
     <itunes:category text="Music"/>
     <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2015/06/CLF-1420x968.jpg"/>
     <itunes:explicit>no</itunes:explicit>
     <itunes:summary>Eine Sendung, die, wenn es sie nicht schon seit über 30 Jahren geben würde, für Ostbelgien erfunden werden müsste. Am Schnittpunkt der Kulturen stellt der BRF französische Chansons, deutschsprachige Lieder und internationale Folk- und Worldmusic vor. Montag, 20 - 21 Uhr.</itunes:summary>
     <item>
-      <title>Chansons, Lieder und Folk: Danger Dan – Protest salopp</title>
+      <title>Chansons, Lieder und Folk: Danger Dan - Protest salopp</title>
       <link>https://1.brf.be/sendungen/chansons/1228132/</link>
       <description>Mit Maaru Will.</description>
       <content:encoded>&lt;p&gt;Maaru Will&lt;/p&gt;</content:encoded>
       <guid isPermaLink="false">https://1.brf.be/sendungen/chansons/1228132/</guid>
       <enclosure url="https://streaming2.brf.be/audio/2026/41/7acbd92c3b42f724442aa2c8b350c774.mp3" length="56388132" type="audio/mpeg"/>
       <pubDate>Mon, 05 Oct 2026 21:00:00 +0200</pubDate>
-      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2021/05/MarkusWill_ThierryCornelyBRF-600x400.jpg"/>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2026/10/10-danger-dan-credits-bastian-bochinski-web-600x400.jpg"/>
     </item>
     <item>
       <title>Chansons, Lieder und Folk: Nichtseattle – Liebe als radikale, solidarische Praxis</title>
