@@ -8,12 +8,22 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <language>de</language>
-    <lastBuildDate>Tue, 13 Oct 2026 09:12:53 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 14 Oct 2026 14:55:09 +0000</lastBuildDate>
     <itunes:author>BRF1</itunes:author>
     <itunes:category text="Music"/>
     <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2015/06/CLF-1420x968.jpg"/>
     <itunes:explicit>no</itunes:explicit>
     <itunes:summary>Eine Sendung, die, wenn es sie nicht schon seit über 30 Jahren geben würde, für Ostbelgien erfunden werden müsste. Am Schnittpunkt der Kulturen stellt der BRF französische Chansons, deutschsprachige Lieder und internationale Folk- und Worldmusic vor. Montag, 20 - 21 Uhr.</itunes:summary>
+    <item>
+      <title>Chansons, Lieder und Folk: Jude Brothers - Unter den Geisterbäumen der Ozarks</title>
+      <link>https://1.brf.be/sendungen/chansons/1228908/</link>
+      <description>Mit Harfe, Tenorbanjo und Geschichten aus dem Hinterland bricht eine außergewöhnliche Stimme aus Arkansas mit den Mustern aktueller Folkmusik. Die non-binäre Songwriterin Jud/Jude/Judith Brothers umrankt auf ihrem Album "Dogwood Maiden Voyage" Naturmetaphern mit verschlungenen Erzählpfaden.</description>
+      <content:encoded>&lt;p&gt;Die musikalische Welt von Judith Brothers liegt tief in den Ozarks in Arkansas. Dieses dicht bewaldete, bis heute isolierte Gebirgsplateau im Herzen der USA prägt eine ganz eigene Form der Naturmystik. Jahrhundertelang vermischten sich in der Abgeschiedenheit der Wälder europäische Geistergeschichten mit indigenem Kräuterwissen zu einem Volksglauben, der die Natur als beseelt begreift. Bäume besitzen hier Geister, und der dichte Forst ist ein unheimlicher Zufluchtsort. Judith Brothers, die mittlerweile im kargen New Mexico lebt, speist ihren Freak-Folk aus dieser Wald-Einsamkeit.&lt;/p&gt;&lt;p&gt;Der &amp;quot;Dogwood&amp;quot; (Blüten-Hartriegel) im Albumtitel, eine holzwuchernde Kletterpflanze, dient als Symbol für die Schwelle zwischen Leben und Tod. In den Texten kriechen fragmentierte Erinnerungen an Brothers’ Kindheit in Springdale an die Oberfläche, sie verweben biografische Zufluchtsorte mit mythischen Fabelwelten. Das elfminütige Eröffnungsepos &amp;quot;Handsome Little Fountains &amp;amp; Little Ancient Mountains&amp;quot; lässt zwei getrennte Teile des eigenen Ichs in einer jenseitigen Berglandschaft aufeinandertreffen, um dort Geschichten über das irdische Dasein auszutauschen. In &amp;quot;Treat Me Like A Tree &amp;amp; Love Me For My Crookedness&amp;quot; nutzt die Künstlerin, die seit ihrem achten Lebensjahr Songs schreibt, mit spielerischer Ironie das Bild des krumm gewachsenen Baumes, um eine feinsinnige Liebeserklärung an die eigenen menschlichen Unvollkommenheiten und Macken zu formulieren. &amp;quot;Sister Different &amp;amp; Sister Distant&amp;quot; gibt ein Zwiegespräch wieder zwischen den Facetten der eigenen Persönlichkeit, die wie ungleiche Schwestern miteinander kommunizieren. Am Ende des 14 Songs umfassenden Albums singt Brothers in &amp;quot;Small Gods &amp;amp; Grief Portals&amp;quot; über eine Kulisse aus summenden Insekten und abendlichen Vogelrufen, um den Wald als heilenden Trauerraum greifbar zu machen.&lt;/p&gt;&lt;p&gt;Die Produktion verzichtet auf jedwede elektronische Unterstützung. Jude Brothers beschreibt das Album als ein &amp;quot;Schiff aus Holz&amp;quot;. Die Arrangements vereinen Harfe, Fiddle, Tenorbanjo, Gitarre und Kontrabass, live eingespielt in Wohnzimmern, Studios und in einem alten Eisenbahntunnel in Tennessee. Die Songs verweigern sich geraden Strukturen, die Art, wie Jude Brothers ihre Geschichten erzählt, erinnert an die Berichte alter Menschen im amerikanischen Süden, die sich in etliche Nebenstränge verzweigen, bevor sie zum eigentlichen Kern zurückkehren.&lt;/p&gt;&lt;p&gt;&amp;quot;Dogwood Maiden Voyage&amp;quot; verzaubert mit Geduld und Entschleunigung und einer fast soghaften Intimität, die den Hörer mit jedem Knarzen der Instrumente tiefer in diese hölzerne Klangwelt hineinzieht. Jude Brothers gelingt das Kunststück, aus uralten Mythen, purer Akustik und moderner Identitätssuche ein zeitloses, berührendes Dokument zu formen - ein Album von magischer Multitonalität, das wie ein Waldspaziergang zur goldenen Stunde funktioniert. Man verläuft sich gerne in diesen verschlungenen Pfaden, weil hinter jeder Wegbiegung ein neuer Flecken Schönheit funkelt.&lt;/p&gt;&lt;p&gt;&amp;quot;Dogwood Maiden Voyage&amp;quot; von Jude Brothers ist erschienen am 25. September bei Gar Hole Records.&lt;/p&gt;&lt;p&gt;+ Neuheiten von Ruby Gill, His His, Jet van der Steen, Emma Hessels, Lost In September und Galine&lt;/p&gt;&lt;p&gt;Maaru Will&lt;/p&gt;</content:encoded>
+      <guid isPermaLink="false">https://1.brf.be/sendungen/chansons/1228908/</guid>
+      <enclosure url="https://streaming2.brf.be/audio/2026/42/1618f84d2311c81ce327b5fd24695690.mp3" length="56334774" type="audio/mpeg"/>
+      <pubDate>Mon, 12 Oct 2026 21:00:00 +0200</pubDate>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2026/10/2022promojuds82000x-533x400.jpg"/>
+    </item>
     <item>
       <title>Chansons, Lieder und Folk: Danger Dan - Protest salopp</title>
       <link>https://1.brf.be/sendungen/chansons/1228132/</link>
@@ -32,7 +42,7 @@
       <guid isPermaLink="false">https://1.brf.be/sendungen/chansons/1227507/</guid>
       <enclosure url="https://streaming2.brf.be/audio/2026/40/f3edc82a75e9abb8bb302761597fd249.mp3" length="56488879" type="audio/mpeg"/>
       <pubDate>Mon, 28 Sep 2026 21:00:00 +0200</pubDate>
-      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2026/09/nichtseattle-solo-05-26-sascha-schlegel-37-599x400.jpg"/>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2026/09/nichtseattle-solo-05-26-sascha-schlegel-37-539x360.jpg"/>
     </item>
     <item>
       <title>Chansons, Lieder und Folk: Jake Xerxes Fussell, Retter der vergessenen Lieder</title>
@@ -131,7 +141,6 @@
       <guid isPermaLink="false">https://1.brf.be/sendungen/chansons/1221758/</guid>
       <enclosure url="https://streaming2.brf.be/audio/2026/30/a831ec17f09b923f33ce34cfea3b5a83.mp3" length="57771196" type="audio/mpeg"/>
       <pubDate>Mon, 20 Jul 2026 21:00:00 +0200</pubDate>
-      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2026/07/cinderwell-photocreditchelseamoosekian-540x360.jpg"/>
     </item>
     <item>
       <title>Chansons, Lieder und Folk: Songs of Standhaftigkeit</title>
