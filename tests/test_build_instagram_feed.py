@@ -167,6 +167,27 @@ class TestMain:
         assert "<title>Tiny Ruins on Instagram</title>" in xml
         assert "https://www.instagram.com/tiny_ruins/" in xml
 
+    def test_prints_throttle_marker_when_permalink_is_429(
+        self, tmp_path, monkeypatch, capsys
+    ):
+        monkeypatch.delenv("INSTAGRAM_PROFILE_HTML", raising=False)
+        monkeypatch.setenv("INSTAGRAM_SESSIONID", "s3cret")
+        monkeypatch.setattr(
+            build_instagram_feed.common,
+            "fetch_page",
+            lambda *a, **k: (open(FIXTURE, encoding="utf-8").read(), "direct"),
+        )
+        monkeypatch.setattr(
+            build_instagram_feed, "fetch_api_profile", lambda account: None
+        )
+        monkeypatch.setattr(
+            build_instagram_feed, "enrich_with_slides", lambda *a, **k: True
+        )
+        monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
+
+        assert build_instagram_feed.main(["tiny_ruins"]) == 0
+        assert build_instagram_feed.THROTTLE_MARKER in capsys.readouterr().out
+
     def test_invalid_account_fails_cleanly(self, tmp_path, monkeypatch):
         monkeypatch.setattr(build_instagram_feed, "FEEDS_DIR", str(tmp_path))
         assert build_instagram_feed.main(["../evil"]) == 2
@@ -980,6 +1001,20 @@ class TestEnrichWithSlides:
 
         build_instagram_feed.enrich_with_slides(items, boom, delay=0)
         assert "content" not in items[0]
+
+    def test_429_from_permalink_reports_throttled(self):
+        items = [self.jina_item()]
+
+        def boom(code):
+            raise Throttled(429)
+
+        assert build_instagram_feed.enrich_with_slides(items, boom, delay=0) is True
+
+    def test_successful_enrichment_is_not_throttled(self):
+        items = [self.jina_item()]
+        assert build_instagram_feed.enrich_with_slides(
+            items, lambda code: permalink_html(), delay=0
+        ) is False
 
     def test_contentless_item_upgrades_from_single_slide(self):
         items = [self.jina_item("SiNgLe111")]
