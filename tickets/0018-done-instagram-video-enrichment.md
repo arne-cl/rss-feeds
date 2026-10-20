@@ -49,13 +49,27 @@ exact `taken_at` (all current Instagram items show `00:00:00`).
 
 ## Hurdles
 
-(to be filled during implementation)
+- The session API stayed `429` during the real rebuild, so the fix was
+  exercised on the direct-parse → permalink path (the actual failure mode).
+- Only **fresh** items are permalink-enriched (cap 12). Two older
+  "Video by titanic" entries (`DecKWD1FdcC`, `DeKHAtYAKgs`) no longer
+  appear on the profile page, so they stay poster-only. Their permalinks
+  do return videos, but repairing all historical items would need a
+  separate bounded backfill (out of scope, ban risk).
+- Date upgrade also fixed the day-precision `00:00:00` timestamps of all
+  freshly enriched moritz items; old non-fresh items keep their stored
+  dates.
 
 ## Verification
 
-(to be filled: pytest count, rebuilt moritz feed showing `<video>` +
-`video/mp4` + exact pubDate)
+- Baseline 257 passed → final `pytest`: **260 passed**.
+- Live permalink check before the fix: `parse_permalink` returned
+  `video/mp4`, 1 `<img>`, 1 `<video>`, `2026-10-18 08:40:12+00:00`.
+- Real rebuild: `.venv/bin/python scripts/build_instagram_feed.py
+  moritz.huertgen` (75s, 17 items). `DeoRWklOA79` now has a
+  `<video controls>` tag, enclosure `type="video/mp4"`, and
+  `pubDate Sun, 18 Oct 2026 08:40:12 +0000`.
 
 ## Status
 
-todo
+done
