@@ -402,8 +402,9 @@ def enrich_with_slides(
 ) -> None:
     """Upgrade fresh items in place from their permalink pages.
 
-    Only strictly richer content (more ``<img>`` slides) replaces an
-    item; ``published`` and ``title`` are adopted only when missing, so
+    Only strictly richer content (more ``<img>``/``<video>`` media tags)
+    replaces an item; ``title`` is adopted only when missing and an exact
+    ``published`` timestamp replaces a missing or day-precision one, so
     existing data never regresses. Fetch failures keep the item as-is;
     fetches are capped at ``max_fetches`` per build and spaced by
     ``delay`` seconds to stay polite.
@@ -426,14 +427,14 @@ def enrich_with_slides(
         if not parsed:
             continue
         rich = parsed[0]
-        if _content_images(rich.get("content")) > _content_images(item.get("content")):
+        if _content_media_score(rich.get("content")) > _content_media_score(item.get("content")):
             item["content"] = rich["content"]
             if rich.get("enclosure"):
                 item["enclosure"] = rich["enclosure"]
-            if item["published"] is None and rich["published"]:
-                item["published"] = rich["published"]
-            if not item["title"] and rich["title"]:
-                item["title"] = rich["title"]
+        if _should_take_published(item.get("published"), rich["published"]):
+            item["published"] = rich["published"]
+        if not item["title"] and rich["title"]:
+            item["title"] = rich["title"]
 
 
 # --------------------------------------------------------------------------
@@ -470,25 +471,47 @@ def parse_dom(html: str) -> list[dict]:
 # Profile metadata
 # --------------------------------------------------------------------------
 
-def _content_images(content: str | None) -> int:
-    return content.count("<img") if content else 0
+def _content_media_score(content: str | None) -> int:
+    """Media richness of item HTML, counting poster/video tags equally."""
+    return (content.count("<img") + content.count("<video")) if content else 0
+
+
+def _is_date_only(published: datetime | None) -> bool:
+    if published is None:
+        return False
+    return (published.hour, published.minute, published.second, published.microsecond) == (
+        0,
+        0,
+        0,
+        0,
+    )
+
+
+def _should_take_published(current: datetime | None, candidate: datetime | None) -> bool:
+    """Prefer an exact timestamp over no date or a day-precision one."""
+    if candidate is None:
+        return False
+    return current is None or (_is_date_only(current) and not _is_date_only(candidate))
 
 
 def restore_richer_content(items: list[dict], previous: dict[str, dict]) -> None:
-    """Keep the stored content/enclosure when a fresh parse saw fewer slides.
+    """Keep the stored media/date when a fresh parse saw fewer slides.
 
     E.g. after a sessionid expiry the direct parse only sees carousel covers;
     the previously stored API content must survive the merge instead of being
-    overwritten by the weaker reparse.
+    overwritten by the weaker reparse. Videos count like images, so a poster
+    parse cannot drop a stored ``<video>``.
     """
     for item in items:
         old = previous.get(item["id"])
         if not old:
             continue
-        if _content_images(old.get("content")) > _content_images(item.get("content")):
+        if _content_media_score(old.get("content")) > _content_media_score(item.get("content")):
             item["content"] = old["content"]
             if old.get("enclosure"):
                 item["enclosure"] = old["enclosure"]
+        if _should_take_published(item.get("published"), old.get("published")):
+            item["published"] = old["published"]
 
 
 def profile_metadata(html: str) -> dict:
