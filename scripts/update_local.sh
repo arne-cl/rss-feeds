@@ -17,12 +17,12 @@ PY=.venv/bin/python
 "$PY" scripts/build_quora_feed.py
 "$PY" scripts/build_klum_feed.py
 "$PY" scripts/build_brf_chansons_feed.py
-for account in tiny_ruins martinmaleschka tumvlt jamborjoanna daxwerner thebeths susibumms waveybobson moritz.huertgen reinder_wijnveld ostmoderne_philokartie sveamaus; do
-    "$PY" scripts/build_instagram_feed.py "$account"
-    # spread the authenticated API calls out so Instagram's rate limit
-    # (429) is not burned through in one burst
-    sleep 45
-done
+# Short gap by default; the runner waits 45s/90s/180s only after a
+# permalink fetch actually reports a 429.
+"$PY" scripts/instagram_stagger.py \
+    tiny_ruins martinmaleschka tumvlt jamborjoanna daxwerner thebeths \
+    susibumms waveybobson moritz.huertgen reinder_wijnveld \
+    ostmoderne_philokartie sveamaus
 
 if [[ -n "$(git status --porcelain feeds)" ]]; then
     git add feeds

@@ -36,7 +36,8 @@ Soft failures (fetch, fallback fetch, unparseable page) do not abort with a
 non-zero exit: they are recorded as a rolling "Feed build failed" item
 (error + stacktrace) inside the feed, keeping all previous items, so feed
 subscribers can see the breakage. The next successful build removes that
-item again.
+item again. When a permalink fetch is 429-throttled, the builder prints
+``::instagram-throttled::`` so the update runner can back off adaptively.
 
 Usage: python scripts/build_instagram_feed.py <account>
 Optional env: JINA_API_KEY (avoids r.jina.ai rate limits on shared IPs)
@@ -57,6 +58,7 @@ from bs4 import BeautifulSoup
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common
+import instagram_stagger
 
 ACCOUNT_RE = re.compile(r"^[A-Za-z0-9._]{1,30}$")
 POST_URL_RE = re.compile(r"https://www\.instagram\.com/p/([A-Za-z0-9_-]{5,})/?")
@@ -65,6 +67,7 @@ TITLE_MAX_LEN = 80
 MAX_ITEMS = 100
 PERMALINK_MAX = 12
 PERMALINK_DELAY = 2
+THROTTLE_MARKER = instagram_stagger.THROTTLE_MARKER
 
 FEEDS_DIR = os.path.normpath(
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "feeds")
@@ -399,7 +402,7 @@ def enrich_with_slides(
     fetch_html,
     max_fetches: int = PERMALINK_MAX,
     delay: float = PERMALINK_DELAY,
-) -> None:
+) -> bool:
     """Upgrade fresh items in place from their permalink pages.
 
     Only strictly richer content (more ``<img>``/``<video>`` media tags)
@@ -407,9 +410,11 @@ def enrich_with_slides(
     ``published`` timestamp replaces a missing or day-precision one, so
     existing data never regresses. Fetch failures keep the item as-is;
     fetches are capped at ``max_fetches`` per build and spaced by
-    ``delay`` seconds to stay polite.
+    ``delay`` seconds to stay polite. Returns True if any fetch was
+    throttled with a 429, so the update runner can back off.
     """
     fetched = 0
+    throttled = False
     for i, item in enumerate(items):
         if fetched >= max_fetches:
             break
@@ -422,6 +427,8 @@ def enrich_with_slides(
         try:
             parsed = parse_permalink(fetch_html(m.group(1)))
         except Exception as exc:  # noqa: BLE001
+            if common.status_of(exc) == 429:
+                throttled = True
             log.warning("permalink fetch failed for %s (%s)", item["link"], exc)
             continue
         if not parsed:
@@ -435,6 +442,7 @@ def enrich_with_slides(
             item["published"] = rich["published"]
         if not item["title"] and rich["title"]:
             item["title"] = rich["title"]
+    return throttled
 
 
 # --------------------------------------------------------------------------
@@ -642,6 +650,7 @@ def main(argv=None) -> int:
     # longer carry media data, so each fresh post's permalink page (fetched
     # with the session cookie) is the only source for exact dates and all
     # carousel slides. Bounded and spaced; failures keep cover-only items.
+    throttled = False
     if not offline and os.environ.get("INSTAGRAM_SESSIONID"):
         session_id = os.environ["INSTAGRAM_SESSIONID"]
 
@@ -651,13 +660,15 @@ def main(argv=None) -> int:
                 cookies={"sessionid": session_id},
             )
 
-        enrich_with_slides(items, fetch_permalink)
+        throttled = enrich_with_slides(items, fetch_permalink)
 
     meta = profile_metadata(page)
     previous = common.load_previous(out)
     restore_richer_content(items, common.without_warning(previous))
     merged = common.merge_items(common.without_warning(previous), items)
     common.write_feed(list(merged.values()), out, MAX_ITEMS, **_feed_kwargs(account, meta))
+    if throttled:
+        print(THROTTLE_MARKER, flush=True)
     return 0
 
 
