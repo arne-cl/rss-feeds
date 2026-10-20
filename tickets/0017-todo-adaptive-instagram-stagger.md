@@ -14,20 +14,25 @@ manual/verification run too.
 
 Make the stagger reactive instead of unconditional:
 
-- Default delay between Instagram builds drops to ~0-2s.
-- Track 429s from the profile/permalink fetches (the builders already
-  classify them); on the first 429, sleep the current 45s before the
-  next account, and keep backing off for the rest of the run
-  (e.g. exponential 45s → 90s → 180s, capped).
-- The backoff state lives in the update script (shell) or the build
-  script (exit code / stdout marker) — decide during implementation;
-  keep `update_local.sh` readable.
+- Default delay between Instagram builds drops to 2s.
+- New `scripts/instagram_stagger.py` runner builds the accounts in
+  sequence and owns the backoff state; `update_local.sh` calls it once
+  instead of looping/sleeping itself.
+- `build_instagram_feed.py` prints a machine-readable marker
+  (`::instagram-throttled::`) when a **permalink** fetch gets a 429.
+  A `web_profile_info` 429 is ignored for staggering: tickets 0013/0015
+  established that endpoint returns a fake/neutered 429 even when the
+  session works, and permalinks then succeed. Profile-page 429s already
+  fall back to jina inside `fetch_page`.
+- Backoff: no throttle → keep 2s; first 429 → 45s before the next
+  account; further 429s → 90s, then cap at 180s. Once throttled, keep
+  the cautious delay for the rest of the run.
 - Soft-fail behaviour stays untouched: a persistent 429 still ends in a
   "Feed build failed" warning item, never a hard abort mid-run.
 
-TDD: characterise the backoff decision (429 seen → delay, none → no
-delay, repeated 429s → grow up to cap) in `tests/` before changing the
-script wiring.
+TDD: `next_delay()` and the runner loop are unit-tested before changing
+the script wiring; the builder marker is covered by enrichment/main
+tests.
 
 ## Hurdles
 
