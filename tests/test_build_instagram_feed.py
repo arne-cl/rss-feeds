@@ -691,6 +691,19 @@ class TestRicherContentRestore:
         assert new["content"] == "<img one>\n<img two>"
         assert new["enclosure"]["url"] == "https://cdn/b.mp4"
 
+    def test_keeps_stored_video_when_reparse_has_equal_images(self):
+        new = self.item()
+        new["published"] = datetime(2025, 1, 1, tzinfo=timezone.utc)
+        old = self.item(
+            content='<img one>\n<video controls src="https://cdn/b.mp4"></video>',
+            enclosure={"url": "https://cdn/b.mp4", "type": "video/mp4", "length": 0},
+        )
+        old["published"] = datetime(2025, 1, 1, 8, 40, tzinfo=timezone.utc)
+        build_instagram_feed.restore_richer_content([new], {new["id"]: old})
+        assert "<video controls" in new["content"]
+        assert new["enclosure"]["type"] == "video/mp4"
+        assert new["published"] == datetime(2025, 1, 1, 8, 40, tzinfo=timezone.utc)
+
     def test_keeps_fresh_content_when_richer_or_equal(self):
         new = self.item(content="<img one>\n<img two>")
         old = self.item(content="<img one>")
@@ -842,7 +855,7 @@ class Throttled(Exception):
         self.response = type("Resp", (), {"status_code": status})()
 
 
-def permalink_html(code="AbCdEf12345", slides=3, taken_at=1735689600):
+def permalink_html(code="AbCdEf12345", slides=3, taken_at=1735689600, video=False):
     """Post page fixture: ScheduledServerJS blob with the app-API media node."""
     children = [
         {
@@ -857,6 +870,11 @@ def permalink_html(code="AbCdEf12345", slides=3, taken_at=1735689600):
         }
         for i in range(slides)
     ]
+    if video:
+        children[0]["media_type"] = 2
+        children[0]["video_versions"] = [
+            {"url": f"https://cdn.example.com/{code}.mp4"}
+        ]
     media = {
         "code": code,
         "pk": "999001",
@@ -971,6 +989,39 @@ class TestEnrichWithSlides:
             delay=0,
         )
         assert (items[0]["content"] or "").count("<img") == 1
+
+    def test_video_upgrades_when_image_count_is_equal(self):
+        item = self.jina_item()
+        item["published"] = datetime(2025, 1, 1, tzinfo=timezone.utc)
+        item["content"] = (
+            '<img src="https://cdn.example.com/AbCdEf12345-0.jpg" />'
+        )
+        item["enclosure"] = {
+            "url": "https://cdn.example.com/AbCdEf12345-0.jpg",
+            "type": "image/jpeg",
+            "length": 0,
+        }
+        build_instagram_feed.enrich_with_slides(
+            [item],
+            lambda code: permalink_html(slides=1, video=True),
+            delay=0,
+        )
+        assert "<video controls" in item["content"]
+        assert item["content"].count("<img") == 1
+        assert item["enclosure"]["url"].endswith("AbCdEf12345.mp4")
+        assert item["enclosure"]["type"] == "video/mp4"
+
+    def test_date_only_timestamp_upgrades_to_exact_taken_at(self):
+        item = self.jina_item()
+        item["published"] = datetime(2025, 1, 1, tzinfo=timezone.utc)
+        build_instagram_feed.enrich_with_slides(
+            [item],
+            lambda code: permalink_html(taken_at=1735689723),
+            delay=0,
+        )
+        assert item["published"] == datetime.fromtimestamp(
+            1735689723, tz=timezone.utc
+        )
 
     def test_existing_richer_content_is_kept(self):
         item = self.jina_item()
