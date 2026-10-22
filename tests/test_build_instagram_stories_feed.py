@@ -123,6 +123,22 @@ class TestParseStoriesPage:
     def test_empty_page_yields_no_items(self):
         assert stories.parse_stories_page("<html></html>", "thebeths") == []
 
+    def test_same_minute_stories_get_distinct_titles(self):
+        taken = 1735689600
+        items = stories.parse_stories_page(
+            stories_page(
+                [
+                    story_node(node_id="300666_1", taken_at=taken),
+                    story_node(node_id="300667_1", taken_at=taken),
+                ]
+            ),
+            "thebeths",
+        )
+        titles = [i["title"] for i in items]
+        assert len(set(titles)) == 2
+        assert titles[0].endswith("2025-01-01 00:00")
+        assert titles[1] == titles[0] + " (2)"
+
 
 class TestKeepUntilCap:
     def test_same_day_stories_of_one_account_are_not_superseded(

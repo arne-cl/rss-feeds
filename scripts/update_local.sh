@@ -19,10 +19,13 @@ PY=.venv/bin/python
 "$PY" scripts/build_brf_chansons_feed.py
 # Short gap by default; the runner waits 45s/90s/180s only after a
 # permalink fetch actually reports a 429.
-"$PY" scripts/instagram_stagger.py \
-    tiny_ruins martinmaleschka tumvlt jamborjoanna daxwerner thebeths \
-    susibumms waveybobson moritz.huertgen reinder_wijnveld \
+IG_ACCOUNTS=(
+    tiny_ruins martinmaleschka tumvlt jamborjoanna daxwerner thebeths
+    susibumms waveybobson moritz.huertgen reinder_wijnveld
     ostmoderne_philokartie sveamaus betelsfoodfeast
+)
+"$PY" scripts/instagram_stagger.py "${IG_ACCOUNTS[@]}"
+"$PY" scripts/build_instagram_stories_feed.py "${IG_ACCOUNTS[@]}"
 
 if [[ -n "$(git status --porcelain feeds)" ]]; then
     git add feeds

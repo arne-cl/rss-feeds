@@ -157,8 +157,21 @@ def parse_stories_page(html: str, account: str) -> list[dict]:
                 continue
             seen.add(node_id)
             items.append(_story_item(node, account))
+    _disambiguate_titles(items)
     log.info("stories parse: %d item(s) for %s", len(items), account)
     return items
+
+
+def _disambiguate_titles(items: list[dict]) -> None:
+    """Suffix colliding titles: the merge's supersede filter matches on
+    (title, date), so two same-minute stories of one account must not
+    share a title or the older would be dropped on the next build."""
+    counts: dict[str, int] = {}
+    for item in items:
+        n = counts.get(item["title"], 0)
+        counts[item["title"]] = n + 1
+        if n:
+            item["title"] = f"{item['title']} ({n + 1})"
 
 
 def write_warning_feed(accounts: list[str], exc: Exception) -> int:
