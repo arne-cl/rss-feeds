@@ -182,14 +182,19 @@ def _item_content(post_url: str, caption: str, slides: list[dict]) -> str:
     )
 
 
-def fetch_api_profile(account: str) -> str | None:
-    """web_profile_info JSON via the INSTAGRAM_SESSIONID cookie, or None.
+def fetch_api_profile(account: str, session_id: str | None = None) -> str | None:
+    """web_profile_info JSON via a sessionid cookie, or None.
+
+    The cookie comes from the explicit ``session_id`` argument (used by
+    the session helper to verify a candidate cookie) or, by default,
+    from ``INSTAGRAM_SESSIONID``.
 
     429 throttles get a bounded backoff (10s, 30s); other errors and a
     still-throttled session after the last retry raise immediately so
     main() can fall back to the weaker parses.
     """
-    session_id = os.environ.get("INSTAGRAM_SESSIONID")
+    if session_id is None:
+        session_id = os.environ.get("INSTAGRAM_SESSIONID")
     if not session_id:
         return None
     headers = {"x-ig-app-id": IG_APP_ID, "Accept": "application/json"}
