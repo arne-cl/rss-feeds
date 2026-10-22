@@ -22,7 +22,7 @@ PY=.venv/bin/python
 "$PY" scripts/instagram_stagger.py \
     tiny_ruins martinmaleschka tumvlt jamborjoanna daxwerner thebeths \
     susibumms waveybobson moritz.huertgen reinder_wijnveld \
-    ostmoderne_philokartie sveamaus
+    ostmoderne_philokartie sveamaus betelsfoodfeast
 
 if [[ -n "$(git status --porcelain feeds)" ]]; then
     git add feeds
