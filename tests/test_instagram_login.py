@@ -262,3 +262,21 @@ class TestFetchApiProfileExplicitSessionid:
 
         b.fetch_api_profile("tiny_ruins")
         assert captured["cookies"] == {"sessionid": "from-env"}
+
+
+class TestParseArgs:
+    def test_login_defaults(self):
+        args = il.parse_args(["login"])
+        assert args.command == "login"
+        assert args.account == "tiny_ruins"
+        assert args.store_throttled is False
+
+    def test_login_store_throttled(self):
+        args = il.parse_args(["login", "--store-throttled"])
+        assert args.store_throttled is True
+
+    def test_refresh_defaults(self):
+        args = il.parse_args(["refresh"])
+        assert args.command == "refresh"
+        assert args.account == "tiny_ruins"
+        assert not hasattr(args, "store_throttled")

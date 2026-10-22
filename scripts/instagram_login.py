@@ -208,11 +208,21 @@ def cmd_login(args) -> int:
                 return OK
             print(f"warning: cookie classified {kind} (not stored)")
             if kind == "rate_limited":
-                answer = input("store it anyway? [y/N] ").strip().lower()
-                if answer == "y":
+                # 429 = authenticated but throttled (ticket 0013); storing
+                # is usually fine — it just needs the throttle to clear.
+                if args.store_throttled:
                     update_env_file(ENV_PATH, value)
                     print(f"ok: stored unverified (throttled) -> {ENV_PATH}")
                     return OK
+                if sys.stdin.isatty():
+                    answer = input("store it anyway? [y/N] ").strip().lower()
+                    if answer == "y":
+                        update_env_file(ENV_PATH, value)
+                        print(f"ok: stored unverified (throttled) -> {ENV_PATH}")
+                        return OK
+                else:
+                    print("stdin is not interactive — re-run "
+                          "`login --store-throttled` to store it anyway")
             return ERROR
         finally:
             context.close()
@@ -257,6 +267,11 @@ def parse_args(argv=None) -> argparse.Namespace:
         cmd = sub.add_parser(name)
         cmd.add_argument("--account", default="tiny_ruins",
                          help="account for the verification API call")
+    sub.choices["login"].add_argument(
+        "--store-throttled", action="store_true",
+        help="store the cookie even if verification is only 429-throttled "
+             "(instead of asking on the terminal)",
+    )
     return parser.parse_args(argv)
 
 
