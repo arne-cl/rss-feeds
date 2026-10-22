@@ -81,8 +81,48 @@ Pure functions offline-tested (no browser, no network):
 
 ## Hurdles
 
-- (to be filled during implementation)
+- Playwright 1.64.0 + system `/usr/bin/chromium`: `executable_path`
+  works out of the box, headless and headful — no fallback needed, no
+  browser download.
+- Pre-work session check: `check_instagram_session.py` → 429 (with the
+  10s/30s backoff), garbage cookie → 401, stored cookie → 429 ⇒ cookie
+  **valid but throttled** (0013's classifier methodology). Authed
+  permalink fetch with the same cookie: 200, item parses. Session was
+  fine; only web_profile_info was hot.
+- `verify_sessionid` inherits `fetch_api_profile`'s bounded 429
+  backoff (10s+30s) — a refresh on a throttled API costs ~40s before
+  deciding. Acceptable for the daily unattended run (it happens before
+  the builds anyway); not fixed.
+- First live `login` run: the window + login + cookie grab all worked,
+  but the 429-store decision hit an interactive `input()` from a
+  non-TTY → EOFError traceback, cookie not stored. Fix: `--store-throttled`
+  flag to pre-answer, `isatty()` guard with a clean message instead of
+  the prompt, flag tested via `parse_args`.
+- Second `login --store-throttled` run: found the existing session in
+  the persistent profile instantly (no second login), stored the cookie.
+- `refresh` fast path verified: headless touch finds the same sessionid
+  → "ok: session unchanged", **zero** API calls on the common path.
+- Test-side own goals: a bytes fixture split across lines without
+  parentheses (second literal silently became a no-op expression →
+  JSON parse failed), and `Path.write_text(mode=)` doesn't exist.
+  `update_env_file` gained `makedirs` for the missing-parent case.
+- Output interleaving made it look like verification ran before the
+  browser window opened — logging (stderr, unbuffered) vs print
+  (stdout, line-buffered on tty but block-buffered when piped); cosmetic.
+
+## Verification
+
+- `.venv/bin/pytest`: 287 baseline → 325 passed (38 new
+  `tests/test_instagram_login.py`, red→green per phase).
+- Live: `refresh` with empty profile → kept stored cookie (exit 0);
+  `login` → user logged in incl. 2FA; `login --store-throttled` →
+  fresh cookie stored, exit 0; `refresh` again → "session unchanged",
+  exit 0; `check_instagram_session.py` → rate_limited (throttle, see
+  hurdles); authed permalink fetch with the new cookie → 200 +
+  parse_permalink finds the item.
+- `~/.config/rss-feeds/env`: still 600, `JINA_API_KEY` preserved,
+  cookie never printed anywhere.
 
 ## Status
 
-todo
+done

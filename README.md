@@ -39,6 +39,26 @@ neutered the `web_profile_info` API, so the builders enrich each post from its
 remaining source for exact dates and carousel slides. You can verify if the
 session id still works by running `scripts/check_instagram_session.py` (exit 0 = works).
 
+### Rotating the Instagram session id
+
+The daily update run keeps the session alive by itself: it touches
+instagram.com in a persistent Chromium profile
+(`~/.config/rss-feeds/ig-profile`) and adopts the freshly-rolled cookie
+only after verifying it (ticket 0014). The only manual step left is the
+initial login, and re-login whenever the session eventually dies
+(`refresh` reports it, and builds degrade to cover-only posts):
+
+```sh
+.venv/bin/python scripts/instagram_login.py login
+```
+
+Log in in the browser window that opens (2FA included), don't click
+logout — the script grabs the HttpOnly `sessionid` cookie, verifies it
+against the `web_profile_info` API and writes it to
+`~/.config/rss-feeds/env`. If that API is currently rate-limited (429
+= authenticated but throttled), it asks whether to store anyway;
+`--store-throttled` pre-answers yes. The cookie value is never printed.
+
 To run everything by hand: `scripts/update_local.sh` (pull, build, commit,
 push) or the individual builder commands under "Local development" below.
 
