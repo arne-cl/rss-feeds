@@ -199,6 +199,44 @@ class TestEnrichItems:
         assert items[0]["description"] == "cached description"
         assert items[0]["enclosure"]["length"] == 42
 
+    def test_cached_description_and_image_are_restored(self, monkeypatch):
+        monkeypatch.delenv("RBB24_POLEN_PAGES_DIR", raising=False)
+        items = [
+            {
+                "id": WISENT_LINK,
+                "title": "Plötzlich steht ein Wisent im Vorgarten",
+                "link": WISENT_LINK,
+                "description": "Plötzlich steht ein Wisent im Vorgarten",
+                "published": None,
+                "image": "https://www.rbb24.de/teaser-468x262.jpg",
+            }
+        ]
+        old = {
+            WISENT_LINK: {
+                "id": WISENT_LINK,
+                "title": "cached",
+                "link": WISENT_LINK,
+                "description": "full cached description",
+                "published": datetime(2026, 10, 30, 16, 48, 38, tzinfo=CET),
+                "image": "https://www.rbb-online.de/detail-1280x720.jpg",
+                "enclosure": {
+                    "url": "https://rbb-progressive.ard-mcdn.de/x.mp4",
+                    "type": "video/mp4",
+                    "length": 42,
+                },
+            }
+        }
+
+        def fail_fetch(url):
+            raise AssertionError(f"cached item must not be fetched: {url}")
+
+        monkeypatch.setattr(
+            build_rbb24_polen_update_feed, "fetch_video_page", fail_fetch
+        )
+        build_rbb24_polen_update_feed.enrich_items(items, old)
+        assert items[0]["description"] == "full cached description"
+        assert items[0]["image"] == "https://www.rbb-online.de/detail-1280x720.jpg"
+
     def test_incomplete_cache_is_refetched(self, monkeypatch):
         monkeypatch.setenv("RBB24_POLEN_PAGES_DIR", PAGES)
         items = [

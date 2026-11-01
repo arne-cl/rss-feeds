@@ -149,6 +149,25 @@ class TestLoadPrevious:
         prev = common.load_previous(path)
         assert "enclosure" not in prev["https://example.com/b"]
 
+    def test_itunes_image_is_read_back(self, tmp_path):
+        path = write_feed(
+            tmp_path,
+            """<?xml version="1.0" encoding="UTF-8"?>
+            <rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+                 version="2.0"><channel>
+              <item>
+                <title>With cover</title>
+                <link>https://example.com/a</link>
+                <description>x</description>
+                <itunes:image href="https://cdn.example.com/cover.jpg"/>
+              </item>
+            </channel></rss>""",
+        )
+        prev = common.load_previous(path)
+        assert prev["https://example.com/a"]["image"] == (
+            "https://cdn.example.com/cover.jpg"
+        )
+
     def test_feed_with_xml_stylesheet_pi_round_trips(self, tmp_path):
         """The preview PI must not confuse feed parsing/merging."""
         path = write_feed(

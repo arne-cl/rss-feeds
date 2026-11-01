@@ -219,10 +219,10 @@ def enrich_items(items: list[dict], previous: dict[str, dict]) -> None:
     for item in items:
         old = by_id.get(item["id"])
         if old and old.get("published") and old.get("enclosure"):
-            if not item["description"] and old.get("description"):
-                item["description"] = old["description"]
+            item["description"] = old.get("description") or item["description"]
             item["published"] = old["published"]
             item["enclosure"] = old["enclosure"]
+            item["image"] = old.get("image") or item["image"]
             continue
         page_html = None
         if os.environ.get(PAGES_DIR_ENV):

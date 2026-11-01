@@ -148,6 +148,9 @@ def load_previous(path: str) -> dict[str, dict]:
                 "length": length,
                 "type": enc.get("type") or "application/octet-stream",
             }
+        itunes_img = item.find("itunes:image")
+        if itunes_img is not None and itunes_img.get("href"):
+            entry["image"] = itunes_img["href"]
         prev[item_id] = entry
     log.info("loaded %d item(s) from previous feed", len(prev))
     return prev
