@@ -8,7 +8,17 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 01 Nov 2026 13:28:22 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 01 Nov 2026 13:42:04 +0000</lastBuildDate>
+    <item>
+      <title>Feed build failed</title>
+      <link>https://www.instagram.com/</link>
+      <description>stories need INSTAGRAM_SESSIONID</description>
+      <content:encoded>&lt;p&gt;The last feed update failed; the items below are the most recent entries known.&lt;/p&gt;
+&lt;pre&gt;RuntimeError: stories need INSTAGRAM_SESSIONID
+&lt;/pre&gt;</content:encoded>
+      <guid isPermaLink="false">https://www.instagram.com/#build-status</guid>
+      <pubDate>Sun, 01 Nov 2026 13:42:04 +0000</pubDate>
+    </item>
     <item>
       <title>Story by daxwerner · 2026-11-01 12:41</title>
       <link>https://www.instagram.com/stories/daxwerner/4020801275761812316/</link>
@@ -958,16 +968,6 @@
       <guid isPermaLink="false">4015739566455373099_1262172269</guid>
       <enclosure url="https://scontent-fra3-1.cdninstagram.com/o1/v/t2/f2/m78/AQOLCImgJNBO-UWeqgcezkBXFgOV7_4y2eONdZUcDUWsbz_7qPWtMfwlu9DrHLEVrLxnL8Ltqwm9n7DFB50SE52FYmiputQvgwMUfSQ.mp4?_nc_cat=101&amp;_nc_sid=5e9851&amp;_nc_ht=scontent-fra3-1.cdninstagram.com&amp;_nc_ohc=QV4wPXy2qVAQ7kNvwHjWCbp&amp;efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uU1RPUlkuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTg2NDE4NjU2MTAwMjgyNzAsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDEwMCwiZHVyYXRpb25fcyI6MTIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&amp;ccb=17-1&amp;vs=7ae162d8385739b8&amp;_nc_vs=HBksFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzc5QzEzN0FENkNFQjRFQUQ5N0NBN0ZDOTE1NzU1NjFFX3ZpZGVvX2Rhc2hpbml0Lm1wNBUAAsgBEgAVAhhRaWdfeHB2X3BsYWNlbWVudF9wZXJtYW5lbnRfdjIvMEVERDE0OENFNUI2NDNGNEJENUE2QTc1NUI1RjZCNzhfYXVkaW9fZGFzaGluaXQubXA0FQICyAESACgAGAAbAogHdXNlX29pbAExEnByb2dyZXNzaXZlX3JlY2lwZQExFQAAJtyTl5qyq51CFQIoAkMzLBdAKJmZmZmZmhgSZGFzaF9iYXNlbGluZV8xX3YxEQB16Adl6J0BAA&amp;_nc_gid=yt3z3qeqnBpqlJeC13K9NQ&amp;_nc_ss=7b6a8&amp;_nc_zt=28&amp;oh=00_AQOIlMRU_GNmiGob-nXr6puW-Gy7ze4spOSt5fN7ECFsoA&amp;oe=6AE0ED32" length="0" type="video/mp4"/>
       <pubDate>Sun, 25 Oct 2026 13:04:39 +0000</pubDate>
-    </item>
-    <item>
-      <title>Story by susibumms · 2026-10-24 19:18</title>
-      <link>https://www.instagram.com/stories/susibumms/4015203141574298946/</link>
-      <description>&lt;img src="https://scontent-ber1-1.cdninstagram.com/v/t51.71878-15/863729737_895073860359110_5836948596372844528_n.jpg?stp=dst-jpg_e15_tt6&amp;amp;_nc_cat=105&amp;amp;ig_cache_key=NDAxNTIwMzE0MTU3NDI5ODk0Ng%3D%3D.3-ccb7-5&amp;amp;ccb=7-5&amp;amp;_nc_sid=58cdad&amp;amp;efg=eyJ2ZW5jb2RlX3RhZyI6IlNUT1JZLnhwaWRzLjY0MC5zZHIudmlkZW9fZmlyc3RfZnJhbWVfdGh1bWJuYWlsLkMzIn0%3D&amp;amp;_nc_ohc=sH9pYONhyOgQ7kNvwEWo8w1&amp;amp;_nc_oc=AdqkYtCvdv29hFDDNBDTieOO6P3gPUZB43sQuRlIsFEUJeB1gRb2uftn0N-X5qi49hOZiKGglrWYHWipiXUz4ztN&amp;amp;_nc_zt=23&amp;amp;_nc_ht=scontent-ber1-1.cdninstagram.com&amp;amp;_nc_gid=o7rfrEPFezB-LRfmtYREww&amp;amp;_nc_ss=7b6a8&amp;amp;oh=00_AQMBLgib6t3fpS08fgUf8I05pzGbU4CWu8OTOn-hReAsTQ&amp;amp;oe=6AE2D440" /&gt;
-&lt;video controls preload="none" src="https://scontent-ber1-1.cdninstagram.com/o1/v/t2/f2/m78/AQN4MoSyxcAxsjmlOojSTIJZCjGYs4-_AN39QRBMy21iWbnBotZ9Lrs2fxDRS3C7FeEtev9GqRUWHJMwMXvC8PAlO_eOugzVZGFNol4.mp4?_nc_cat=110&amp;amp;_nc_sid=5e9851&amp;amp;_nc_ht=scontent-ber1-1.cdninstagram.com&amp;amp;_nc_ohc=A5X5xR23-YoQ7kNvwEH7-fh&amp;amp;efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uU1RPUlkuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTgxNjg3Mzg2NTg0NzgzMjQsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDEwMCwiZHVyYXRpb25fcyI6MTIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&amp;amp;ccb=17-1&amp;amp;vs=2734e8f1cb77a7e3&amp;amp;_nc_vs=HBksFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdBQzYwNERGMDIwQjRBOTlBMEM2RTg0NjIyNTY5NUE4X3ZpZGVvX2Rhc2hpbml0Lm1wNBUAAsgBEgAVAhhRaWdfeHB2X3BsYWNlbWVudF9wZXJtYW5lbnRfdjIvRTFDQjQ0RjJDRDVGNDYzRjgzMUUzNzUzOUExMDdGMUJfYXVkaW9fZGFzaGluaXQubXA0FQICyAESACgAGAAbAogHdXNlX29pbAExEnByb2dyZXNzaXZlX3JlY2lwZQExFQAAJuiji9zjl8ZAFQIoAkMzLBdAKSHKwIMSbxgSZGFzaF9iYXNlbGluZV8xX3YxEQB16Adl6J0BAA&amp;amp;_nc_gid=o7rfrEPFezB-LRfmtYREww&amp;amp;_nc_ss=7b6a8&amp;amp;_nc_zt=28&amp;amp;oh=00_AQOO6_lygSYweArXqXqWYxNoG67ma0agBC1xvmsBd41Leg&amp;amp;oe=6ADED843"&gt;&lt;/video&gt;
-&lt;p&gt;Story by &lt;a href="https://www.instagram.com/stories/susibumms/"&gt;susibumms&lt;/a&gt; · expires 2026-10-25 19:18 UTC&lt;/p&gt;</description>
-      <guid isPermaLink="false">4015203141574298946_14327646323</guid>
-      <enclosure url="https://scontent-ber1-1.cdninstagram.com/o1/v/t2/f2/m78/AQN4MoSyxcAxsjmlOojSTIJZCjGYs4-_AN39QRBMy21iWbnBotZ9Lrs2fxDRS3C7FeEtev9GqRUWHJMwMXvC8PAlO_eOugzVZGFNol4.mp4?_nc_cat=110&amp;_nc_sid=5e9851&amp;_nc_ht=scontent-ber1-1.cdninstagram.com&amp;_nc_ohc=A5X5xR23-YoQ7kNvwEH7-fh&amp;efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uU1RPUlkuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTgxNjg3Mzg2NTg0NzgzMjQsImFzc2V0X2FnZV9kYXlzIjowLCJ2aV91c2VjYXNlX2lkIjoxMDEwMCwiZHVyYXRpb25fcyI6MTIsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&amp;ccb=17-1&amp;vs=2734e8f1cb77a7e3&amp;_nc_vs=HBksFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdBQzYwNERGMDIwQjRBOTlBMEM2RTg0NjIyNTY5NUE4X3ZpZGVvX2Rhc2hpbml0Lm1wNBUAAsgBEgAVAhhRaWdfeHB2X3BsYWNlbWVudF9wZXJtYW5lbnRfdjIvRTFDQjQ0RjJDRDVGNDYzRjgzMUUzNzUzOUExMDdGMUJfYXVkaW9fZGFzaGluaXQubXA0FQICyAESACgAGAAbAogHdXNlX29pbAExEnByb2dyZXNzaXZlX3JlY2lwZQExFQAAJuiji9zjl8ZAFQIoAkMzLBdAKSHKwIMSbxgSZGFzaF9iYXNlbGluZV8xX3YxEQB16Adl6J0BAA&amp;_nc_gid=o7rfrEPFezB-LRfmtYREww&amp;_nc_ss=7b6a8&amp;_nc_zt=28&amp;oh=00_AQOO6_lygSYweArXqXqWYxNoG67ma0agBC1xvmsBd41Leg&amp;oe=6ADED843" length="0" type="video/mp4"/>
-      <pubDate>Sat, 24 Oct 2026 19:18:52 +0000</pubDate>
     </item>
   </channel>
 </rss>
