@@ -1,0 +1,288 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type='text/xsl' href='feed-preview.xsl'?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+  <channel>
+    <title>Polen Update (rbb24)</title>
+    <link>https://www.rbb24.de/panorama/polen-update/</link>
+    <description>Polen Update: aktuelle Nachrichten und Trends aus dem Nachbarland – die Videos der rbb|24-Reihe. (auto-generated from https://www.rbb24.de/panorama/polen-update/)</description>
+    <docs>http://www.rssboard.org/rss-specification</docs>
+    <generator>python-feedgen</generator>
+    <language>de</language>
+    <lastBuildDate>Sun, 01 Nov 2026 13:39:03 +0000</lastBuildDate>
+    <itunes:author>rbb24</itunes:author>
+    <itunes:category text="News"/>
+    <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/fernsehen/kowalski_und_schmidt/2020/07_2020/KOW_KOW-Making-of-Polen-update-uv_47702376__10-00-53-14.jpg.jpg/size=1280x720.jpg"/>
+    <itunes:explicit>no</itunes:explicit>
+    <itunes:summary>Polen Update: aktuelle Nachrichten und Trends aus dem Nachbarland – die Videos der rbb|24-Reihe.</itunes:summary>
+    <item>
+      <title>Plötzlich steht ein Wisent im Vorgarten</title>
+      <link>https://www.rbb24.de/panorama/av/av24/video-polen-update-wisent-vorgarten-.html</link>
+      <description>Wisente standen vor 100 Jahren kurz vor der Ausrottung. Inzwischen hat sich Polens Population dank strenger Schutzmaßnahmen wieder erholt – und man begegnet den Tieren mittlerweile sogar an Orten, an denen man sie nicht erwarten würde.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/av/av24/video-polen-update-wisent-vorgarten-.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/f4/cf/f4cf5359-a9e2-4968-81ba-ff1be82b21aa/f4cf5359-a9e2-4968-81ba-ff1be82b21aa_9zu16-sm1280.mp4" length="21890128" type="video/mp4"/>
+      <pubDate>Fri, 30 Oct 2026 16:48:38 +0100</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_10/sonstiges/2026_10_30-PU-Wisent-2_16x9.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Mehrere Messerattacken an polnischen Schulen</title>
+      <link>https://www.rbb24.de/panorama/av/av24/video-polen-update-messer-angriffe-attacke-schule.html</link>
+      <description>An polnischen Schulen hat es zuletzt mehrere Messerattacken gegeben. Viele im Land sind geschocket. Bei einem Angriff wurde eine 37-jährige Hausmeisterin getötet. Nun patrouilliert die Polizei polenweit.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/av/av24/video-polen-update-messer-angriffe-attacke-schule.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/21/7f/217fb12a-19e3-494e-8f3a-a3aa84490eec/217fb12a-19e3-494e-8f3a-a3aa84490eec_9zu16-sm1280.mp4" length="28528611" type="video/mp4"/>
+      <pubDate>Fri, 16 Oct 2026 18:32:06 +0200</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_10/sonstiges/messerattacken.png.png/size=1280x720.png"/>
+    </item>
+    <item>
+      <title>Atomkraftwerk - ja bitte!</title>
+      <link>https://www.rbb24.de/panorama/av/av24/video-polen-update-erstes-atomkraftwerk-kernkraftwerk.html</link>
+      <description>Polens erstes Atomkraftwerk nimmt Fahrt auf - die Vorarbeiten laufen. Im September wurde das Baugelände an einen US-Konzern übergeben. Das Kernkraftwerk entsteht an der Ostseeküste in der Gemeinde Choczewo, circa 250 Kilometer von der deutsch-polnischen Grenze entfernt.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/av/av24/video-polen-update-erstes-atomkraftwerk-kernkraftwerk.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/fa/0a/fa0ad470-c1f0-4d7f-9ff7-0aa6ac18ff36/fa0ad470-c1f0-4d7f-9ff7-0aa6ac18ff36_9zu16-sm1280.mp4" length="23606834" type="video/mp4"/>
+      <pubDate>Fri, 02 Oct 2026 19:18:08 +0200</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_10/rbb-reporter/2026_10_02-PU-Atomkraftwerk_16x9.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Ist Warschau die neue Trend-Metropole?</title>
+      <link>https://www.rbb24.de/panorama/av/av24/video-polen-update-warschau-trend-metropole.html</link>
+      <description>Glaubt man Reisebloggern und Content Creatoren ist Warschau Europas neue Hipster-Metropole. Besonders im Stadtteil Praga auf der linken Flussseite der Weichsel zeige sich der besondere Vibe der Stadt: urban, wild und ständig in Bewegung.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/av/av24/video-polen-update-warschau-trend-metropole.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/fe/ed/feedb153-865c-4713-9ff2-3de93cdeefe5/feedb153-865c-4713-9ff2-3de93cdeefe5_9zu16-sm1280.mp4" length="15595422" type="video/mp4"/>
+      <pubDate>Tue, 22 Sep 2026 09:38:40 +0200</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_09/imago-images/puwarschau-neu.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Polen baut einen Megaflughafen</title>
+      <link>https://www.rbb24.de/panorama/av/av24/video-polen-update-warschau-megaflughafen.html</link>
+      <description>Polen baut einen Megaflughafen: Ende 2032 soll er gut 30 Kilometer von Warschau entfernt eröffnet werden und Platz für 44 Millionen Fluggäste pro Jahr bieten. Es ist eines der größten und umstrittensten Projekte in der Geschichte des Landes.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/av/av24/video-polen-update-warschau-megaflughafen.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/94/df/94df9b8a-22b8-4f7d-947f-82273bf426ac/94df9b8a-22b8-4f7d-947f-82273bf426ac_9zu16-sm1280.mp4" length="19148505" type="video/mp4"/>
+      <pubDate>Mon, 07 Sep 2026 10:11:44 +0200</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_09/sonstiges/pu_flughafen_16_9.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Puma in polnischem Wald entlaufen</title>
+      <link>https://www.rbb24.de/panorama/av/av24/video-polen-puma-wildtier-katze-wald-frei.html</link>
+      <description>Im Norden von Polen wurde ein Puma in der Nähe von Wohnhäusern gesichtet. Die junge Wildkatze ist inzwischen eingefangen und lebt im Zoo von Posen. Vermutlich stammt sie aus einer illegalen Zucht und war von dort entlaufen.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/av/av24/video-polen-puma-wildtier-katze-wald-frei.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/be/17/be172ede-1572-4311-9d15-1a1f3071ef10/be172ede-1572-4311-9d15-1a1f3071ef10_9zu16-sm1280.mp4" length="15758727" type="video/mp4"/>
+      <pubDate>Mon, 24 Aug 2026 10:03:25 +0200</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_08/dpa-news/puma-wildkatze.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Zunehmende Angriffe auf Ukrainer in Polen</title>
+      <link>https://www.rbb24.de/panorama/av/av24/video-polen-update-angriffe-auf-ukrainer.html</link>
+      <description>Vor vier Jahren standen in Polen die Türen für ukrainische Kriegsflüchtlinge offen. Heute sieht das anders aus. Ukrainerinnen und Ukrainer haben mittlerweile Angst, ihre Muttersprache auf der Straße oder im Bus zu sprechen.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/av/av24/video-polen-update-angriffe-auf-ukrainer.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/41/ba/41bad622-c478-4cb7-9164-98cef76a788f/41bad622-c478-4cb7-9164-98cef76a788f_9zu16-sm1280.mp4" length="22970337" type="video/mp4"/>
+      <pubDate>Fri, 07 Aug 2026 17:54:08 +0200</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_08/dpa-accoun/polen-update-ukrainer-in-polen.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Höllenfahrt nach Hel</title>
+      <link>https://www.rbb24.de/panorama/av/av24/video-polen-update-bus-linie-666-hel-see.html</link>
+      <description>Die polnische Buslinie 666 ist zurück. Vor drei Jahren wurde die Verbindung zwischen Krakau und der beliebten Ostsee-Halbinsel Hel eingestellt, nachdem sich religiöse Gruppen über die "satanische" Nummerierung beschwert hatten.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/av/av24/video-polen-update-bus-linie-666-hel-see.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/48/7d/487deec9-6a5e-40ee-9cf9-2bdd3502af55/487deec9-6a5e-40ee-9cf9-2bdd3502af55_9zu16-sm1280.mp4" length="20503763" type="video/mp4"/>
+      <pubDate>Wed, 29 Jul 2026 14:09:18 +0200</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_07/dpa-account/hel-bus.jpg.jpg/rendition=helsocial.jpg/size=1280x2275.jpg"/>
+    </item>
+    <item>
+      <title>Ende der Preisbremse: Lohnt sich Tanken in Polen noch?</title>
+      <link>https://www.rbb24.de/panorama/av/av24/video-polen-update-tanken-teuer.html</link>
+      <description>Der staatliche Preisdeckel in Polen ist ausgelaufen, die Spritpreise klettern deutlich nach oben. Der reguläre Mehrwertsteuersatz von 23 Prozent greift wieder. Polnische Autofahrer:innen müssen deutlich tiefer in die Tasche greifen. Deutsche zieht es trotzdem weiter über die Grenze.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/av/av24/video-polen-update-tanken-teuer.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/2f/b3/2fb3c58d-e4e6-4676-a5b6-4aab822c3e71/2fb3c58d-e4e6-4676-a5b6-4aab822c3e71_9zu16-sm1280.mp4" length="22210190" type="video/mp4"/>
+      <pubDate>Fri, 10 Jul 2026 20:22:55 +0200</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_07/sonstiges/Polen_Update_Tanken_169.png.png/size=1280x720.png"/>
+    </item>
+    <item>
+      <title>Sieben Tage lang gratis durch Polen reisen</title>
+      <link>https://www.rbb24.de/panorama/av/av24/video-polen-zug-gratis.html</link>
+      <description>30.000 junge Menschen aus Polen und 30.000 aus Deutschland können sich bald um ein kostenloses Bahnticket für Reisen im jeweils anderen Land bewerben. Den "Freundschaftspass" gibt es anlässlich des 35. Jahrestags der Unterzeichnung des deutsch-polnischen Nachbarschaftsvertrags.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/av/av24/video-polen-zug-gratis.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/49/a3/49a3ed6e-b838-4e14-8659-01525fccc61f/49a3ed6e-b838-4e14-8659-01525fccc61f_9zu16-sm1280.mp4" length="18045951" type="video/mp4"/>
+      <pubDate>Fri, 26 Jun 2026 17:28:02 +0200</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_06/rbb-reporter/polen-update-zugtickets.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Mega-Hotel an der polnischen Ostsee</title>
+      <link>https://www.rbb24.de/panorama/polen-update/av24/video-polen-update-mega-hotel-ostsee.html</link>
+      <description>Ende Juni eröffnet Hotel Gołębiewski in Pobierowo - nach acht Jahren Bauzeit und mehreren Baustopps. 1.200 Zimmer, 13 Stockwerke und jede Menge Diskussionen. Für das Großprojekt in Küstennähe wurden 1.500 Bäume gefällt.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/polen-update/av24/video-polen-update-mega-hotel-ostsee.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/1c/52/1c5298e5-664c-4938-b3e7-cc2e44d4b6d4/1c5298e5-664c-4938-b3e7-cc2e44d4b6d4_1zu1-sm720.mp4" length="13300843" type="video/mp4"/>
+      <pubDate>Fri, 29 May 2026 17:34:45 +0200</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_05/sonstiges/Quelle-Gazeta-Wyborcza-Kopie.jpg.jpg/size=1280x719.jpg"/>
+    </item>
+    <item>
+      <title>Lebensmittel für alle</title>
+      <link>https://www.rbb24.de/panorama/polen-update/av24/video-polen-update-kuehlschraenke-fuer-alle-.html</link>
+      <description>Lebensmittel teilen statt verschwenden: rund 1600 Kühlschränke am Straßenrand sollen Essen für alle zugänglich machen. Das Prinzip dahinter ist simpel: wer etwas übrig hat, stellt es rein. Wer etwas braucht, nimmt etwas mit.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/polen-update/av24/video-polen-update-kuehlschraenke-fuer-alle-.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/7e/09/7e091919-57a0-441f-8dc1-42becf2a769a/7e091919-57a0-441f-8dc1-42becf2a769a_1zu1-sm720.mp4" length="16778028" type="video/mp4"/>
+      <pubDate>Sat, 16 May 2026 09:28:05 +0200</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_05/sonstiges/2026_05_15-K-hschrank-2_16x9.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Charity-Stream für krebskranke Kinder</title>
+      <link>https://www.rbb24.de/panorama/av/av24/video-polen-update-charity-stream-spenden.html</link>
+      <description>Der polnische Streamer "Latwogang" hat mit seinem 9-tägigen Stream für krebskranke Kinder einen Weltrekord im Charity-Stream aufgestellt. In dem Fall geht es um einen inoffiziellen nicht von Guiness World Records bestätigten Weltrekord.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/av/av24/video-polen-update-charity-stream-spenden.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/4c/fa/4cfab2de-f229-4a17-a411-f0944cf3b7d2/4cfab2de-f229-4a17-a411-f0944cf3b7d2_1zu1-sm720.mp4" length="14320802" type="video/mp4"/>
+      <pubDate>Fri, 08 May 2026 08:06:00 +0200</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_05/sonstiges/16_91.png.png/img.png"/>
+    </item>
+    <item>
+      <title>Europas Dubai liegt an der Ostsee</title>
+      <link>https://www.rbb24.de/panorama/polen-update/av24/video-polen-ostsee-jaroslawiec-groesster-kuenstlicher-strand-europa.html</link>
+      <description>An der Ostsee in Jarosławiec wird gerade Europas größter künstlicher Strand weiter ausgebaut. Mit Sonne und Sand soll auch wirtschaftlicher Aufschwung einhergehen. Doch hinter dem Projekt verbirgt sich mehr als nur eine touristische Attraktion.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/polen-update/av24/video-polen-ostsee-jaroslawiec-groesster-kuenstlicher-strand-europa.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/26/7e/267e2ddf-bc4d-4608-b84b-c5962d05bf7b/267e2ddf-bc4d-4608-b84b-c5962d05bf7b_1zu1-sm720.mp4" length="12754658" type="video/mp4"/>
+      <pubDate>Fri, 17 Apr 2026 18:15:07 +0200</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_04/rbb-reporter/2026_04_17-Dubai_Polen_16x9.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>"Bobr, kurwa!": Biber-Hype in Polen</title>
+      <link>https://www.rbb24.de/panorama/polen-update/av24/video-polen-update-biber-hype-in-polen.html</link>
+      <description>Kaum jemand kommt an dem Video "Bobr, kurwa!" in Polen vorbei. Seit rund drei Jahren sorgt es für Lacher im Netz. Während die Klickzahlen steigen, wächst auch die Biberzahl im Land.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/polen-update/av24/video-polen-update-biber-hype-in-polen.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/5d/b6/5db60adf-e542-4e65-a2e2-e842b70c8d00/5db60adf-e542-4e65-a2e2-e842b70c8d00_1zu1-sm720.mp4" length="14421026" type="video/mp4"/>
+      <pubDate>Thu, 02 Apr 2026 17:27:22 +0200</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_04/rbb-reporter/Biberteich.png.png/size=1280x720.png"/>
+    </item>
+    <item>
+      <title>Roboter als Influencer</title>
+      <link>https://www.rbb24.de/panorama/av/av24/video-polen-update-roboter-influencer.html</link>
+      <description>In Polen läuft ein Roboter gerade durch die Straßen, quatscht spontan Leute an, wankt wie ein Betrunkener, geht einkaufen – und das Netz dreht total durch.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/av/av24/video-polen-update-roboter-influencer.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/71/f4/71f4f2f4-30f2-47f5-9ac8-5cf3b521d6c6/71f4f2f4-30f2-47f5-9ac8-5cf3b521d6c6_1zu1-sm720.mp4" length="19112356" type="video/mp4"/>
+      <pubDate>Fri, 20 Mar 2026 20:10:15 +0100</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_03/sonstiges/2026_03_20-Polen_Update_Edek_16x9.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Wieso gibt es so viele Unfälle an Bahnübergängen in Polen?</title>
+      <link>https://www.rbb24.de/panorama/av/av24/video-polen-update-bahnuebergang-zug-unfall-auto-verkehr.html</link>
+      <description>In Polen gibt es dreimal so viele Unfälle an Bahnübergängen wie in Deutschland. Liegt das an risikofreudigerem Fahrverhalten? Die Zahl der Fälle dürfte auf jeden Fall erhöhen, dass es in Polen mehr Bahnübergänge pro Kopf gibt als hierzulande.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/av/av24/video-polen-update-bahnuebergang-zug-unfall-auto-verkehr.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/26/28/262818fc-3d4b-40f4-b7f3-a99aed9e7768/262818fc-3d4b-40f4-b7f3-a99aed9e7768_1zu1-sm720.mp4" length="13748826" type="video/mp4"/>
+      <pubDate>Mon, 09 Mar 2026 17:17:53 +0100</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_03/sonstiges/2026_03_06-PolenUpdate_16x91.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Atomwaffen made in Poland?</title>
+      <link>https://www.rbb24.de/politik/av/av24/video-polenupdate-polen-eigene-atomwaffen.html</link>
+      <description>Der polnische Präsident Nawrocki hat sich - angesichts der Bedrohung durch Russland - für ein eigenes Atomwaffen-Programm ausgesprochen. Wie realistisch ist es, dass Polen bald eigene Atomwaffen besitzt?</description>
+      <guid isPermaLink="false">https://www.rbb24.de/politik/av/av24/video-polenupdate-polen-eigene-atomwaffen.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/ea/fe/eafe848c-953d-47ba-846b-71054efd7ab8/eafe848c-953d-47ba-846b-71054efd7ab8_1zu1-sm720.mp4" length="14107189" type="video/mp4"/>
+      <pubDate>Fri, 20 Feb 2026 16:40:40 +0100</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_02/imago-images/2026_02_20-Polen_Update_16x9.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Hetze gegen Ukrainer in Polen nimmt zu</title>
+      <link>https://www.rbb24.de/politik/av/av24/newsvideo-polenupdate-hetze-gegen-ukraine.html</link>
+      <description>In Polen nehmen Ressentiments gegenüber Menschen aus der Ukraine zu. Rechtsextreme Politiker und russische Propaganda schüren gezielt Hass gegen die rund 1,5 Millionen Ukrainer im Land.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/politik/av/av24/newsvideo-polenupdate-hetze-gegen-ukraine.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/05/47/0547a1a7-296f-4842-bb18-e7bdf15c7034/0547a1a7-296f-4842-bb18-e7bdf15c7034_1zu1-sm720.mp4" length="17079806" type="video/mp4"/>
+      <pubDate>Fri, 06 Feb 2026 17:34:11 +0100</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_02/sonstiges/PolenUpdate_AntiukrainischeHetze.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Erneut polnische Flaggen an Grenz-Brücke aufgehängt</title>
+      <link>https://www.rbb24.de/panorama/av/av24/video-polenupdate-bruecke-flaggen-frankfurt-oder-polen.html</link>
+      <description>Aktivisten der polnischen "Bewegung zur Verteidigung der Grenzen" haben in dieser Woche erneut weiß-rote Flaggen an der Grenzbrücke zwischen Słubice und Frankfurt (Oder) angebracht. Wer genau steckt hinter der Aktion und was ist das Ziel?</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/av/av24/video-polenupdate-bruecke-flaggen-frankfurt-oder-polen.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/1c/16/1c16adc6-5e5f-4fb8-9db4-5f1a9af29bcb/1c16adc6-5e5f-4fb8-9db4-5f1a9af29bcb_1zu1-sm720.mp4" length="21402775" type="video/mp4"/>
+      <pubDate>Fri, 23 Jan 2026 19:36:30 +0100</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_01/sonstiges/PolenUpdateflagge.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Delfine in der Oder gesichtet</title>
+      <link>https://www.rbb24.de/panorama/polen-update/av24/polen-update-delfine-in-der-oder.html</link>
+      <description>Unerwarteter Besuch in der Oder: Überwachungskameras in Stettin filmten zufällig zwei Delfine an einer Brücke in der Oder. Vermutlich Mutter und Kalb – 60 km flussaufwärts von der Ostsee.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/polen-update/av24/polen-update-delfine-in-der-oder.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/cf/f5/cff56ae0-cb6f-4ef4-955a-0be72a4a8c78/cff56ae0-cb6f-4ef4-955a-0be72a4a8c78_1zu1-sm720.mp4" length="9049465" type="video/mp4"/>
+      <pubDate>Sat, 10 Jan 2026 15:36:15 +0100</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_01/rbb-reporter/2025_09_01-Polen_Update_16x9.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Silvester mit Tieren im Bunker</title>
+      <link>https://www.rbb24.de/panorama/av/av24/video-polen-update-tiere-bunker-silvester.html</link>
+      <description>Die Silvesternacht im Bunker verbringen? Das ist für Tiere und ihre Besitzer möglich, damit die Tiere stress- und lärmfrei in das neue Jahr starten können. Das Ganze hat sich ein Verein aus Posen in Polen ausgedacht.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/av/av24/video-polen-update-tiere-bunker-silvester.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/18/b1/18b1e1d9-13ac-4c7b-8d48-4682ed0ef11f/18b1e1d9-13ac-4c7b-8d48-4682ed0ef11f_1zu1-sm720.mp4" length="9793082" type="video/mp4"/>
+      <pubDate>Sat, 27 Dec 2025 11:52:50 +0100</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2025/2025_12/sonstiges/Polen_Update_Tiere-im-Bunker.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Mehr direkte Zugverbindungen zwischen Deutschland und Polen</title>
+      <link>https://www.rbb24.de/panorama/polen-update/av24/video-polen-update-berlin-warschau-zugverbindung-direkt.html</link>
+      <description>Die Zugverbindungen zwischen Deutschland und Polen werden kräftig ausgebaut. Darüber dürften sich deutsche Touristen besonders freuen, denn Polen gehört zu den Top 10 der beliebtesten Reiseziele der Deutschen.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/polen-update/av24/video-polen-update-berlin-warschau-zugverbindung-direkt.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/7a/83/7a83514b-36a4-4ea8-b68a-1ad2c40acfd8/7a83514b-36a4-4ea8-b68a-1ad2c40acfd8_1zu1-sm720.mp4" length="6202517" type="video/mp4"/>
+      <pubDate>Fri, 19 Dec 2025 11:58:59 +0100</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2025/2025_12/sonstiges/2025_08_01-Polen_Update2_16x9.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Mehr Züge zwischen Deutschland und Polen</title>
+      <link>https://www.rbb24.de/panorama/av/av24/video-berlin-brandenburg-polen-zuege-mehr-verbindungen.html</link>
+      <description>Deutschland und Polen bauen ihre Zugverbindungen deutlich aus – eine gute Nachricht für alle Reiselustigen. Das Nachbarland wird bei deutschen Touristen immer beliebter. Im vergangenen Jahr schaffte es das Nachbarland sogar auf Platz 8 der beliebtesten Reiseziele.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/av/av24/video-berlin-brandenburg-polen-zuege-mehr-verbindungen.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/91/4a/914af530-c22b-499e-ae1f-70ec68bc0b69/914af530-c22b-499e-ae1f-70ec68bc0b69_1zu1-sm720.mp4" length="6181763" type="video/mp4"/>
+      <pubDate>Thu, 18 Dec 2025 17:04:00 +0100</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2025/2025_12/dpa-account/523957679-1-.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Polen-Deutschland: Beziehungsstatus kompliziert</title>
+      <link>https://www.rbb24.de/panorama/polen-update/av24/polen-update-beziehungsstatus.html</link>
+      <description>Polen und Deutschland Beziehungsstatus: kompliziert. So unbeliebt wie derzeit waren die Deutschen in Polen seit Jahrzehnten nicht mehr. Woran das liegt, erklären wir im Video.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/polen-update/av24/polen-update-beziehungsstatus.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/32/ed/32ed3d21-c185-47ec-ba3d-35dda470c306/32ed3d21-c185-47ec-ba3d-35dda470c306_1zu1-sm720.mp4" length="17285791" type="video/mp4"/>
+      <pubDate>Fri, 05 Dec 2025 19:11:50 +0100</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2025/2025_12/sonstiges/2025_12_07-PolenUpdate_V2_16x9.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Deutsch-polnischer Nationalpark vor dem Aus?</title>
+      <link>https://www.rbb24.de/panorama/polen-update/av24/video-brandenburg-polen-nationalpark-natur-schutz-gebiet-oder.html</link>
+      <description>Seit 25 Jahren kämpfen Menschen südlich von Stettin für den deutsch-polnischen Nationalpark "Dolna Odra". Präsident Nawrocki hat zuletzt ein Veto gegen den Nationalpark an der Grenze eingelegt - ist er damit Geschichte?</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/polen-update/av24/video-brandenburg-polen-nationalpark-natur-schutz-gebiet-oder.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/6f/88/6f8800aa-1fcc-491f-b29c-df6fc476c072/6f8800aa-1fcc-491f-b29c-df6fc476c072_1zu1-sm720.mp4" length="9423135" type="video/mp4"/>
+      <pubDate>Fri, 21 Nov 2025 17:18:50 +0100</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2025/2025_11/sonstiges/169.png.png/size=1280x720.png"/>
+    </item>
+    <item>
+      <title>Knapper bezahlbarer Wohnraum für junge Pol:innen</title>
+      <link>https://www.rbb24.de/panorama/polen-update/av24/video-polen-knapper-bezahlbarer-wohnraum.html</link>
+      <description>Steigende und regelrecht explodierende Immobilien- und Wohnungspreise: Auch in Polen ist bezahlbarer Wohnraum zunehmend knapp. Insbesondere die jüngere Generation ist davon betroffen und zieht immer später zu Hause aus.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/polen-update/av24/video-polen-knapper-bezahlbarer-wohnraum.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/d2/76/d276d8b6-f480-4070-8ce9-922efb841c01/d276d8b6-f480-4070-8ce9-922efb841c01_1zu1-sm720.mp4" length="14678283" type="video/mp4"/>
+      <pubDate>Tue, 11 Nov 2025 09:52:34 +0100</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2025/2025_11/sonstiges/2025_07_18-Polen_Update_ohne-Titel_16x9-1-.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Tunnel an polnisch-belarussischer Grenze entdeckt</title>
+      <link>https://www.rbb24.de/panorama/polen-update/av24/video-polen-update-tunnel-grenze-belarus.html</link>
+      <description>An der polnisch-belarussischen Grenze wurde ein 30 Meter langer Tunnel entdeckt. Flüchtende sollen ihn für illegale Grenzübertritte genutzt haben. Seit Jahresbeginn zählte der polnische Grenzschutz tausende Versuche, die Grenze zu überqueren – trotz hoher Stahlbarriere.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/polen-update/av24/video-polen-update-tunnel-grenze-belarus.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/25/4d/254db732-1309-43ee-80e3-8b0605f518b8/254db732-1309-43ee-80e3-8b0605f518b8_1zu1-sm720.mp4" length="13224914" type="video/mp4"/>
+      <pubDate>Sat, 08 Nov 2025 16:19:48 +0100</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2025/2025_11/sonstiges/2025_08_01_polen_update_tunnel16x9.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+    <item>
+      <title>Polen bereiten sich auf möglichen Ernstfall vor</title>
+      <link>https://www.rbb24.de/panorama/av/av24/video-polen-ernstfall-krieg-russland-vorbereitung.html</link>
+      <description>19 russische Drohnen haben im September den polnischen Luftraum verletzt. Die Regierung ruft zur Vorsorge auf. Supermärkte verkaufen Notfallrucksäcke. Im Fernsehen läuft die Sendung "Sicheres Polen", täglich rufen rund 100 Menschen an.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/av/av24/video-polen-ernstfall-krieg-russland-vorbereitung.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/9c/1c/9c1cf163-9f03-44bd-96b7-5f2a471086a8/9c1cf163-9f03-44bd-96b7-5f2a471086a8_1zu1-sm720.mp4" length="13345648" type="video/mp4"/>
+      <pubDate>Sat, 11 Oct 2025 13:19:31 +0200</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2025/2025_11/rbb-reporter/2025_10_10_PU_Ernstfall_16x9_v2.png.png/size=1280x720.png"/>
+    </item>
+    <item>
+      <title>Tschüss Deutschland - Witaj Polsko</title>
+      <link>https://www.rbb24.de/panorama/polen-update/av24/video-polnische-migranten-verlassen-deutschland.html</link>
+      <description>Für immer mehr polnische Migrant:innen heiß es derzeit: Tschüss Deutschland, hallo Polen! Warum haben sie keine Lust mehr auf ein Leben in Deutschland?</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/polen-update/av24/video-polnische-migranten-verlassen-deutschland.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/5d/0e/5d0e9598-e7c5-4eab-ae49-b3a19c06663f/5d0e9598-e7c5-4eab-ae49-b3a19c06663f_1zu1-sm720.mp4" length="10569630" type="video/mp4"/>
+      <pubDate>Mon, 29 Sep 2025 16:35:01 +0200</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2025/2025_09/dpa-account/warschau.jpg.jpg/size=1280x720.jpg"/>
+    </item>
+  </channel>
+</rss>
