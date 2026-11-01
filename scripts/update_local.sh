@@ -17,6 +17,7 @@ git pull --rebase --autostash origin main
 PY=.venv/bin/python
 "$PY" scripts/build_quora_feed.py
 "$PY" scripts/build_klum_feed.py
+"$PY" scripts/build_rbb24_polen_update_feed.py
 "$PY" scripts/build_brf_chansons_feed.py
 # Touch the persistent Instagram browser profile so the sessionid keeps
 # rolling; rewrites the env file only when a verified-new cookie shows up.

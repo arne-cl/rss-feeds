@@ -10,6 +10,7 @@ Vibe-coded RSS feeds generated from pages that don't provide one.
 | Günther Klum News | `https://raw.githubusercontent.com/arne-cl/rss-feeds/main/feeds/klum-news.xml` |
 | Tiny Ruins on Instagram | `https://raw.githubusercontent.com/arne-cl/rss-feeds/main/feeds/instagram-tiny_ruins.xml` |
 | Chansons, Lieder und Folk (BRF1) | `https://raw.githubusercontent.com/arne-cl/rss-feeds/main/feeds/brf1-chansons.xml` |
+| Polen Update (rbb24) | `https://raw.githubusercontent.com/arne-cl/rss-feeds/main/feeds/rbb24-polen-update.xml` |
 
 Subscribe with the raw URL above.
 
@@ -76,6 +77,7 @@ python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 .venv/bin/python scripts/build_quora_feed.py
 .venv/bin/python scripts/build_klum_feed.py
+.venv/bin/python scripts/build_rbb24_polen_update_feed.py
 .venv/bin/python scripts/build_brf_chansons_feed.py
 .venv/bin/python scripts/build_instagram_feed.py tiny_ruins
 ```
