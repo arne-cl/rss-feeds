@@ -8,12 +8,22 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <language>de</language>
-    <lastBuildDate>Mon, 09 Nov 2026 09:41:23 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 10 Nov 2026 19:57:51 +0000</lastBuildDate>
     <itunes:author>BRF1</itunes:author>
     <itunes:category text="Music"/>
     <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2015/06/CLF-1420x968.jpg"/>
     <itunes:explicit>no</itunes:explicit>
     <itunes:summary>Eine Sendung, die, wenn es sie nicht schon seit über 30 Jahren geben würde, für Ostbelgien erfunden werden müsste. Am Schnittpunkt der Kulturen stellt der BRF französische Chansons, deutschsprachige Lieder und internationale Folk- und Worldmusic vor. Montag, 20 - 21 Uhr.</itunes:summary>
+    <item>
+      <title>Chansons, Lieder und Folk: Johnny &amp; Lillie Flynn - Rückkehr ins Beam Cottage</title>
+      <link>https://1.brf.be/sendungen/chansons/1231378/</link>
+      <description>Die britischen Geschwister Johnny &amp; Lillie Flynn setzen der Idylle ihrer frühen Kindheit ein Denkmal. Ihr Album fängt die Unbeschwertheit gemeinsamer Jahre ein, verarbeitet den Verlust des Vaters und schlägt Brücken bis nach Südafrika.</description>
+      <content:encoded>&lt;p&gt;Das &amp;quot;Beam Cottage&amp;quot; war ein kleines, reetgedecktes Landhaus in Hampshire, in dem Johnny und Lillie Flynn als Kinder im selben Zimmer schliefen. Es steht für die unbeschwerte Zeit, bevor Johnny mit einem Musikstipendium an ein Internat ging und die Familie nach Wales zog, wo ihr Vater Eric bald an Krebs verstarb, im Alter von nur 62 Jahren. Dieses Album ist der Versuch, die damalige Geborgenheit in Musik zu gießen, zulaufend auf das Wiegenlied &amp;quot;Sleepy Head&amp;quot;, das ihr Vater einst für sie schrieb und mit dem Johnny heute seine eigenen Kinder in den Schlaf singt - ein emotionaler Schlusspunkt und zugleich ein Staffelstab für die nächste Generation.&lt;/p&gt;&lt;p&gt;Musikalisch atmet das Werk überwiegend die ungezwungene, teils raue Atmosphäre einer Pub-Session mit klappernden Gitarren und treibenden Geigen. Die 14 Songs - eine Mischung aus eigenen Stücken und prägenden Coverversionen - leben vom Aufeinandertreffen von Johnnys kratzigem Bariton und Lillies klarem Sopran. Wie sie harmonieren, lernten die beiden in den 1990er Jahren auf dem Rücksitz eines alten Ford Escort: Weil der linke Lautsprecher defekt war, fehlte bei den Kassetten von Simon &amp;amp; Garfunkel eine Stimme, die die Geschwister kurzerhand selbst mitsangen. Neben Folk-Interpretationen von Johnny Mercer oder Hank Williams glänzt Lillie Flynn mit der melancholischen Eigenkomposition &amp;quot;Brockwell Park&amp;quot;.&lt;/p&gt;&lt;p&gt;Obwohl die Platte sehr persönliche Erinnerungen beschwört, behält sie den Blick für die Gegenwart. Mit einer Coverversion von Billy Braggs Bergarbeiter-Hymne &amp;quot;Between the Wars&amp;quot; schlagen die Flynns den Bogen zu den aktuellen globalen Krisen und Kriegen der Gegenwart. &amp;quot;Beam Cottage&amp;quot; ist kein nostalgisches Zurückblicken, sondern die Wiederbelebung einer geschwisterlichen Freundschaft, die die Vergangenheit im Licht von heute feiert.&lt;/p&gt;&lt;p&gt;&amp;quot;Beam Cottage&amp;quot; von Johnny &amp;amp; Lillie Flynn ist erschienen am 6. November bei Transgressive Records.&lt;/p&gt;</content:encoded>
+      <guid isPermaLink="false">https://1.brf.be/sendungen/chansons/1231378/</guid>
+      <enclosure url="https://streaming2.brf.be/audio/2026/46/32c3e97357c66154a0f78027f37155d3.mp3" length="56240757" type="audio/mpeg"/>
+      <pubDate>Mon, 09 Nov 2026 21:00:00 +0100</pubDate>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2021/05/MarkusWill2_ThierryCornelyBRF-600x400.jpg"/>
+    </item>
     <item>
       <title>Chansons, Lieder und Folk: Bluai - weniger Folk, mehr Grunge</title>
       <link>https://1.brf.be/sendungen/chansons/1230687/</link>
@@ -32,7 +42,7 @@
       <guid isPermaLink="false">https://1.brf.be/sendungen/chansons/1230153/</guid>
       <enclosure url="https://streaming2.brf.be/audio/2026/44/b502b69002531f87e408baea41081d3e.mp3" length="57435601" type="audio/mpeg"/>
       <pubDate>Mon, 26 Oct 2026 21:00:00 +0100</pubDate>
-      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2026/10/muireann-bradley-600x400.jpg"/>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2026/10/muireann-bradley-540x360.jpg"/>
     </item>
     <item>
       <title>Chansons, Lieder und Folk: Billie Bird - Die Wärme eines sicheren Hafens</title>
