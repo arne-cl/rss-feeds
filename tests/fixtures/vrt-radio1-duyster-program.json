@@ -1,0 +1,1536 @@
+{
+ "data": {
+  "page": {
+   "objectId": "UBvG0ZY1l/rnA/9KqSKMfaqTF48=",
+   "permalink": "https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/",
+   "header": {
+    "objectId": "pAzH3uUFIGH4EdOOn8j/Zir3jPs=",
+    "accessibilityTitle": null,
+    "brandsLogos": [],
+    "presenters": [],
+    "title": "DUYSTER.",
+    "titleArt": {
+     "objectId": "3JAg/56qPplmcNCDu3GtZ4c7Xsg=",
+     "templateUrl": "https://images.vrt.be/orig/2025/02/10/d123f29d-9686-4f57-8c06-c18e4815ead2.png?trim=0"
+    },
+    "richDescription": null,
+    "actionItems": [
+     {
+      "__typename": "ActionItem",
+      "objectId": "E3K5Qcodp2FUzOp/qL2zz8cJ+wI=",
+      "accessibilityLabel": "Luister nu",
+      "active": false,
+      "mode": "primary",
+      "title": "Luister nu",
+      "themeOverride": null,
+      "action": {
+       "__typename": "LinkAction",
+       "link": "/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39811-0/",
+       "internalTarget": "radioepisodepage",
+       "externalTarget": null,
+       "page": null,
+       "passUserIdentity": null,
+       "zone": null,
+       "linkTokens": null
+      },
+      "icons": [
+       {
+        "__typename": "DesignSystemIcon",
+        "accessibilityLabel": null,
+        "position": "left",
+        "type": "DESIGN_SYSTEM",
+        "value": {
+         "__typename": "DesignSystemIconValue",
+         "color": null,
+         "name": "playPause"
+        },
+        "activeValue": null
+       }
+      ]
+     },
+     {
+      "__typename": "ActionItem",
+      "objectId": "o%FavoriteAction|pluxbox-11-177|radio-program|btn|b%0%",
+      "accessibilityLabel": "Voeg dit programma toe aan Mijn lijst",
+      "active": false,
+      "mode": "secondary",
+      "title": "Mijn lijst",
+      "themeOverride": null,
+      "action": {
+       "__typename": "FavoriteAction",
+       "id": "o%FavoriteAction|pluxbox-11-177|radio-program|btn|b%0%",
+       "favorite": false,
+       "title": "DUYSTER."
+      },
+      "icons": [
+       {
+        "__typename": "DesignSystemIcon",
+        "accessibilityLabel": null,
+        "position": "left",
+        "type": "DESIGN_SYSTEM",
+        "value": {
+         "__typename": "DesignSystemIconValue",
+         "color": null,
+         "name": "add"
+        },
+        "activeValue": {
+         "__typename": "DesignSystemIconValue",
+         "color": null,
+         "name": "check"
+        }
+       }
+      ]
+     },
+     {
+      "__typename": "ActionItem",
+      "objectId": "V3jswphU5cHx/PwrB5IOKY6vCQw=",
+      "accessibilityLabel": "Delen",
+      "active": false,
+      "mode": "secondary",
+      "title": "Delen",
+      "themeOverride": null,
+      "action": {
+       "__typename": "ShareAction",
+       "title": null,
+       "url": "https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/?utm_medium=internal&utm_source=vrtmax-app&utm_campaign=share-button"
+      },
+      "icons": [
+       {
+        "__typename": "DesignSystemIcon",
+        "accessibilityLabel": null,
+        "position": "left",
+        "type": "DESIGN_SYSTEM",
+        "value": {
+         "__typename": "DesignSystemIconValue",
+         "color": null,
+         "name": "share"
+        },
+        "activeValue": {
+         "__typename": "DesignSystemIconValue",
+         "color": null,
+         "name": "shareActive"
+        }
+       }
+      ]
+     }
+    ],
+    "primaryMeta": [],
+    "secondaryMeta": [
+     {
+      "type": "default",
+      "value": "Radio",
+      "shortValue": null,
+      "longValue": null
+     },
+     {
+      "type": "default",
+      "value": "Radio 1",
+      "shortValue": null,
+      "longValue": null
+     },
+     {
+      "type": "default",
+      "value": "Ayco Duyster",
+      "shortValue": null,
+      "longValue": null
+     }
+    ],
+    "tertiaryMeta": [],
+    "image": {
+     "__typename": "Image",
+     "objectId": "Zgpmcm658Ig4j0lYMLIog/o0pG8=",
+     "focusPoint": null,
+     "templateUrl": "https://images.vrt.be/orig/2025/02/05/c26e5909-134d-4fe2-9e44-0e68c6d9f700.png"
+    }
+   },
+   "popUp": null,
+   "toast": null,
+   "seo": {
+    "__typename": "SeoProperties",
+    "title": "DUYSTER. | VRT MAX",
+    "description": "DUYSTER. - Beluister alle afleveringen van DUYSTER. met VRT MAX via de site of app."
+   },
+   "socialSharing": {
+    "__typename": "SocialSharingProperties",
+    "title": "DUYSTER. | VRT MAX",
+    "description": "DUYSTER. - Beluister alle afleveringen van DUYSTER. met VRT MAX via de site of app.",
+    "image": {
+     "__typename": "Image",
+     "objectId": "Zgpmcm658Ig4j0lYMLIog/o0pG8=",
+     "templateUrl": "https://images.vrt.be/orig/2025/02/05/c26e5909-134d-4fe2-9e44-0e68c6d9f700.png"
+    }
+   },
+   "trackingData": {
+    "data": "{\"$pana\":\"/vrtmax/luister/radio/d/duyster~11-177/\",\"$pacb\":\"radio 1\",\"$pati\":\"duyster. | vrt max\",\"$paty\":\"radioprogrampage\",\"$paid\":\"pluxbox-11-177\",\"$pazo\":\"vrtmax\",\"$papa\":\"\",\"$feex\":\"\",\"$feke\":\"\",\"$feva\":\"\",\"$fesr\":\"\",\"$feri\":\"\",\"$pas1\":\"detail\",\"$pas2\":\"program\",\"$prna\":\"duyster.\",\"$prid\":\"pluxbox-11-177\"}",
+    "perTrigger": [
+     {
+      "trigger": "impression",
+      "data": null,
+      "template": {
+       "id": "page_impression_1_1_0"
+      }
+     }
+    ]
+   },
+   "ldjson": null,
+   "menu": {
+    "__typename": "ContainerNavigation",
+    "objectId": "Lir4SFpygr8jSdsSZx3SYZjmt9s=",
+    "accessibilityTitle": "Paginanavigatie",
+    "navigationType": "pill",
+    "items": [
+     {
+      "__typename": "ContainerNavigationItem",
+      "objectId": "$byUxNXxyZWNlbnR8dCVSYWRpb1Byb2dyYW1QYWdlJS9sdWlzdGVyL3JhZGlvL2QvZHV5c3Rlcn4xMS0xNzcvJQ==",
+      "title": "Uitzendingen",
+      "active": true,
+      "components": [
+       {
+        "__typename": "PaginatedTileList",
+        "trackingData": {
+         "data": "{\"$liti\":\"Lijst van recente radio uitzendingen\",\"$liid\":\"RadioProgramEpisodeTileList\",\"$licc\":1,\"$lity\":\"list\"}",
+         "perTrigger": []
+        },
+        "objectId": "$byUyN3xyZWNlbnR8byUxNXxyZWNlbnR8dCVSYWRpb1Byb2dyYW1QYWdlJS9sdWlzdGVyL3JhZGlvL2QvZHV5c3Rlcn4xMS0xNzcvJXwl",
+        "listId": "$byUyN3xyZWNlbnR8byUxNXxyZWNlbnR8dCVSYWRpb1Byb2dyYW1QYWdlJS9sdWlzdGVyL3JhZGlvL2QvZHV5c3Rlcn4xMS0xNzcvJXwl",
+        "action": null,
+        "banner": null,
+        "bannerSize": null,
+        "displayType": "list",
+        "maxAge": null,
+        "tileVariant": null,
+        "paginatedItems": {
+         "__typename": "TileConnection",
+         "edges": [
+          {
+           "__typename": "TileEdge",
+           "cursor": "pluxbox-11-39811-0",
+           "node": {
+            "__typename": "RadioEpisodeTile",
+            "objectId": "43DNugHOn/zmsgwQiW8CLQfZhZU=",
+            "trackingData": {
+             "data": "{\"$leti\":\"DUYSTER.\",\"$lest\":\"Maandag 9 november\",\"$lepo\":1,\"$leco\":1,\"$tapu\":\"/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39811-0/\",\"$tapi\":\"pluxbox-11-39811-0\"}",
+             "perTrigger": [
+              {
+               "trigger": "impression",
+               "data": null,
+               "template": {
+                "id": "listelement_impression_1_1_0"
+               }
+              },
+              {
+               "trigger": "click",
+               "data": null,
+               "template": {
+                "id": "listelement_click_1_1_0"
+               }
+              },
+              {
+               "trigger": "focus",
+               "data": null,
+               "template": {
+                "id": "listelement_focus_1_1_0"
+               }
+              }
+             ]
+            },
+            "title": "DUYSTER.",
+            "active": false,
+            "accessibilityTitle": null,
+            "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC0xMS0zOTgxMS0wfHx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lMjd8cmVjZW50fG8lMTV8cmVjZW50fHQlUmFkaW9Qcm9ncmFtUGFnZSUvbHVpc3Rlci9yYWRpby9kL2R1eXN0ZXJ+MTEtMTc3LyV8JXxwbHV4Ym94LTExLTM5ODExLTAl",
+            "tileType": "radioepisode",
+            "action": {
+             "__typename": "LinkAction",
+             "internalTarget": "radioepisodepage",
+             "link": "/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39811-0/",
+             "externalTarget": null,
+             "zone": null
+            },
+            "image": {
+             "__typename": "Image",
+             "objectId": "TXi219JQuowNXXJQEtpfHSML6QA=",
+             "alt": null,
+             "focusPoint": null,
+             "templateUrl": "https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"
+            },
+            "primaryMeta": [
+             {
+              "__typename": "MetaDataItem",
+              "type": "default",
+              "value": "Maandag 9 november",
+              "shortValue": "Ma 09/11",
+              "longValue": "Maandag 9 november",
+              "icons": null
+             }
+            ],
+            "secondaryMeta": null,
+            "indexMeta": null,
+            "status": {
+             "accessibilityLabel": "120 minuten",
+             "icon": {
+              "__typename": "DesignSystemIcon",
+              "accessibilityLabel": null,
+              "position": "left",
+              "type": "DESIGN_SYSTEM",
+              "value": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPause"
+              },
+              "activeValue": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPauseActive"
+              }
+             },
+             "text": {
+              "small": "120 min",
+              "default": "120 minuten"
+             }
+            },
+            "labelMeta": [],
+            "description": "Win tickets voor Tortoise in de Arenberg in Antwerpen",
+            "progress": null
+           }
+          },
+          {
+           "__typename": "TileEdge",
+           "cursor": "pluxbox-11-39809-0",
+           "node": {
+            "__typename": "RadioEpisodeTile",
+            "objectId": "5zXD+/P0RiF0XeqdZ6iU2d5Vx1o=",
+            "trackingData": {
+             "data": "{\"$leti\":\"DUYSTER.\",\"$lest\":\"Maandag 26 oktober\",\"$lepo\":1,\"$leco\":1,\"$tapu\":\"/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39809-0/\",\"$tapi\":\"pluxbox-11-39809-0\"}",
+             "perTrigger": [
+              {
+               "trigger": "impression",
+               "data": null,
+               "template": {
+                "id": "listelement_impression_1_1_0"
+               }
+              },
+              {
+               "trigger": "click",
+               "data": null,
+               "template": {
+                "id": "listelement_click_1_1_0"
+               }
+              },
+              {
+               "trigger": "focus",
+               "data": null,
+               "template": {
+                "id": "listelement_focus_1_1_0"
+               }
+              }
+             ]
+            },
+            "title": "DUYSTER.",
+            "active": false,
+            "accessibilityTitle": null,
+            "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC0xMS0zOTgwOS0wfHx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lMjd8cmVjZW50fG8lMTV8cmVjZW50fHQlUmFkaW9Qcm9ncmFtUGFnZSUvbHVpc3Rlci9yYWRpby9kL2R1eXN0ZXJ+MTEtMTc3LyV8JXxwbHV4Ym94LTExLTM5ODA5LTAl",
+            "tileType": "radioepisode",
+            "action": {
+             "__typename": "LinkAction",
+             "internalTarget": "radioepisodepage",
+             "link": "/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39809-0/",
+             "externalTarget": null,
+             "zone": null
+            },
+            "image": {
+             "__typename": "Image",
+             "objectId": "TXi219JQuowNXXJQEtpfHSML6QA=",
+             "alt": null,
+             "focusPoint": null,
+             "templateUrl": "https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"
+            },
+            "primaryMeta": [
+             {
+              "__typename": "MetaDataItem",
+              "type": "default",
+              "value": "Maandag 26 oktober",
+              "shortValue": "Ma 26/10",
+              "longValue": "Maandag 26 oktober",
+              "icons": null
+             }
+            ],
+            "secondaryMeta": null,
+            "indexMeta": null,
+            "status": {
+             "accessibilityLabel": "120 minuten",
+             "icon": {
+              "__typename": "DesignSystemIcon",
+              "accessibilityLabel": null,
+              "position": "left",
+              "type": "DESIGN_SYSTEM",
+              "value": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPause"
+              },
+              "activeValue": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPauseActive"
+              }
+             },
+             "text": {
+              "small": "120 min",
+              "default": "120 minuten"
+             }
+            },
+            "labelMeta": [],
+            "description": "Win tickets voor het concert van Alela Diane en voor het Tere Zielen festival in de Roma",
+            "progress": null
+           }
+          },
+          {
+           "__typename": "TileEdge",
+           "cursor": "pluxbox-11-39808-0",
+           "node": {
+            "__typename": "RadioEpisodeTile",
+            "objectId": "Wl2y1Ft8i1JZFn5cxnMW9lCuPl4=",
+            "trackingData": {
+             "data": "{\"$leti\":\"DUYSTER.\",\"$lest\":\"Maandag 19 oktober\",\"$lepo\":1,\"$leco\":1,\"$tapu\":\"/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39808-0/\",\"$tapi\":\"pluxbox-11-39808-0\"}",
+             "perTrigger": [
+              {
+               "trigger": "impression",
+               "data": null,
+               "template": {
+                "id": "listelement_impression_1_1_0"
+               }
+              },
+              {
+               "trigger": "click",
+               "data": null,
+               "template": {
+                "id": "listelement_click_1_1_0"
+               }
+              },
+              {
+               "trigger": "focus",
+               "data": null,
+               "template": {
+                "id": "listelement_focus_1_1_0"
+               }
+              }
+             ]
+            },
+            "title": "DUYSTER.",
+            "active": false,
+            "accessibilityTitle": null,
+            "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC0xMS0zOTgwOC0wfHx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lMjd8cmVjZW50fG8lMTV8cmVjZW50fHQlUmFkaW9Qcm9ncmFtUGFnZSUvbHVpc3Rlci9yYWRpby9kL2R1eXN0ZXJ+MTEtMTc3LyV8JXxwbHV4Ym94LTExLTM5ODA4LTAl",
+            "tileType": "radioepisode",
+            "action": {
+             "__typename": "LinkAction",
+             "internalTarget": "radioepisodepage",
+             "link": "/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39808-0/",
+             "externalTarget": null,
+             "zone": null
+            },
+            "image": {
+             "__typename": "Image",
+             "objectId": "TXi219JQuowNXXJQEtpfHSML6QA=",
+             "alt": null,
+             "focusPoint": null,
+             "templateUrl": "https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"
+            },
+            "primaryMeta": [
+             {
+              "__typename": "MetaDataItem",
+              "type": "default",
+              "value": "Maandag 19 oktober",
+              "shortValue": "Ma 19/10",
+              "longValue": "Maandag 19 oktober",
+              "icons": null
+             }
+            ],
+            "secondaryMeta": null,
+            "indexMeta": null,
+            "status": {
+             "accessibilityLabel": "120 minuten",
+             "icon": {
+              "__typename": "DesignSystemIcon",
+              "accessibilityLabel": null,
+              "position": "left",
+              "type": "DESIGN_SYSTEM",
+              "value": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPause"
+              },
+              "activeValue": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPauseActive"
+              }
+             },
+             "text": {
+              "small": "120 min",
+              "default": "120 minuten"
+             }
+            },
+            "labelMeta": [],
+            "description": "met Ayco Duyster",
+            "progress": null
+           }
+          },
+          {
+           "__typename": "TileEdge",
+           "cursor": "pluxbox-11-39804-0",
+           "node": {
+            "__typename": "RadioEpisodeTile",
+            "objectId": "OynMshdamfCV+rmRBQQNo/2HpNU=",
+            "trackingData": {
+             "data": "{\"$leti\":\"DUYSTER.\",\"$lest\":\"Maandag 21 september\",\"$lepo\":1,\"$leco\":1,\"$tapu\":\"/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39804-0/\",\"$tapi\":\"pluxbox-11-39804-0\"}",
+             "perTrigger": [
+              {
+               "trigger": "impression",
+               "data": null,
+               "template": {
+                "id": "listelement_impression_1_1_0"
+               }
+              },
+              {
+               "trigger": "click",
+               "data": null,
+               "template": {
+                "id": "listelement_click_1_1_0"
+               }
+              },
+              {
+               "trigger": "focus",
+               "data": null,
+               "template": {
+                "id": "listelement_focus_1_1_0"
+               }
+              }
+             ]
+            },
+            "title": "DUYSTER.",
+            "active": false,
+            "accessibilityTitle": null,
+            "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC0xMS0zOTgwNC0wfHx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lMjd8cmVjZW50fG8lMTV8cmVjZW50fHQlUmFkaW9Qcm9ncmFtUGFnZSUvbHVpc3Rlci9yYWRpby9kL2R1eXN0ZXJ+MTEtMTc3LyV8JXxwbHV4Ym94LTExLTM5ODA0LTAl",
+            "tileType": "radioepisode",
+            "action": {
+             "__typename": "LinkAction",
+             "internalTarget": "radioepisodepage",
+             "link": "/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39804-0/",
+             "externalTarget": null,
+             "zone": null
+            },
+            "image": {
+             "__typename": "Image",
+             "objectId": "TXi219JQuowNXXJQEtpfHSML6QA=",
+             "alt": null,
+             "focusPoint": null,
+             "templateUrl": "https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"
+            },
+            "primaryMeta": [
+             {
+              "__typename": "MetaDataItem",
+              "type": "default",
+              "value": "Maandag 21 september",
+              "shortValue": "Ma 21/09",
+              "longValue": "Maandag 21 september",
+              "icons": null
+             }
+            ],
+            "secondaryMeta": null,
+            "indexMeta": null,
+            "status": {
+             "accessibilityLabel": "120 minuten",
+             "icon": {
+              "__typename": "DesignSystemIcon",
+              "accessibilityLabel": null,
+              "position": "left",
+              "type": "DESIGN_SYSTEM",
+              "value": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPause"
+              },
+              "activeValue": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPauseActive"
+              }
+             },
+             "text": {
+              "small": "120 min",
+              "default": "120 minuten"
+             }
+            },
+            "labelMeta": [],
+            "description": "met Ayco Duyster",
+            "progress": null
+           }
+          },
+          {
+           "__typename": "TileEdge",
+           "cursor": "pluxbox-11-39803-0",
+           "node": {
+            "__typename": "RadioEpisodeTile",
+            "objectId": "ISuL+TwSDEv/Fzsrnaoj3hrTvh8=",
+            "trackingData": {
+             "data": "{\"$leti\":\"DUYSTER.\",\"$lest\":\"Maandag 14 september\",\"$lepo\":1,\"$leco\":1,\"$tapu\":\"/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39803-0/\",\"$tapi\":\"pluxbox-11-39803-0\"}",
+             "perTrigger": [
+              {
+               "trigger": "impression",
+               "data": null,
+               "template": {
+                "id": "listelement_impression_1_1_0"
+               }
+              },
+              {
+               "trigger": "click",
+               "data": null,
+               "template": {
+                "id": "listelement_click_1_1_0"
+               }
+              },
+              {
+               "trigger": "focus",
+               "data": null,
+               "template": {
+                "id": "listelement_focus_1_1_0"
+               }
+              }
+             ]
+            },
+            "title": "DUYSTER.",
+            "active": false,
+            "accessibilityTitle": null,
+            "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC0xMS0zOTgwMy0wfHx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lMjd8cmVjZW50fG8lMTV8cmVjZW50fHQlUmFkaW9Qcm9ncmFtUGFnZSUvbHVpc3Rlci9yYWRpby9kL2R1eXN0ZXJ+MTEtMTc3LyV8JXxwbHV4Ym94LTExLTM5ODAzLTAl",
+            "tileType": "radioepisode",
+            "action": {
+             "__typename": "LinkAction",
+             "internalTarget": "radioepisodepage",
+             "link": "/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39803-0/",
+             "externalTarget": null,
+             "zone": null
+            },
+            "image": {
+             "__typename": "Image",
+             "objectId": "TXi219JQuowNXXJQEtpfHSML6QA=",
+             "alt": null,
+             "focusPoint": null,
+             "templateUrl": "https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"
+            },
+            "primaryMeta": [
+             {
+              "__typename": "MetaDataItem",
+              "type": "default",
+              "value": "Maandag 14 september",
+              "shortValue": "Ma 14/09",
+              "longValue": "Maandag 14 september",
+              "icons": null
+             }
+            ],
+            "secondaryMeta": null,
+            "indexMeta": null,
+            "status": {
+             "accessibilityLabel": "120 minuten",
+             "icon": {
+              "__typename": "DesignSystemIcon",
+              "accessibilityLabel": null,
+              "position": "left",
+              "type": "DESIGN_SYSTEM",
+              "value": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPause"
+              },
+              "activeValue": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPauseActive"
+              }
+             },
+             "text": {
+              "small": "120 min",
+              "default": "120 minuten"
+             }
+            },
+            "labelMeta": [],
+            "description": "met Ayco Duyster",
+            "progress": null
+           }
+          },
+          {
+           "__typename": "TileEdge",
+           "cursor": "pluxbox-11-39802-0",
+           "node": {
+            "__typename": "RadioEpisodeTile",
+            "objectId": "QeDSmxdWH0zCPN4wKHf4iUztMRY=",
+            "trackingData": {
+             "data": "{\"$leti\":\"DUYSTER.\",\"$lest\":\"Maandag 7 september\",\"$lepo\":1,\"$leco\":1,\"$tapu\":\"/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39802-0/\",\"$tapi\":\"pluxbox-11-39802-0\"}",
+             "perTrigger": [
+              {
+               "trigger": "impression",
+               "data": null,
+               "template": {
+                "id": "listelement_impression_1_1_0"
+               }
+              },
+              {
+               "trigger": "click",
+               "data": null,
+               "template": {
+                "id": "listelement_click_1_1_0"
+               }
+              },
+              {
+               "trigger": "focus",
+               "data": null,
+               "template": {
+                "id": "listelement_focus_1_1_0"
+               }
+              }
+             ]
+            },
+            "title": "DUYSTER.",
+            "active": false,
+            "accessibilityTitle": null,
+            "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC0xMS0zOTgwMi0wfHx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lMjd8cmVjZW50fG8lMTV8cmVjZW50fHQlUmFkaW9Qcm9ncmFtUGFnZSUvbHVpc3Rlci9yYWRpby9kL2R1eXN0ZXJ+MTEtMTc3LyV8JXxwbHV4Ym94LTExLTM5ODAyLTAl",
+            "tileType": "radioepisode",
+            "action": {
+             "__typename": "LinkAction",
+             "internalTarget": "radioepisodepage",
+             "link": "/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39802-0/",
+             "externalTarget": null,
+             "zone": null
+            },
+            "image": {
+             "__typename": "Image",
+             "objectId": "TXi219JQuowNXXJQEtpfHSML6QA=",
+             "alt": null,
+             "focusPoint": null,
+             "templateUrl": "https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"
+            },
+            "primaryMeta": [
+             {
+              "__typename": "MetaDataItem",
+              "type": "default",
+              "value": "Maandag 7 september",
+              "shortValue": "Ma 07/09",
+              "longValue": "Maandag 7 september",
+              "icons": null
+             }
+            ],
+            "secondaryMeta": null,
+            "indexMeta": null,
+            "status": {
+             "accessibilityLabel": "120 minuten",
+             "icon": {
+              "__typename": "DesignSystemIcon",
+              "accessibilityLabel": null,
+              "position": "left",
+              "type": "DESIGN_SYSTEM",
+              "value": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPause"
+              },
+              "activeValue": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPauseActive"
+              }
+             },
+             "text": {
+              "small": "120 min",
+              "default": "120 minuten"
+             }
+            },
+            "labelMeta": [],
+            "description": "met Ayco Duyster",
+            "progress": null
+           }
+          },
+          {
+           "__typename": "TileEdge",
+           "cursor": "pluxbox-11-38632-0",
+           "node": {
+            "__typename": "RadioEpisodeTile",
+            "objectId": "acExBqgGHr5IQ+ffuk/Uzj4MOqs=",
+            "trackingData": {
+             "data": "{\"$leti\":\"DUYSTER.\",\"$lest\":\"Maandag 31 augustus\",\"$lepo\":1,\"$leco\":1,\"$tapu\":\"/vrtmax/luister/radio/d/duyster~11-177/duyster~11-38632-0/\",\"$tapi\":\"pluxbox-11-38632-0\"}",
+             "perTrigger": [
+              {
+               "trigger": "impression",
+               "data": null,
+               "template": {
+                "id": "listelement_impression_1_1_0"
+               }
+              },
+              {
+               "trigger": "click",
+               "data": null,
+               "template": {
+                "id": "listelement_click_1_1_0"
+               }
+              },
+              {
+               "trigger": "focus",
+               "data": null,
+               "template": {
+                "id": "listelement_focus_1_1_0"
+               }
+              }
+             ]
+            },
+            "title": "DUYSTER.",
+            "active": false,
+            "accessibilityTitle": null,
+            "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC0xMS0zODYzMi0wfHx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lMjd8cmVjZW50fG8lMTV8cmVjZW50fHQlUmFkaW9Qcm9ncmFtUGFnZSUvbHVpc3Rlci9yYWRpby9kL2R1eXN0ZXJ+MTEtMTc3LyV8JXxwbHV4Ym94LTExLTM4NjMyLTAl",
+            "tileType": "radioepisode",
+            "action": {
+             "__typename": "LinkAction",
+             "internalTarget": "radioepisodepage",
+             "link": "/vrtmax/luister/radio/d/duyster~11-177/duyster~11-38632-0/",
+             "externalTarget": null,
+             "zone": null
+            },
+            "image": {
+             "__typename": "Image",
+             "objectId": "TXi219JQuowNXXJQEtpfHSML6QA=",
+             "alt": null,
+             "focusPoint": null,
+             "templateUrl": "https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"
+            },
+            "primaryMeta": [
+             {
+              "__typename": "MetaDataItem",
+              "type": "default",
+              "value": "Maandag 31 augustus",
+              "shortValue": "Ma 31/08",
+              "longValue": "Maandag 31 augustus",
+              "icons": null
+             }
+            ],
+            "secondaryMeta": null,
+            "indexMeta": null,
+            "status": {
+             "accessibilityLabel": "120 minuten",
+             "icon": {
+              "__typename": "DesignSystemIcon",
+              "accessibilityLabel": null,
+              "position": "left",
+              "type": "DESIGN_SYSTEM",
+              "value": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPause"
+              },
+              "activeValue": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPauseActive"
+              }
+             },
+             "text": {
+              "small": "120 min",
+              "default": "120 minuten"
+             }
+            },
+            "labelMeta": [],
+            "description": "met Ayco Duyster",
+            "progress": null
+           }
+          },
+          {
+           "__typename": "TileEdge",
+           "cursor": "pluxbox-11-38016-0",
+           "node": {
+            "__typename": "RadioEpisodeTile",
+            "objectId": "zJ6hP8tLShR4iSEsC0wo8Mtamkg=",
+            "trackingData": {
+             "data": "{\"$leti\":\"DUYSTER.\",\"$lest\":\"Maandag 22 juni\",\"$lepo\":1,\"$leco\":1,\"$tapu\":\"/vrtmax/luister/radio/d/duyster~11-177/duyster~11-38016-0/\",\"$tapi\":\"pluxbox-11-38016-0\"}",
+             "perTrigger": [
+              {
+               "trigger": "impression",
+               "data": null,
+               "template": {
+                "id": "listelement_impression_1_1_0"
+               }
+              },
+              {
+               "trigger": "click",
+               "data": null,
+               "template": {
+                "id": "listelement_click_1_1_0"
+               }
+              },
+              {
+               "trigger": "focus",
+               "data": null,
+               "template": {
+                "id": "listelement_focus_1_1_0"
+               }
+              }
+             ]
+            },
+            "title": "DUYSTER.",
+            "active": false,
+            "accessibilityTitle": null,
+            "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC0xMS0zODAxNi0wfHx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lMjd8cmVjZW50fG8lMTV8cmVjZW50fHQlUmFkaW9Qcm9ncmFtUGFnZSUvbHVpc3Rlci9yYWRpby9kL2R1eXN0ZXJ+MTEtMTc3LyV8JXxwbHV4Ym94LTExLTM4MDE2LTAl",
+            "tileType": "radioepisode",
+            "action": {
+             "__typename": "LinkAction",
+             "internalTarget": "radioepisodepage",
+             "link": "/vrtmax/luister/radio/d/duyster~11-177/duyster~11-38016-0/",
+             "externalTarget": null,
+             "zone": null
+            },
+            "image": {
+             "__typename": "Image",
+             "objectId": "TXi219JQuowNXXJQEtpfHSML6QA=",
+             "alt": null,
+             "focusPoint": null,
+             "templateUrl": "https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"
+            },
+            "primaryMeta": [
+             {
+              "__typename": "MetaDataItem",
+              "type": "default",
+              "value": "Maandag 22 juni",
+              "shortValue": "Ma 22/06",
+              "longValue": "Maandag 22 juni",
+              "icons": null
+             }
+            ],
+            "secondaryMeta": null,
+            "indexMeta": null,
+            "status": {
+             "accessibilityLabel": "120 minuten",
+             "icon": {
+              "__typename": "DesignSystemIcon",
+              "accessibilityLabel": null,
+              "position": "left",
+              "type": "DESIGN_SYSTEM",
+              "value": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPause"
+              },
+              "activeValue": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPauseActive"
+              }
+             },
+             "text": {
+              "small": "120 min",
+              "default": "120 minuten"
+             }
+            },
+            "labelMeta": [],
+            "description": "met Ayco Duyster",
+            "progress": null
+           }
+          },
+          {
+           "__typename": "TileEdge",
+           "cursor": "pluxbox-11-35675-0",
+           "node": {
+            "__typename": "RadioEpisodeTile",
+            "objectId": "EmOaBZm1pK7GnL/zK+JhAMrohhA=",
+            "trackingData": {
+             "data": "{\"$leti\":\"DUYSTER.\",\"$lest\":\"Maandag 8 juni\",\"$lepo\":1,\"$leco\":1,\"$tapu\":\"/vrtmax/luister/radio/d/duyster~11-177/duyster~11-35675-0/\",\"$tapi\":\"pluxbox-11-35675-0\"}",
+             "perTrigger": [
+              {
+               "trigger": "impression",
+               "data": null,
+               "template": {
+                "id": "listelement_impression_1_1_0"
+               }
+              },
+              {
+               "trigger": "click",
+               "data": null,
+               "template": {
+                "id": "listelement_click_1_1_0"
+               }
+              },
+              {
+               "trigger": "focus",
+               "data": null,
+               "template": {
+                "id": "listelement_focus_1_1_0"
+               }
+              }
+             ]
+            },
+            "title": "DUYSTER.",
+            "active": false,
+            "accessibilityTitle": null,
+            "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC0xMS0zNTY3NS0wfHx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lMjd8cmVjZW50fG8lMTV8cmVjZW50fHQlUmFkaW9Qcm9ncmFtUGFnZSUvbHVpc3Rlci9yYWRpby9kL2R1eXN0ZXJ+MTEtMTc3LyV8JXxwbHV4Ym94LTExLTM1Njc1LTAl",
+            "tileType": "radioepisode",
+            "action": {
+             "__typename": "LinkAction",
+             "internalTarget": "radioepisodepage",
+             "link": "/vrtmax/luister/radio/d/duyster~11-177/duyster~11-35675-0/",
+             "externalTarget": null,
+             "zone": null
+            },
+            "image": {
+             "__typename": "Image",
+             "objectId": "TXi219JQuowNXXJQEtpfHSML6QA=",
+             "alt": null,
+             "focusPoint": null,
+             "templateUrl": "https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"
+            },
+            "primaryMeta": [
+             {
+              "__typename": "MetaDataItem",
+              "type": "default",
+              "value": "Maandag 8 juni",
+              "shortValue": "Ma 08/06",
+              "longValue": "Maandag 8 juni",
+              "icons": null
+             }
+            ],
+            "secondaryMeta": null,
+            "indexMeta": null,
+            "status": {
+             "accessibilityLabel": "120 minuten",
+             "icon": {
+              "__typename": "DesignSystemIcon",
+              "accessibilityLabel": null,
+              "position": "left",
+              "type": "DESIGN_SYSTEM",
+              "value": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPause"
+              },
+              "activeValue": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPauseActive"
+              }
+             },
+             "text": {
+              "small": "120 min",
+              "default": "120 minuten"
+             }
+            },
+            "labelMeta": [],
+            "description": "met Ayco Duyster",
+            "progress": null
+           }
+          },
+          {
+           "__typename": "TileEdge",
+           "cursor": "pluxbox-11-35674-0",
+           "node": {
+            "__typename": "RadioEpisodeTile",
+            "objectId": "HdRyuVwVuP4jsm/lqvDs1C+Gibk=",
+            "trackingData": {
+             "data": "{\"$leti\":\"DUYSTER.\",\"$lest\":\"Maandag 1 juni\",\"$lepo\":1,\"$leco\":1,\"$tapu\":\"/vrtmax/luister/radio/d/duyster~11-177/duyster~11-35674-0/\",\"$tapi\":\"pluxbox-11-35674-0\"}",
+             "perTrigger": [
+              {
+               "trigger": "impression",
+               "data": null,
+               "template": {
+                "id": "listelement_impression_1_1_0"
+               }
+              },
+              {
+               "trigger": "click",
+               "data": null,
+               "template": {
+                "id": "listelement_click_1_1_0"
+               }
+              },
+              {
+               "trigger": "focus",
+               "data": null,
+               "template": {
+                "id": "listelement_focus_1_1_0"
+               }
+              }
+             ]
+            },
+            "title": "DUYSTER.",
+            "active": false,
+            "accessibilityTitle": null,
+            "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC0xMS0zNTY3NC0wfHx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lMjd8cmVjZW50fG8lMTV8cmVjZW50fHQlUmFkaW9Qcm9ncmFtUGFnZSUvbHVpc3Rlci9yYWRpby9kL2R1eXN0ZXJ+MTEtMTc3LyV8JXxwbHV4Ym94LTExLTM1Njc0LTAl",
+            "tileType": "radioepisode",
+            "action": {
+             "__typename": "LinkAction",
+             "internalTarget": "radioepisodepage",
+             "link": "/vrtmax/luister/radio/d/duyster~11-177/duyster~11-35674-0/",
+             "externalTarget": null,
+             "zone": null
+            },
+            "image": {
+             "__typename": "Image",
+             "objectId": "TXi219JQuowNXXJQEtpfHSML6QA=",
+             "alt": null,
+             "focusPoint": null,
+             "templateUrl": "https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"
+            },
+            "primaryMeta": [
+             {
+              "__typename": "MetaDataItem",
+              "type": "default",
+              "value": "Maandag 1 juni",
+              "shortValue": "Ma 01/06",
+              "longValue": "Maandag 1 juni",
+              "icons": null
+             }
+            ],
+            "secondaryMeta": null,
+            "indexMeta": null,
+            "status": {
+             "accessibilityLabel": "120 minuten",
+             "icon": {
+              "__typename": "DesignSystemIcon",
+              "accessibilityLabel": null,
+              "position": "left",
+              "type": "DESIGN_SYSTEM",
+              "value": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPause"
+              },
+              "activeValue": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPauseActive"
+              }
+             },
+             "text": {
+              "small": "120 min",
+              "default": "120 minuten"
+             }
+            },
+            "labelMeta": [],
+            "description": "met Ayco Duyster",
+            "progress": null
+           }
+          }
+         ],
+         "pageInfo": {
+          "__typename": "PageInfo",
+          "endCursor": "pluxbox-11-35674-0",
+          "hasNextPage": false,
+          "hasPreviousPage": false,
+          "startCursor": "pluxbox-11-39811-0"
+         }
+        },
+        "tileContentType": "radioEpisode",
+        "title": null,
+        "description": null
+       }
+      ]
+     },
+     {
+      "__typename": "ContainerNavigationItem",
+      "objectId": "$byUxNXx1cGNvbWluZ3x0JVJhZGlvUHJvZ3JhbVBhZ2UlL2x1aXN0ZXIvcmFkaW8vZC9kdXlzdGVyfjExLTE3Ny8l",
+      "title": "Geplande uitzendingen",
+      "active": false,
+      "components": [
+       {
+        "__typename": "PaginatedTileList",
+        "trackingData": {
+         "data": "{\"$liti\":\"Lijst van geplande radio uitzendingen\",\"$liid\":\"RadioProgramEpisodeTileList\",\"$licc\":1,\"$lity\":\"list\"}",
+         "perTrigger": []
+        },
+        "objectId": "$byUyN3x1cGNvbWluZ3xvJTE1fHVwY29taW5nfHQlUmFkaW9Qcm9ncmFtUGFnZSUvbHVpc3Rlci9yYWRpby9kL2R1eXN0ZXJ+MTEtMTc3LyV8JQ==",
+        "listId": "$byUyN3x1cGNvbWluZ3xvJTE1fHVwY29taW5nfHQlUmFkaW9Qcm9ncmFtUGFnZSUvbHVpc3Rlci9yYWRpby9kL2R1eXN0ZXJ+MTEtMTc3LyV8JQ==",
+        "action": null,
+        "banner": null,
+        "bannerSize": null,
+        "displayType": "list",
+        "maxAge": null,
+        "tileVariant": null,
+        "paginatedItems": {
+         "__typename": "TileConnection",
+         "edges": [
+          {
+           "__typename": "TileEdge",
+           "cursor": "pluxbox-11-39812-0",
+           "node": {
+            "__typename": "RadioEpisodeTile",
+            "objectId": "oitL8GvY9XlccCexaHiF6Lgp0nk=",
+            "trackingData": {
+             "data": "{\"$leti\":\"DUYSTER.\",\"$lest\":\"Maandag 16 november\",\"$lepo\":1,\"$leco\":1,\"$tapu\":\"/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39812-0/\",\"$tapi\":\"pluxbox-11-39812-0\"}",
+             "perTrigger": [
+              {
+               "trigger": "impression",
+               "data": null,
+               "template": {
+                "id": "listelement_impression_1_1_0"
+               }
+              },
+              {
+               "trigger": "click",
+               "data": null,
+               "template": {
+                "id": "listelement_click_1_1_0"
+               }
+              },
+              {
+               "trigger": "focus",
+               "data": null,
+               "template": {
+                "id": "listelement_focus_1_1_0"
+               }
+              }
+             ]
+            },
+            "title": "DUYSTER.",
+            "active": false,
+            "accessibilityTitle": null,
+            "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC0xMS0zOTgxMi0wfHx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lMjd8dXBjb21pbmd8byUxNXx1cGNvbWluZ3x0JVJhZGlvUHJvZ3JhbVBhZ2UlL2x1aXN0ZXIvcmFkaW8vZC9kdXlzdGVyfjExLTE3Ny8lfCV8cGx1eGJveC0xMS0zOTgxMi0wJQ==",
+            "tileType": "radioepisode",
+            "action": {
+             "__typename": "LinkAction",
+             "internalTarget": "radioepisodepage",
+             "link": "/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39812-0/",
+             "externalTarget": null,
+             "zone": null
+            },
+            "image": {
+             "__typename": "Image",
+             "objectId": "TXi219JQuowNXXJQEtpfHSML6QA=",
+             "alt": null,
+             "focusPoint": null,
+             "templateUrl": "https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"
+            },
+            "primaryMeta": [
+             {
+              "__typename": "MetaDataItem",
+              "type": "default",
+              "value": "Maandag 16 november",
+              "shortValue": "Ma 16/11",
+              "longValue": "Maandag 16 november",
+              "icons": null
+             }
+            ],
+            "secondaryMeta": null,
+            "indexMeta": null,
+            "status": {
+             "accessibilityLabel": "120 minuten",
+             "icon": {
+              "__typename": "DesignSystemIcon",
+              "accessibilityLabel": null,
+              "position": "left",
+              "type": "DESIGN_SYSTEM",
+              "value": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPause"
+              },
+              "activeValue": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPauseActive"
+              }
+             },
+             "text": {
+              "small": "120 min",
+              "default": "120 minuten"
+             }
+            },
+            "labelMeta": [],
+            "description": "met Ayco Duyster",
+            "progress": null
+           }
+          },
+          {
+           "__typename": "TileEdge",
+           "cursor": "pluxbox-11-39813-0",
+           "node": {
+            "__typename": "RadioEpisodeTile",
+            "objectId": "c60bhzjJnLn+tcE5UWjB/dCg9T0=",
+            "trackingData": {
+             "data": "{\"$leti\":\"DUYSTER.\",\"$lest\":\"Maandag 23 november\",\"$lepo\":1,\"$leco\":1,\"$tapu\":\"/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39813-0/\",\"$tapi\":\"pluxbox-11-39813-0\"}",
+             "perTrigger": [
+              {
+               "trigger": "impression",
+               "data": null,
+               "template": {
+                "id": "listelement_impression_1_1_0"
+               }
+              },
+              {
+               "trigger": "click",
+               "data": null,
+               "template": {
+                "id": "listelement_click_1_1_0"
+               }
+              },
+              {
+               "trigger": "focus",
+               "data": null,
+               "template": {
+                "id": "listelement_focus_1_1_0"
+               }
+              }
+             ]
+            },
+            "title": "DUYSTER.",
+            "active": false,
+            "accessibilityTitle": null,
+            "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC0xMS0zOTgxMy0wfHx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lMjd8dXBjb21pbmd8byUxNXx1cGNvbWluZ3x0JVJhZGlvUHJvZ3JhbVBhZ2UlL2x1aXN0ZXIvcmFkaW8vZC9kdXlzdGVyfjExLTE3Ny8lfCV8cGx1eGJveC0xMS0zOTgxMy0wJQ==",
+            "tileType": "radioepisode",
+            "action": {
+             "__typename": "LinkAction",
+             "internalTarget": "radioepisodepage",
+             "link": "/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39813-0/",
+             "externalTarget": null,
+             "zone": null
+            },
+            "image": {
+             "__typename": "Image",
+             "objectId": "TXi219JQuowNXXJQEtpfHSML6QA=",
+             "alt": null,
+             "focusPoint": null,
+             "templateUrl": "https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"
+            },
+            "primaryMeta": [
+             {
+              "__typename": "MetaDataItem",
+              "type": "default",
+              "value": "Maandag 23 november",
+              "shortValue": "Ma 23/11",
+              "longValue": "Maandag 23 november",
+              "icons": null
+             }
+            ],
+            "secondaryMeta": null,
+            "indexMeta": null,
+            "status": {
+             "accessibilityLabel": "120 minuten",
+             "icon": {
+              "__typename": "DesignSystemIcon",
+              "accessibilityLabel": null,
+              "position": "left",
+              "type": "DESIGN_SYSTEM",
+              "value": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPause"
+              },
+              "activeValue": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPauseActive"
+              }
+             },
+             "text": {
+              "small": "120 min",
+              "default": "120 minuten"
+             }
+            },
+            "labelMeta": [],
+            "description": "met Ayco Duyster",
+            "progress": null
+           }
+          },
+          {
+           "__typename": "TileEdge",
+           "cursor": "pluxbox-11-39814-0",
+           "node": {
+            "__typename": "RadioEpisodeTile",
+            "objectId": "tqncTdLxUxKc0paFPqWm4/Y/+qs=",
+            "trackingData": {
+             "data": "{\"$leti\":\"DUYSTER.\",\"$lest\":\"Maandag 30 november\",\"$lepo\":1,\"$leco\":1,\"$tapu\":\"/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39814-0/\",\"$tapi\":\"pluxbox-11-39814-0\"}",
+             "perTrigger": [
+              {
+               "trigger": "impression",
+               "data": null,
+               "template": {
+                "id": "listelement_impression_1_1_0"
+               }
+              },
+              {
+               "trigger": "click",
+               "data": null,
+               "template": {
+                "id": "listelement_click_1_1_0"
+               }
+              },
+              {
+               "trigger": "focus",
+               "data": null,
+               "template": {
+                "id": "listelement_focus_1_1_0"
+               }
+              }
+             ]
+            },
+            "title": "DUYSTER.",
+            "active": false,
+            "accessibilityTitle": null,
+            "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC0xMS0zOTgxNC0wfHx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lMjd8dXBjb21pbmd8byUxNXx1cGNvbWluZ3x0JVJhZGlvUHJvZ3JhbVBhZ2UlL2x1aXN0ZXIvcmFkaW8vZC9kdXlzdGVyfjExLTE3Ny8lfCV8cGx1eGJveC0xMS0zOTgxNC0wJQ==",
+            "tileType": "radioepisode",
+            "action": {
+             "__typename": "LinkAction",
+             "internalTarget": "radioepisodepage",
+             "link": "/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39814-0/",
+             "externalTarget": null,
+             "zone": null
+            },
+            "image": {
+             "__typename": "Image",
+             "objectId": "TXi219JQuowNXXJQEtpfHSML6QA=",
+             "alt": null,
+             "focusPoint": null,
+             "templateUrl": "https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"
+            },
+            "primaryMeta": [
+             {
+              "__typename": "MetaDataItem",
+              "type": "default",
+              "value": "Maandag 30 november",
+              "shortValue": "Ma 30/11",
+              "longValue": "Maandag 30 november",
+              "icons": null
+             }
+            ],
+            "secondaryMeta": null,
+            "indexMeta": null,
+            "status": {
+             "accessibilityLabel": "120 minuten",
+             "icon": {
+              "__typename": "DesignSystemIcon",
+              "accessibilityLabel": null,
+              "position": "left",
+              "type": "DESIGN_SYSTEM",
+              "value": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPause"
+              },
+              "activeValue": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPauseActive"
+              }
+             },
+             "text": {
+              "small": "120 min",
+              "default": "120 minuten"
+             }
+            },
+            "labelMeta": [],
+            "description": "met Ayco Duyster",
+            "progress": null
+           }
+          },
+          {
+           "__typename": "TileEdge",
+           "cursor": "pluxbox-11-39815-0",
+           "node": {
+            "__typename": "RadioEpisodeTile",
+            "objectId": "numV/iDBnsq/8pvMTBUQtbLaBu8=",
+            "trackingData": {
+             "data": "{\"$leti\":\"DUYSTER.\",\"$lest\":\"Maandag 7 december\",\"$lepo\":1,\"$leco\":1,\"$tapu\":\"/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39815-0/\",\"$tapi\":\"pluxbox-11-39815-0\"}",
+             "perTrigger": [
+              {
+               "trigger": "impression",
+               "data": null,
+               "template": {
+                "id": "listelement_impression_1_1_0"
+               }
+              },
+              {
+               "trigger": "click",
+               "data": null,
+               "template": {
+                "id": "listelement_click_1_1_0"
+               }
+              },
+              {
+               "trigger": "focus",
+               "data": null,
+               "template": {
+                "id": "listelement_focus_1_1_0"
+               }
+              }
+             ]
+            },
+            "title": "DUYSTER.",
+            "active": false,
+            "accessibilityTitle": null,
+            "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC0xMS0zOTgxNS0wfHx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lMjd8dXBjb21pbmd8byUxNXx1cGNvbWluZ3x0JVJhZGlvUHJvZ3JhbVBhZ2UlL2x1aXN0ZXIvcmFkaW8vZC9kdXlzdGVyfjExLTE3Ny8lfCV8cGx1eGJveC0xMS0zOTgxNS0wJQ==",
+            "tileType": "radioepisode",
+            "action": {
+             "__typename": "LinkAction",
+             "internalTarget": "radioepisodepage",
+             "link": "/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39815-0/",
+             "externalTarget": null,
+             "zone": null
+            },
+            "image": {
+             "__typename": "Image",
+             "objectId": "TXi219JQuowNXXJQEtpfHSML6QA=",
+             "alt": null,
+             "focusPoint": null,
+             "templateUrl": "https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"
+            },
+            "primaryMeta": [
+             {
+              "__typename": "MetaDataItem",
+              "type": "default",
+              "value": "Maandag 7 december",
+              "shortValue": "Ma 07/12",
+              "longValue": "Maandag 7 december",
+              "icons": null
+             }
+            ],
+            "secondaryMeta": null,
+            "indexMeta": null,
+            "status": {
+             "accessibilityLabel": "120 minuten",
+             "icon": {
+              "__typename": "DesignSystemIcon",
+              "accessibilityLabel": null,
+              "position": "left",
+              "type": "DESIGN_SYSTEM",
+              "value": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPause"
+              },
+              "activeValue": {
+               "__typename": "DesignSystemIconValue",
+               "color": null,
+               "name": "playPauseActive"
+              }
+             },
+             "text": {
+              "small": "120 min",
+              "default": "120 minuten"
+             }
+            },
+            "labelMeta": [],
+            "description": "met Ayco Duyster",
+            "progress": null
+           }
+          }
+         ],
+         "pageInfo": {
+          "__typename": "PageInfo",
+          "endCursor": "pluxbox-11-39815-0",
+          "hasNextPage": false,
+          "hasPreviousPage": false,
+          "startCursor": "pluxbox-11-39812-0"
+         }
+        },
+        "tileContentType": "radioEpisode",
+        "title": null,
+        "description": null
+       }
+      ]
+     }
+    ]
+   }
+  }
+ }
+}

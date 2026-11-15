@@ -1,0 +1,29 @@
+{
+ "duration": 6948288,
+ "skinType": "vod",
+ "title": "DUYSTER.",
+ "shortDescription": null,
+ "drm": null,
+ "drmExpired": null,
+ "videoRobustness": null,
+ "aspectRatio": null,
+ "posterImageUrl": null,
+ "channelId": null,
+ "targetUrls": [
+  {
+   "type": "hls",
+   "url": "https://ondemand-radio.vrtcdn.be/content/vod/aud-1a326e77-9106-4b26-be83-6d4878e00099-CDN_6/aud-1a326e77-9106-4b26-be83-6d4878e00099-CDN_6_nodrm_f2df2d8b-139b-4812-a554-1939af5c1224.ism/.m3u8?filter=%28%21%28type%3D%3D%22audio%22%26%26FourCC%21%3D%22AACL%22%29%29"
+  },
+  {
+   "type": "mpeg_dash",
+   "url": "https://ondemand-radio.vrtcdn.be/content/vod/aud-1a326e77-9106-4b26-be83-6d4878e00099-CDN_6/aud-1a326e77-9106-4b26-be83-6d4878e00099-CDN_6_nodrm_f2df2d8b-139b-4812-a554-1939af5c1224.ism/.mpd?filter=%28%21%28type%3D%3D%22audio%22%26%26FourCC%21%3D%22AACL%22%29%29"
+  }
+ ],
+ "downloadUrls": [],
+ "downloadAdUrls": [],
+ "playlist": {
+  "content": []
+ },
+ "metadata": {},
+ "mediaType": "AOD"
+}

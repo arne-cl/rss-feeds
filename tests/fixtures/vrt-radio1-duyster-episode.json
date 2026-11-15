@@ -1,0 +1,357 @@
+{
+ "data": {
+  "page": {
+   "__typename": "RadioEpisodePage",
+   "objectId": "T/MZdIbtbijgYrmsmbt1cwM8Xuc=",
+   "title": "DUYSTER.",
+   "brand": "radio1",
+   "permalink": "https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39811-0/",
+   "seo": {
+    "__typename": "SeoProperties",
+    "title": "DUYSTER. - maandag 9 november 2026 om 22:00 | VRT MAX",
+    "description": "Win tickets voor Tortoise in de Arenberg in Antwerpen - Beluister DUYSTER. met VRT MAX via de site of app."
+   },
+   "socialSharing": {
+    "__typename": "SocialSharingProperties",
+    "title": "DUYSTER. - maandag 9 november 2026 om 22:00 | VRT MAX",
+    "description": "Win tickets voor Tortoise in de Arenberg in Antwerpen - Beluister DUYSTER. met VRT MAX via de site of app.",
+    "image": {
+     "__typename": "Image",
+     "objectId": "Zgpmcm658Ig4j0lYMLIog/o0pG8=",
+     "templateUrl": "https://images.vrt.be/orig/2025/02/05/c26e5909-134d-4fe2-9e44-0e68c6d9f700.png"
+    }
+   },
+   "trackingData": {
+    "data": "{\"$pana\":\"/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39811-0/\",\"$pacb\":\"radio 1\",\"$pati\":\"duyster. - maandag 9 november 2026 om 22:00 | vrt max\",\"$paty\":\"radioepisodepage\",\"$paid\":\"pluxbox-11-39811-0\",\"$pazo\":\"vrtmax\",\"$papa\":\"\",\"$feex\":\"\",\"$feke\":\"\",\"$feva\":\"\",\"$fesr\":\"\",\"$feri\":\"\",\"$pas1\":\"detail\",\"$pas2\":\"program\",\"$pas3\":\"episode\",\"$prna\":\"duyster.\",\"$prid\":\"pluxbox-11-177\",\"$epna\":\"duyster.\",\"$epid\":\"pluxbox-11-39811-0\",\"$eppt\":1794258000000}",
+    "perTrigger": [
+     {
+      "trigger": "impression",
+      "data": null,
+      "template": {
+       "id": "page_impression_1_1_0"
+      }
+     }
+    ]
+   },
+   "ldjson": null,
+   "player": {
+    "__typename": "MediaPlayer",
+    "objectId": "$byUyNHx0JVJhZGlvRXBpc29kZVBhZ2UlL2x1aXN0ZXIvcmFkaW8vZC9kdXlzdGVyfjExLTE3Ny9kdXlzdGVyfjExLTM5ODExLTAvfG1lZGlhLXBsYXllciU=",
+    "classification": [],
+    "highlight": null,
+    "maxAge": null,
+    "image": {
+     "__typename": "Image",
+     "objectId": "Zgpmcm658Ig4j0lYMLIog/o0pG8=",
+     "alt": null,
+     "focusPoint": null,
+     "templateUrl": "https://images.vrt.be/orig/2025/02/05/c26e5909-134d-4fe2-9e44-0e68c6d9f700.png"
+    },
+    "modes": [
+     {
+      "__typename": "AudioPlayerMode",
+      "active": true,
+      "adsUrl": null,
+      "cimMediaTrackingData": {
+       "__typename": "CimMediaTrackingData",
+       "channel": "radio1",
+       "ct": "ce/radio",
+       "programDuration": 7200,
+       "programId": "aud-1a326e77-9106-4b26-be83-6d4878e00099",
+       "programName": "DUYSTER. - 09/11/2026 22:00",
+       "programSeason": null,
+       "publicationDate": null,
+       "seriesName": null,
+       "se": "default",
+       "st": "aud.rai.ep.free",
+       "tv": "aud-1a326e77-9106-4b26-be83-6d4878e00099",
+       "vf": null
+      },
+      "mediaTrackingData": {
+       "data": "{\"$mena\":\"DUYSTER. - 09/11/2026 22:00\",\"$meid\":\"pluxbox-11-39811-0\",\"$pubid\":\"pbs-pub-b3fba1ef-4b14-4c31-9bfd-359c64461869$aud-1a326e77-9106-4b26-be83-6d4878e00099\",\"$mele\":7200000,\"$prcb\":\"radio 1\",\"$epna\":\"DUYSTER.\",\"$epid\":\"pluxbox-11-39811-0\",\"$eppt\":1794258000000,\"$prna\":\"DUYSTER.\",\"$prid\":\"pluxbox-11-177\"}",
+       "perTrigger": [
+        {
+         "trigger": "impression",
+         "data": null,
+         "template": {
+          "id": "media_impression_rod"
+         }
+        }
+       ]
+      },
+      "token": {
+       "placeholder": ":playerMode",
+       "value": "luister"
+      },
+      "resumePointTemplate": {
+       "mediaId": "aud-1a326e77-9106-4b26-be83-6d4878e00099",
+       "mediaName": "DUYSTER. - 09/11/2026 22:00"
+      },
+      "streamId": "pbs-pub-b3fba1ef-4b14-4c31-9bfd-359c64461869$aud-1a326e77-9106-4b26-be83-6d4878e00099",
+      "broadcastStartDate": "2026-11-09T21:00:00.000Z"
+     }
+    ],
+    "progress": null,
+    "secondaryMeta": [
+     {
+      "__typename": "MetaDataItem",
+      "type": "default",
+      "value": "Maandag 9 november",
+      "shortValue": "Ma 09/11",
+      "longValue": "Maandag 9 november",
+      "icons": null
+     }
+    ],
+    "subtitle": "Ayco Duyster",
+    "title": "DUYSTER."
+   },
+   "menu": {
+    "__typename": "ContainerNavigation",
+    "objectId": "1P5CXLxzAatGXQ5/+/9JsOflMoI=",
+    "accessibilityTitle": null,
+    "items": [
+     {
+      "__typename": "ContainerNavigationItem",
+      "objectId": "$byUxMHxpbmZvfHQlUmFkaW9FcGlzb2RlUGFnZSUvbHVpc3Rlci9yYWRpby9kL2R1eXN0ZXJ+MTEtMTc3L2R1eXN0ZXJ+MTEtMzk4MTEtMC8l",
+      "componentId": "$byUxMHxpbmZvfHQlUmFkaW9FcGlzb2RlUGFnZSUvbHVpc3Rlci9yYWRpby9kL2R1eXN0ZXJ+MTEtMTc3L2R1eXN0ZXJ+MTEtMzk4MTEtMC8l",
+      "title": "Info",
+      "active": true,
+      "action": {
+       "__typename": "SwitchTabAction",
+       "referencedTabId": "$byUxMHxpbmZvfHQlUmFkaW9FcGlzb2RlUGFnZSUvbHVpc3Rlci9yYWRpby9kL2R1eXN0ZXJ+MTEtMTc3L2R1eXN0ZXJ+MTEtMzk4MTEtMC8l",
+       "link": "/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39811-0/?tab=info"
+      }
+     },
+     {
+      "__typename": "ContainerNavigationItem",
+      "objectId": "$byUxMHxlcGlzb2Rlc3x0JVJhZGlvRXBpc29kZVBhZ2UlL2x1aXN0ZXIvcmFkaW8vZC9kdXlzdGVyfjExLTE3Ny9kdXlzdGVyfjExLTM5ODExLTAvJQ==",
+      "componentId": "$byUxMHxlcGlzb2Rlc3x0JVJhZGlvRXBpc29kZVBhZ2UlL2x1aXN0ZXIvcmFkaW8vZC9kdXlzdGVyfjExLTE3Ny9kdXlzdGVyfjExLTM5ODExLTAvJQ==",
+      "title": "Afleveringen",
+      "active": false,
+      "action": {
+       "__typename": "SwitchTabAction",
+       "referencedTabId": "$byUxMHxlcGlzb2Rlc3x0JVJhZGlvRXBpc29kZVBhZ2UlL2x1aXN0ZXIvcmFkaW8vZC9kdXlzdGVyfjExLTE3Ny9kdXlzdGVyfjExLTM5ODExLTAvJQ==",
+       "link": "/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39811-0/?tab=episodes"
+      }
+     },
+     {
+      "__typename": "ContainerNavigationItem",
+      "objectId": "$byUxMHxwbGF5bGlzdHx0JVJhZGlvRXBpc29kZVBhZ2UlL2x1aXN0ZXIvcmFkaW8vZC9kdXlzdGVyfjExLTE3Ny9kdXlzdGVyfjExLTM5ODExLTAvJQ==",
+      "componentId": "$byUxMHxwbGF5bGlzdHx0JVJhZGlvRXBpc29kZVBhZ2UlL2x1aXN0ZXIvcmFkaW8vZC9kdXlzdGVyfjExLTE3Ny9kdXlzdGVyfjExLTM5ODExLTAvJQ==",
+      "title": "Playlist",
+      "active": false,
+      "action": {
+       "__typename": "SwitchTabAction",
+       "referencedTabId": "$byUxMHxwbGF5bGlzdHx0JVJhZGlvRXBpc29kZVBhZ2UlL2x1aXN0ZXIvcmFkaW8vZC9kdXlzdGVyfjExLTE3Ny9kdXlzdGVyfjExLTM5ODExLTAvJQ==",
+       "link": "/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39811-0/?tab=playlist"
+      }
+     }
+    ]
+   },
+   "popUp": null,
+   "toast": null,
+   "components": [
+    {
+     "__typename": "MediaInfo",
+     "objectId": "$byU0OHx0JVJhZGlvRXBpc29kZVBhZ2UlL2x1aXN0ZXIvcmFkaW8vZC9kdXlzdGVyfjExLTE3Ny9kdXlzdGVyfjExLTM5ODExLTAvJQ==",
+     "title": "DUYSTER.",
+     "maxAge": null,
+     "description": "Win tickets voor Tortoise in de Arenberg in Antwerpen",
+     "accessibilityTitle": null,
+     "actionItems": [
+      {
+       "__typename": "ActionItem",
+       "objectId": "sWZ+rJICTO5liBJNc2rn35kNlZo=",
+       "accessibilityLabel": "Ga naar dit programma",
+       "active": false,
+       "mode": "secondary",
+       "title": "Ga naar dit programma",
+       "themeOverride": null,
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/luister/radio/d/duyster~11-177/",
+        "internalTarget": "radioprogrampage",
+        "externalTarget": null,
+        "page": null,
+        "passUserIdentity": null,
+        "zone": null,
+        "linkTokens": null
+       },
+       "icons": [
+        {
+         "__typename": "DesignSystemIcon",
+         "accessibilityLabel": null,
+         "position": "left",
+         "type": "DESIGN_SYSTEM",
+         "value": {
+          "__typename": "DesignSystemIconValue",
+          "color": null,
+          "name": "info"
+         },
+         "activeValue": null
+        }
+       ]
+      },
+      {
+       "__typename": "ActionItem",
+       "objectId": "E7hBtCUQK6qmFdo5fNEz3A9cNGY=",
+       "accessibilityLabel": "Meer van Radio 1",
+       "active": false,
+       "mode": "secondary",
+       "title": "Meer van Radio 1",
+       "themeOverride": null,
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/kanalen/radio-1/",
+        "internalTarget": "channelpage",
+        "externalTarget": null,
+        "page": null,
+        "passUserIdentity": null,
+        "zone": null,
+        "linkTokens": null
+       },
+       "icons": [
+        {
+         "__typename": "DesignSystemIcon",
+         "accessibilityLabel": null,
+         "position": "left",
+         "type": "DESIGN_SYSTEM",
+         "value": {
+          "__typename": "DesignSystemIconValue",
+          "color": null,
+          "name": "info"
+         },
+         "activeValue": null
+        }
+       ]
+      },
+      {
+       "__typename": "ActionItem",
+       "objectId": "o%FavoriteAction|pluxbox-11-39811-0|radio-episode|btn|%",
+       "accessibilityLabel": "Voeg deze aflevering toe aan Mijn afspeellijst",
+       "active": false,
+       "mode": "secondary",
+       "title": "Mijn afspeellijst",
+       "themeOverride": null,
+       "action": {
+        "__typename": "FavoriteAction",
+        "id": "o%FavoriteAction|pluxbox-11-39811-0|radio-episode|btn|%",
+        "favorite": false,
+        "title": "DUYSTER."
+       },
+       "icons": [
+        {
+         "__typename": "DesignSystemIcon",
+         "accessibilityLabel": null,
+         "position": "left",
+         "type": "DESIGN_SYSTEM",
+         "value": {
+          "__typename": "DesignSystemIconValue",
+          "color": null,
+          "name": "add"
+         },
+         "activeValue": {
+          "__typename": "DesignSystemIconValue",
+          "color": null,
+          "name": "check"
+         }
+        }
+       ]
+      },
+      {
+       "__typename": "ActionItem",
+       "objectId": "V3jswphU5cHx/PwrB5IOKY6vCQw=",
+       "accessibilityLabel": "Delen",
+       "active": false,
+       "mode": "secondary",
+       "title": "Delen",
+       "themeOverride": null,
+       "action": {
+        "__typename": "ShareAction",
+        "title": null,
+        "url": "https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39811-0/?utm_medium=internal&utm_source=vrtmax-app&utm_campaign=share-button"
+       },
+       "icons": [
+        {
+         "__typename": "DesignSystemIcon",
+         "accessibilityLabel": null,
+         "position": "left",
+         "type": "DESIGN_SYSTEM",
+         "value": {
+          "__typename": "DesignSystemIconValue",
+          "color": null,
+          "name": "share"
+         },
+         "activeValue": {
+          "__typename": "DesignSystemIconValue",
+          "color": null,
+          "name": "shareActive"
+         }
+        }
+       ]
+      }
+     ],
+     "trackingData": null,
+     "image": null,
+     "primaryMeta": [
+      {
+       "__typename": "MetaDataItem",
+       "type": "default",
+       "value": "Radio 1",
+       "shortValue": null,
+       "longValue": null,
+       "icons": null
+      },
+      {
+       "__typename": "MetaDataItem",
+       "type": "default",
+       "value": "DUYSTER.",
+       "shortValue": null,
+       "longValue": null,
+       "icons": null
+      }
+     ],
+     "secondaryMeta": [
+      {
+       "__typename": "MetaDataItem",
+       "type": "default",
+       "value": "Radio",
+       "shortValue": null,
+       "longValue": null,
+       "icons": null
+      },
+      {
+       "__typename": "MetaDataItem",
+       "type": "default",
+       "value": "Maandag 9 november",
+       "shortValue": "Ma 09/11",
+       "longValue": "Maandag 9 november",
+       "icons": null
+      },
+      {
+       "__typename": "MetaDataItem",
+       "type": "default",
+       "value": "120 min",
+       "shortValue": null,
+       "longValue": "120 minuten",
+       "icons": null
+      }
+     ],
+     "tertiaryMeta": null,
+     "quaternaryMeta": [
+      {
+       "label": "Presentatie:",
+       "__typename": "MetaDataItem",
+       "type": "default",
+       "value": "Ayco Duyster",
+       "shortValue": null,
+       "longValue": null,
+       "icons": null
+      }
+     ]
+    }
+   ],
+   "header": null
+  }
+ }
+}
