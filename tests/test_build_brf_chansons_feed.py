@@ -1,10 +1,17 @@
-"""Tests for the BRF1 "Chansons, Lieder und Folk" feed builder."""
+"""Tests for the BRF1 show feed builders (shared brf1_show_feed module).
+
+The chansons cases exercise the shared module through the Chansons
+ShowConfig; per-show tests live in their own files (e.g.
+test_build_brf_rock_monsieur_feed.py).
+"""
 
 import os
+from dataclasses import replace
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
 import build_brf_chansons_feed
+import brf1_show_feed
 import common
 from bs4 import BeautifulSoup
 
@@ -13,6 +20,7 @@ ARCHIVE = os.path.join(FIXTURES, "brf1-chansons.html")
 EPISODE = os.path.join(FIXTURES, "brf-chansons-pages", "1227507.html")
 PLAY = os.path.join(FIXTURES, "brf-chansons-play", "5689cb.html")
 BRF_TZ = ZoneInfo("Europe/Brussels")
+CFG = build_brf_chansons_feed.CFG
 
 
 def read(path):
@@ -21,7 +29,7 @@ def read(path):
 
 
 def parse_archive_fixture():
-    return build_brf_chansons_feed.parse_archive(read(ARCHIVE))
+    return brf1_show_feed.parse_archive(CFG, read(ARCHIVE))
 
 
 def by_id(items, episode_id):
@@ -29,7 +37,7 @@ def by_id(items, episode_id):
 
 
 def parse_episode_fixture():
-    return build_brf_chansons_feed.parse_episode(read(EPISODE))
+    return brf1_show_feed.parse_episode(read(EPISODE))
 
 
 class TestParseEpisode:
@@ -60,7 +68,7 @@ class TestParseEpisode:
             "<section class='classic-content'><article>"
             "<p>Hello world</p></article></section></body></html>"
         )
-        result = build_brf_chansons_feed.parse_episode(html)
+        result = brf1_show_feed.parse_episode(html)
         assert result["play_hash"] is None
         assert result["content"] == "<p>Hello world</p>"
         assert result["excerpt"] == "Kurzbeschreibung"
@@ -68,7 +76,7 @@ class TestParseEpisode:
 
 class TestResolveAudio:
     def test_mp3_url_and_type_from_play_snippet(self):
-        audio = build_brf_chansons_feed.resolve_audio(read(PLAY))
+        audio = brf1_show_feed.resolve_audio(read(PLAY))
         assert audio == {
             "url": (
                 "https://streaming2.brf.be/audio/2026/40/"
@@ -78,7 +86,7 @@ class TestResolveAudio:
         }
 
     def test_no_audio_in_snippet(self):
-        assert build_brf_chansons_feed.resolve_audio("<html></html>") is None
+        assert brf1_show_feed.resolve_audio("<html></html>") is None
 
 
 class TestParseArchive:
@@ -152,14 +160,14 @@ class TestEnrichItems:
             return read(EPISODE) if "1227507" in link else None
 
         monkeypatch.setattr(
-            build_brf_chansons_feed, "fetch_episode_page", fake_episode
+            brf1_show_feed, "fetch_episode_page", fake_episode
         )
         monkeypatch.setattr(
-            build_brf_chansons_feed,
+            brf1_show_feed,
             "fetch_play_snippet",
             lambda url: read(PLAY),
         )
-        build_brf_chansons_feed.enrich_items(items, {})
+        brf1_show_feed.enrich_items(CFG, items, {})
 
         item = by_id(items, "1227507")[0]
         assert item["content"].startswith("<p>")
@@ -197,12 +205,10 @@ class TestEnrichItems:
             return None  # uncached episodes have no fetchable page here
 
         monkeypatch.setattr(
-            build_brf_chansons_feed, "fetch_episode_page", fake_fetch
+            brf1_show_feed, "fetch_episode_page", fake_fetch
         )
-        monkeypatch.setattr(
-            build_brf_chansons_feed, "fetch_play_snippet", fake_fetch
-        )
-        build_brf_chansons_feed.enrich_items(items, old)
+        monkeypatch.setattr(brf1_show_feed, "fetch_play_snippet", fake_fetch)
+        brf1_show_feed.enrich_items(CFG, items, old)
 
         item = by_id(items, "1227507")[0]
         assert item["content"] == "<p>cached content</p>"
@@ -224,25 +230,23 @@ class TestEnrichItems:
             raise AssertionError(f"offline mode must not fetch {url}")
 
         monkeypatch.setattr(
-            build_brf_chansons_feed, "fetch_episode_page", fail_fetch
+            brf1_show_feed, "fetch_episode_page", fail_fetch
         )
-        monkeypatch.setattr(
-            build_brf_chansons_feed, "fetch_play_snippet", fail_fetch
-        )
+        monkeypatch.setattr(brf1_show_feed, "fetch_play_snippet", fail_fetch)
         items = [by_id(parse_archive_fixture(), "1227507")[0]]
-        build_brf_chansons_feed.enrich_items(items, {})
+        brf1_show_feed.enrich_items(CFG, items, {})
         assert items[0]["enclosure"]["url"].endswith(".mp3")
 
     def test_offline_mode_missing_copy_is_skipped(self, monkeypatch, tmp_path):
         monkeypatch.setenv("CHANSONS_PAGES_DIR", str(tmp_path))
         monkeypatch.setenv("CHANSONS_PLAY_DIR", str(tmp_path))
         monkeypatch.setattr(
-            build_brf_chansons_feed,
+            brf1_show_feed,
             "fetch_episode_page",
             lambda url: (_ for _ in ()).throw(AssertionError("no fetch")),
         )
         items = [by_id(parse_archive_fixture(), "1227507")[0]]
-        build_brf_chansons_feed.enrich_items(items, {})
+        brf1_show_feed.enrich_items(CFG, items, {})
         assert "content" not in items[0]
         assert "enclosure" not in items[0]
 
@@ -272,7 +276,7 @@ class TestAttachAudioLengths:
                 },
             }
         ]
-        build_brf_chansons_feed.attach_audio_lengths(items)
+        brf1_show_feed.attach_audio_lengths(items)
         assert items[0]["enclosure"]["length"] == 56488879
 
     def test_head_failure_keeps_zero(self, monkeypatch):
@@ -294,7 +298,7 @@ class TestAttachAudioLengths:
                 },
             }
         ]
-        build_brf_chansons_feed.attach_audio_lengths(items)
+        brf1_show_feed.attach_audio_lengths(items)
         assert items[0]["enclosure"]["length"] == 0
 
     def test_known_length_is_kept(self, monkeypatch):
@@ -317,7 +321,7 @@ class TestAttachAudioLengths:
                 },
             }
         ]
-        build_brf_chansons_feed.attach_audio_lengths(items)
+        brf1_show_feed.attach_audio_lengths(items)
         assert items[0]["enclosure"]["length"] == 7
 
 
@@ -333,16 +337,11 @@ class TestMainOffline:
         monkeypatch.setenv("CHANSONS_HTML", ARCHIVE)
         monkeypatch.setenv("CHANSONS_PAGES_DIR", str(pages))
         monkeypatch.setenv("CHANSONS_PLAY_DIR", str(play))
-        monkeypatch.setattr(build_brf_chansons_feed, "OUTPUT_PATH", str(output))
         monkeypatch.setattr(
-            build_brf_chansons_feed,
-            "fetch_content_length",
-            lambda url: 1234,
+            brf1_show_feed, "fetch_content_length", lambda url: 1234
         )
 
-        assert build_brf_chansons_feed.main() == 0
-
-        import common
+        assert brf1_show_feed.main(replace(CFG, output_path=str(output))) == 0
 
         xml = output.read_bytes()
         assert b"<itunes:author>BRF1</itunes:author>" in xml
@@ -363,17 +362,17 @@ class TestMainOffline:
             "https://1.brf.be/wp-content/"
         )
 
-def redirect_output(monkeypatch, tmp_path):
-    monkeypatch.setattr(
-        build_brf_chansons_feed, "OUTPUT_PATH", str(tmp_path / "brf1-chansons.xml")
-    )
+
+def output_cfg(tmp_path):
+    """ShowConfig redirected to a tmp output file (offline-safe)."""
+    return replace(CFG, output_path=str(tmp_path / "brf1-chansons.xml"))
 
 
 def run_offline(monkeypatch):
     """Neutralize the live enrichment fetches (length HEAD requests)."""
     monkeypatch.setenv("CHANSONS_PAGES_DIR", os.path.join(FIXTURES, "brf-chansons-pages"))
     monkeypatch.setenv("CHANSONS_PLAY_DIR", os.path.join(FIXTURES, "brf-chansons-play"))
-    monkeypatch.setattr(build_brf_chansons_feed, "fetch_content_length", lambda url: 0)
+    monkeypatch.setattr(brf1_show_feed, "fetch_content_length", lambda url: 0)
 
 
 class TestFailureWarning:
@@ -384,15 +383,15 @@ class TestFailureWarning:
         def boom(*args, **kwargs):
             raise RuntimeError(message)
 
-        monkeypatch.setattr(build_brf_chansons_feed.common, "fetch_page", boom)
+        monkeypatch.setattr(brf1_show_feed.common, "fetch_page", boom)
 
     def test_fetch_failure_writes_warning_feed_and_exits_zero(
         self, tmp_path, monkeypatch, capsys
     ):
         monkeypatch.delenv("CHANSONS_HTML", raising=False)
         self._fail_fetch(monkeypatch)
-        redirect_output(monkeypatch, tmp_path)
-        assert build_brf_chansons_feed.main() == 0
+        cfg = output_cfg(tmp_path)
+        assert brf1_show_feed.main(cfg) == 0
 
         xml = (tmp_path / "brf1-chansons.xml").read_text(encoding="utf-8")
         assert "<title>Feed build failed</title>" in xml
@@ -405,8 +404,8 @@ class TestFailureWarning:
         empty = tmp_path / "empty.html"
         empty.write_text("<html></html>", encoding="utf-8")
         monkeypatch.setenv("CHANSONS_HTML", str(empty))
-        redirect_output(monkeypatch, tmp_path)
-        assert build_brf_chansons_feed.main() == 0
+        cfg = output_cfg(tmp_path)
+        assert brf1_show_feed.main(cfg) == 0
 
         xml = (tmp_path / "brf1-chansons.xml").read_text(encoding="utf-8")
         assert "<title>Feed build failed</title>" in xml
@@ -415,9 +414,9 @@ class TestFailureWarning:
     def test_repeated_failure_replaces_warning_entry(self, tmp_path, monkeypatch):
         monkeypatch.delenv("CHANSONS_HTML", raising=False)
         self._fail_fetch(monkeypatch)
-        redirect_output(monkeypatch, tmp_path)
-        assert build_brf_chansons_feed.main() == 0
-        assert build_brf_chansons_feed.main() == 0
+        cfg = output_cfg(tmp_path)
+        assert brf1_show_feed.main(cfg) == 0
+        assert brf1_show_feed.main(cfg) == 0
 
         xml = (tmp_path / "brf1-chansons.xml").read_text(encoding="utf-8")
         assert xml.count("<item>") == 1
@@ -426,32 +425,31 @@ class TestFailureWarning:
     def test_failure_keeps_previous_items(self, tmp_path, monkeypatch):
         monkeypatch.setenv("CHANSONS_HTML", ARCHIVE)
         run_offline(monkeypatch)
-        redirect_output(monkeypatch, tmp_path)
-        assert build_brf_chansons_feed.main() == 0
+        cfg = output_cfg(tmp_path)
+        assert brf1_show_feed.main(cfg) == 0
         xml = (tmp_path / "brf1-chansons.xml").read_text(encoding="utf-8")
         items_before = xml.count("<item>")
         assert items_before > 0
 
         monkeypatch.delenv("CHANSONS_HTML")
         self._fail_fetch(monkeypatch)
-        assert build_brf_chansons_feed.main() == 0
+        assert brf1_show_feed.main(cfg) == 0
 
         xml = (tmp_path / "brf1-chansons.xml").read_text(encoding="utf-8")
         assert xml.count("<item>") == items_before + 1
         assert "<title>Feed build failed</title>" in xml
 
     def test_success_removes_stale_warning(self, tmp_path, monkeypatch):
-        common_mod = build_brf_chansons_feed.common
-        real_fetch_page = common_mod.fetch_page
+        real_fetch_page = common.fetch_page
         monkeypatch.delenv("CHANSONS_HTML", raising=False)
         self._fail_fetch(monkeypatch)
-        redirect_output(monkeypatch, tmp_path)
-        assert build_brf_chansons_feed.main() == 0
+        cfg = output_cfg(tmp_path)
+        assert brf1_show_feed.main(cfg) == 0
 
-        monkeypatch.setattr(common_mod, "fetch_page", real_fetch_page)
+        monkeypatch.setattr(common, "fetch_page", real_fetch_page)
         monkeypatch.setenv("CHANSONS_HTML", ARCHIVE)
         run_offline(monkeypatch)
-        assert build_brf_chansons_feed.main() == 0
+        assert brf1_show_feed.main(cfg) == 0
 
         xml = (tmp_path / "brf1-chansons.xml").read_text(encoding="utf-8")
         assert "Feed build failed" not in xml
