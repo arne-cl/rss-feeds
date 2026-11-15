@@ -116,14 +116,19 @@ def graphql(operation: str, variables: dict, query: str) -> dict:
         json={"operationName": operation, "variables": variables, "query": query},
         impersonate="chrome",
         timeout=30,
-        headers={"Content-Type": "application/json"},
+        headers={
+            "Content-Type": "application/json",
+            # required — the API answers 400 without a client name
+            "X-VRT-CLIENT-NAME": "vrtnu-web",
+            "X-VRT-CLIENT-VERSION": "1.0",
+        },
     )
     r.raise_for_status()
     payload = r.json()
     errors = payload.get("errors")
     if errors:
         raise RuntimeError(f"GraphQL {operation} error: {errors}")
-    return payload.get("data") or {}
+    return payload
 
 
 def fetch_program_json() -> dict:

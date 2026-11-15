@@ -12,6 +12,7 @@ Vibe-coded RSS feeds generated from pages that don't provide one.
 | Chansons, Lieder und Folk (BRF1) | `https://raw.githubusercontent.com/arne-cl/rss-feeds/main/feeds/brf1-chansons.xml` |
 | Rock Monsieur (BRF1) | `https://raw.githubusercontent.com/arne-cl/rss-feeds/main/feeds/brf1-rock-monsieur.xml` |
 | Polen Update (rbb24) | `https://raw.githubusercontent.com/arne-cl/rss-feeds/main/feeds/rbb24-polen-update.xml` |
+| Duyster (VRT Radio 1) | `https://raw.githubusercontent.com/arne-cl/rss-feeds/main/feeds/vrt-radio1-duyster.xml` |
 
 Subscribe with the raw URL above.
 
@@ -81,11 +82,14 @@ python3 -m venv .venv
 .venv/bin/python scripts/build_rbb24_polen_update_feed.py
 .venv/bin/python scripts/build_brf_chansons_feed.py
 .venv/bin/python scripts/build_brf_rock_monsieur_feed.py
+.venv/bin/python scripts/build_vrt_radio1_duyster_feed.py
 .venv/bin/python scripts/build_instagram_feed.py tiny_ruins
 ```
 
 All build scripts can be tested against local HTML files (for details see the
-respective module docstrings) and `tests/fixtures/`.
+respective module docstrings) and `tests/fixtures/`. The Duyster feed only
+contains HLS audio enclosures (VRT serves radio episodes without MP3), so it
+needs a podcast app with HLS support (VLC, AntennaPod, Apple Podcasts).
 
 ## Previewing feeds in a browser
 

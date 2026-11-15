@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type='text/xsl' href='feed-preview.xsl'?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+  <channel>
+    <title>Duyster (VRT Radio 1)</title>
+    <link>https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/</link>
+    <description>DUYSTER. met Ayco Duyster op VRT Radio 1: muziek voor het late uur. Alle uitzendingen via VRT MAX. (auto-generated from https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/)</description>
+    <docs>http://www.rssboard.org/rss-specification</docs>
+    <generator>python-feedgen</generator>
+    <language>nl</language>
+    <lastBuildDate>Sun, 15 Nov 2026 22:53:51 +0000</lastBuildDate>
+    <itunes:author>VRT Radio 1</itunes:author>
+    <itunes:category text="Music"/>
+    <itunes:image href="https://images.vrt.be/orig/2025/02/05/c26e5909-134d-4fe2-9e44-0e68c6d9f700.png"/>
+    <itunes:explicit>no</itunes:explicit>
+    <itunes:summary>DUYSTER. met Ayco Duyster op VRT Radio 1: muziek voor het late uur. Alle uitzendingen via VRT MAX.</itunes:summary>
+    <item>
+      <title>DUYSTER. - maandag 9 november 2026 om 22:00</title>
+      <link>https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39811-0/</link>
+      <description>Win tickets voor Tortoise in de Arenberg in Antwerpen</description>
+      <guid isPermaLink="false">https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39811-0/</guid>
+      <enclosure url="https://ondemand-radio.vrtcdn.be/content/vod/aud-1a326e77-9106-4b26-be83-6d4878e00099-CDN_6/aud-1a326e77-9106-4b26-be83-6d4878e00099-CDN_6_nodrm_f2df2d8b-139b-4812-a554-1939af5c1224.ism/.m3u8?filter=%28%21%28type%3D%3D%22audio%22%26%26FourCC%21%3D%22AACL%22%29%29" length="0" type="application/vnd.apple.mpegurl"/>
+      <pubDate>Mon, 09 Nov 2026 21:00:00 +0000</pubDate>
+      <itunes:image href="https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"/>
+    </item>
+    <item>
+      <title>DUYSTER. - maandag 26 oktober 2026 om 22:00</title>
+      <link>https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39809-0/</link>
+      <description>Win tickets voor het concert van Alela Diane en voor het Tere Zielen festival in de Roma</description>
+      <guid isPermaLink="false">https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39809-0/</guid>
+      <enclosure url="https://ondemand-radio.vrtcdn.be/content/vod/aud-1c4d0e05-d703-4960-9ed5-c8b945ae8abe-CDN_5/aud-1c4d0e05-d703-4960-9ed5-c8b945ae8abe-CDN_5_nodrm_9f0139c1-383c-4bf6-9135-5dab462ad714.ism/.m3u8?filter=%28%21%28type%3D%3D%22audio%22%26%26FourCC%21%3D%22AACL%22%29%29" length="0" type="application/vnd.apple.mpegurl"/>
+      <pubDate>Mon, 26 Oct 2026 21:00:00 +0000</pubDate>
+      <itunes:image href="https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"/>
+    </item>
+    <item>
+      <title>DUYSTER. - maandag 19 oktober 2026 om 22:00</title>
+      <link>https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39808-0/</link>
+      <description>met Ayco Duyster</description>
+      <guid isPermaLink="false">https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39808-0/</guid>
+      <enclosure url="https://ondemand-radio.vrtcdn.be/content/vod/aud-9629d616-2b04-4de6-88fd-3082a4b3aa33-CDN_5/aud-9629d616-2b04-4de6-88fd-3082a4b3aa33-CDN_5_nodrm_06e0237b-7393-4b38-ac97-5e6bb94e372e.ism/.m3u8?filter=%28%21%28type%3D%3D%22audio%22%26%26FourCC%21%3D%22AACL%22%29%29" length="0" type="application/vnd.apple.mpegurl"/>
+      <pubDate>Mon, 19 Oct 2026 20:00:00 +0000</pubDate>
+      <itunes:image href="https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"/>
+    </item>
+    <item>
+      <title>DUYSTER. - maandag 21 september 2026 om 22:00</title>
+      <link>https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39804-0/</link>
+      <description>met Ayco Duyster</description>
+      <guid isPermaLink="false">https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39804-0/</guid>
+      <enclosure url="https://ondemand-radio.vrtcdn.be/content/vod/aud-841fcb74-2ae6-4804-8281-a6bcc605d9da-CDN_5/aud-841fcb74-2ae6-4804-8281-a6bcc605d9da-CDN_5_nodrm_2056c608-e7d2-4790-a8da-852ef1420886.ism/.m3u8?filter=%28%21%28type%3D%3D%22audio%22%26%26FourCC%21%3D%22AACL%22%29%29" length="0" type="application/vnd.apple.mpegurl"/>
+      <pubDate>Mon, 21 Sep 2026 20:00:00 +0000</pubDate>
+      <itunes:image href="https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"/>
+    </item>
+    <item>
+      <title>DUYSTER. - maandag 14 september 2026 om 22:00</title>
+      <link>https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39803-0/</link>
+      <description>met Ayco Duyster</description>
+      <guid isPermaLink="false">https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39803-0/</guid>
+      <enclosure url="https://ondemand-radio.vrtcdn.be/content/vod/aud-9ace73b2-be0c-490b-9a42-71adc968ac56-CDN_5/aud-9ace73b2-be0c-490b-9a42-71adc968ac56-CDN_5_nodrm_8eabe9ae-b209-4466-819c-ce233065046f.ism/.m3u8?filter=%28%21%28type%3D%3D%22audio%22%26%26FourCC%21%3D%22AACL%22%29%29" length="0" type="application/vnd.apple.mpegurl"/>
+      <pubDate>Mon, 14 Sep 2026 20:00:00 +0000</pubDate>
+      <itunes:image href="https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"/>
+    </item>
+    <item>
+      <title>DUYSTER. - maandag 7 september 2026 om 22:00</title>
+      <link>https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39802-0/</link>
+      <description>met Ayco Duyster</description>
+      <guid isPermaLink="false">https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39802-0/</guid>
+      <enclosure url="https://ondemand-radio.vrtcdn.be/content/vod/aud-c6959826-e264-431b-9cb6-e09a301286b3-CDN_5/aud-c6959826-e264-431b-9cb6-e09a301286b3-CDN_5_nodrm_cea15eb4-ff54-49e7-91af-5d2776e26425.ism/.m3u8?filter=%28%21%28type%3D%3D%22audio%22%26%26FourCC%21%3D%22AACL%22%29%29" length="0" type="application/vnd.apple.mpegurl"/>
+      <pubDate>Mon, 07 Sep 2026 20:00:00 +0000</pubDate>
+      <itunes:image href="https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"/>
+    </item>
+    <item>
+      <title>DUYSTER. - maandag 31 augustus 2026 om 22:00</title>
+      <link>https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-38632-0/</link>
+      <description>met Ayco Duyster</description>
+      <guid isPermaLink="false">https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-38632-0/</guid>
+      <enclosure url="https://ondemand-radio.vrtcdn.be/content/vod/aud-50ce7f90-6fd8-4222-b7a2-27a55e8957a5-CDN_5/aud-50ce7f90-6fd8-4222-b7a2-27a55e8957a5-CDN_5_nodrm_09ac15b5-949a-4f8b-9983-8293ae5110b1.ism/.m3u8?filter=%28%21%28type%3D%3D%22audio%22%26%26FourCC%21%3D%22AACL%22%29%29" length="0" type="application/vnd.apple.mpegurl"/>
+      <pubDate>Mon, 31 Aug 2026 20:00:00 +0000</pubDate>
+      <itunes:image href="https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"/>
+    </item>
+    <item>
+      <title>DUYSTER. - maandag 22 juni 2026 om 22:00</title>
+      <link>https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-38016-0/</link>
+      <description>met Ayco Duyster</description>
+      <guid isPermaLink="false">https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-38016-0/</guid>
+      <enclosure url="https://ondemand-radio.vrtcdn.be/content/vod/aud-4411bc02-9c34-4981-a5f5-b177519c57b8-CDN_5/aud-4411bc02-9c34-4981-a5f5-b177519c57b8-CDN_5_nodrm_6f9687e0-9ac8-4783-beb2-8ffd8e91b9b8.ism/.m3u8?filter=%28%21%28type%3D%3D%22audio%22%26%26FourCC%21%3D%22AACL%22%29%29" length="0" type="application/vnd.apple.mpegurl"/>
+      <pubDate>Mon, 22 Jun 2026 20:00:00 +0000</pubDate>
+      <itunes:image href="https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"/>
+    </item>
+    <item>
+      <title>DUYSTER. - maandag 8 juni 2026 om 22:00</title>
+      <link>https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-35675-0/</link>
+      <description>met Ayco Duyster</description>
+      <guid isPermaLink="false">https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-35675-0/</guid>
+      <enclosure url="https://ondemand-radio.vrtcdn.be/content/vod/aud-f052d93a-379c-4a47-978c-a1bdf63ca2c5-CDN_6/aud-f052d93a-379c-4a47-978c-a1bdf63ca2c5-CDN_6_nodrm_a86f2e11-2c3d-415b-9fa0-de8f2eaf1399.ism/.m3u8?filter=%28%21%28type%3D%3D%22audio%22%26%26FourCC%21%3D%22AACL%22%29%29" length="0" type="application/vnd.apple.mpegurl"/>
+      <pubDate>Mon, 08 Jun 2026 20:00:00 +0000</pubDate>
+      <itunes:image href="https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"/>
+    </item>
+    <item>
+      <title>DUYSTER. - maandag 1 juni 2026 om 22:00</title>
+      <link>https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-35674-0/</link>
+      <description>met Ayco Duyster</description>
+      <guid isPermaLink="false">https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-35674-0/</guid>
+      <enclosure url="https://ondemand-radio.vrtcdn.be/content/vod/aud-14d814fa-4113-4cdd-b949-cc9ed07d6c82-CDN_4/aud-14d814fa-4113-4cdd-b949-cc9ed07d6c82-CDN_4_nodrm_6a1570af-87fe-4938-bef1-7ea0e7069aa2.ism/.m3u8?filter=%28%21%28type%3D%3D%22audio%22%26%26FourCC%21%3D%22AACL%22%29%29" length="0" type="application/vnd.apple.mpegurl"/>
+      <pubDate>Mon, 01 Jun 2026 20:00:00 +0000</pubDate>
+      <itunes:image href="https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"/>
+    </item>
+  </channel>
+</rss>
