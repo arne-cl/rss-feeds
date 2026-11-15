@@ -75,6 +75,12 @@ class TestParseProgram:
     def test_all_tiles_found(self):
         assert len(parse_program_fixture()) == 10
 
+    def test_scheduled_upcoming_tiles_are_excluded(self):
+        items = parse_program_fixture()
+        # 39812+ are future broadcasts from the "Geplande uitzendingen" tab
+        assert all(not i["link"].endswith(f"/duyster~11-398{digit}-0/") for i in items
+                   for digit in "23456789")
+
     def test_item_shape(self):
         for item in parse_program_fixture():
             assert {"id", "title", "link", "description", "published", "image"} <= set(item)
@@ -138,12 +144,20 @@ class TestParseEpisode:
         )
 
     def test_broken_page_raises(self):
-        for broken in ({}, {"data": {}}, {"data": {"page": {"player": {}}}}):
+        for broken in ({}, {"data": {}}, {"data": {"page": {}}}):
             try:
                 builder.parse_episode(broken)
             except ValueError:
                 continue
             raise AssertionError(f"no ValueError for {broken}")
+
+    def test_no_player_modes_raises(self):
+        broken = {"data": {"page": {"player": {"modes": []}}}}
+        try:
+            builder.parse_episode(broken)
+        except ValueError:
+            return
+        raise AssertionError("no ValueError for empty modes")
 
 
 class TestResolveAudio:
@@ -151,7 +165,7 @@ class TestResolveAudio:
         audio = builder.resolve_audio(load_json(MEDIA))
         assert audio["type"] == "application/vnd.apple.mpegurl"
         assert audio["url"].startswith("https://ondemand-radio.vrtcdn.be/")
-        assert audio["url"].endswith(".m3u8")
+        assert ".ism/.m3u8" in audio["url"]
 
     def test_no_hls_target_returns_none(self):
         assert builder.resolve_audio({"targetUrls": [{"type": "mpeg_dash", "url": "x"}]}) is None
@@ -178,7 +192,8 @@ class TestEnrichItems:
         monkeypatch.setattr(builder, "fetch_media_json", fake_media)
         builder.enrich_items(items, {})
 
-        assert calls == [EPISODE_LINK]  # only the episode with data is fetched
+        assert calls[0] == EPISODE_LINK  # newest tile is attempted first
+        assert len(calls) == 10  # all tiles attempted; only one has saved data
         item = by_link(items, EPISODE_SLUG)[0]
         assert item["published"] == datetime(2026, 11, 9, 21, 0, tzinfo=timezone.utc)
         assert item["title"] == "DUYSTER. - maandag 9 november 2026 om 22:00"
@@ -186,7 +201,7 @@ class TestEnrichItems:
             "Win tickets voor Tortoise in de Arenberg in Antwerpen"
         )
         assert item["enclosure"]["type"] == "application/vnd.apple.mpegurl"
-        assert item["enclosure"]["url"].endswith(".m3u8")
+        assert ".ism/.m3u8" in item["enclosure"]["url"]
         assert item["enclosure"]["length"] == 0
         # items without episode data stay untouched
         others = [i for i in items if i["link"] != EPISODE_LINK]
@@ -220,7 +235,8 @@ class TestEnrichItems:
     def test_episode_without_stream_id_gets_no_enclosure(self, monkeypatch):
         items = parse_program_fixture()
         episode = load_json(EPISODE)
-        episode["data"]["page"]["player"]["modes"] = []
+        for mode in episode["data"]["page"]["player"]["modes"]:
+            mode["streamId"] = None
 
         monkeypatch.setattr(builder, "fetch_episode_json", lambda link: episode)
         monkeypatch.setattr(builder, "fetch_player_token", lambda: "token")
@@ -261,7 +277,7 @@ class TestMainOffline:
         )
         assert newest.find("pubDate") is not None
         enc = newest.find("enclosure")
-        assert enc["url"].endswith(".m3u8")
+        assert ".ism/.m3u8" in enc["url"]
         assert enc["type"] == "application/vnd.apple.mpegurl"
         assert enc["length"] == "0"
         assert newest.find("itunes:image")["href"].startswith("https://images.vrt.be/")
