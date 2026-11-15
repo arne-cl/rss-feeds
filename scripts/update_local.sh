@@ -19,6 +19,7 @@ PY=.venv/bin/python
 "$PY" scripts/build_klum_feed.py
 "$PY" scripts/build_rbb24_polen_update_feed.py
 "$PY" scripts/build_brf_chansons_feed.py
+"$PY" scripts/build_brf_rock_monsieur_feed.py
 # Touch the persistent Instagram browser profile so the sessionid keeps
 # rolling; rewrites the env file only when a verified-new cookie shows up.
 # Never fatal — a dead session just means the builds fall back to the

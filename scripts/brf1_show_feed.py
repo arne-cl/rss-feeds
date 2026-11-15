@@ -227,8 +227,13 @@ def enrich_items(
     enriched = 0
     for item in items:
         old = by_id.get(item["id"])
-        if old and old.get("content") and old.get("enclosure"):
-            item["content"] = old["content"]
+        # An enclosure means fully enriched: some pages have no article
+        # text at all (player + excerpt only), so content is optional.
+        # Entries with content but no enclosure keep being retried —
+        # their audio resolution failed before.
+        if old and old.get("enclosure"):
+            if old.get("content"):
+                item["content"] = old["content"]
             item["enclosure"] = old["enclosure"]
             item["description"] = old.get("description") or item["description"]
             continue

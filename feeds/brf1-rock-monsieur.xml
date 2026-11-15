@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type='text/xsl' href='feed-preview.xsl'?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+  <channel>
+    <title>Rock Monsieur (BRF1)</title>
+    <link>https://1.brf.be/sendungen/rock-monsieur/</link>
+    <description>Rock Monsieur präsentiert Musik vom Tellerrand: schräg gebürstet oder melancholisch offen getragen, düster treibend oder gepflegt verzweifelnd, geschüttelt und gerührt. Jede Woche neue Alben, alter Kram und andere potentielle Ohrschmeichler. Der BRF1-Grenzpendler zwischen Alternative, Post, Indie, Experimental und allem, was ihm sonst noch so über den Weg läuft. Immer mit wachsamem Blick auf die belgische Musikszene. Moderation: Volker Krings, Roger Pint. Donnerstag, 20 - 21 Uhr. (auto-generated from https://1.brf.be/sendungen/rock-monsieur/)</description>
+    <docs>http://www.rssboard.org/rss-specification</docs>
+    <generator>python-feedgen</generator>
+    <language>de</language>
+    <lastBuildDate>Sun, 15 Nov 2026 22:09:20 +0000</lastBuildDate>
+    <itunes:author>BRF1</itunes:author>
+    <itunes:category text="Music"/>
+    <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2021/05/rockmonsieur_motiv-1420x968.jpg"/>
+    <itunes:explicit>no</itunes:explicit>
+    <itunes:summary>Rock Monsieur präsentiert Musik vom Tellerrand: schräg gebürstet oder melancholisch offen getragen, düster treibend oder gepflegt verzweifelnd, geschüttelt und gerührt. Jede Woche neue Alben, alter Kram und andere potentielle Ohrschmeichler. Der BRF1-Grenzpendler zwischen Alternative, Post, Indie, Experimental und allem, was ihm sonst noch so über den Weg läuft. Immer mit wachsamem Blick auf die belgische Musikszene. Moderation: Volker Krings, Roger Pint. Donnerstag, 20 - 21 Uhr.</itunes:summary>
+    <item>
+      <title>Rock Monsieur - 12. November</title>
+      <link>https://1.brf.be/sendungen/rock-monsieur/1231559/</link>
+      <description>Mit Volker Krings.</description>
+      <content:encoded>&lt;p&gt;Heute mit neuer Musik vom kalifornischen Psychedelic-Trio Brainstory und dem Debütalbum der Australier Radio Free Alice, die New Wave und Post-Punk vermischen, beeinflusst von The Killers, The Smiths und Pulp.&lt;/p&gt;&lt;p&gt;Musik aus Belgien kommt heute von dEUS und Dressed Like Boys, dem Soloprojekt des Dirk.-Frontmanns Jelle Denturck.&lt;/p&gt;&lt;p&gt;Außerdem machen die Lambrini Girls mit zwei neuen Singles Appetit auf ihr neues Album. Und auch die niederländische Band Elephant hat neues Material herausgebracht.&lt;/p&gt;&lt;p&gt;Volker Krings&lt;/p&gt;</content:encoded>
+      <guid isPermaLink="false">https://1.brf.be/sendungen/rock-monsieur/1231559/</guid>
+      <enclosure url="https://streaming2.brf.be/audio/2026/46/37a8adab704c6401bd0ebbf43e3aeea4.mp3" length="55981809" type="audio/mpeg"/>
+      <pubDate>Thu, 12 Nov 2026 21:00:00 +0100</pubDate>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2026/11/radio-free-alice-1imogene-barron-600x400.jpg"/>
+    </item>
+    <item>
+      <title>Rock Monsieur - 5. November</title>
+      <link>https://1.brf.be/sendungen/rock-monsieur/1231217/</link>
+      <description>Mit Roger Pint.</description>
+      <guid isPermaLink="false">https://1.brf.be/sendungen/rock-monsieur/1231217/</guid>
+      <enclosure url="https://streaming2.brf.be/audio/2026/45/f1ba45421e851941ab6aa63a63f7dcf8.mp3" length="57763388" type="audio/mpeg"/>
+      <pubDate>Thu, 05 Nov 2026 21:00:00 +0100</pubDate>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2024/09/rogerpintrmojulienclaessenbrf-600x400.jpg"/>
+    </item>
+    <item>
+      <title>Rock Monsieur - 29. Oktober</title>
+      <link>https://1.brf.be/sendungen/rock-monsieur/1230319/</link>
+      <description>Mit Volker Krings.</description>
+      <content:encoded>&lt;p&gt;Heute mit dem neuen Album von Greg Freeman, einem Songwriter aus Vermont, der krachigen Indie-Rock mit Americana-Einschlag spielt und dem Debüt von Piss (Foto), einer Noise-Punk-Band aus Vancouver, das am Freitag erscheint.&lt;/p&gt;&lt;p&gt;Außerdem neue Musik von Kristin Hersh, The Truffauts, Twisted Teens, The Flaming Lips und einen Vorgeschmack auf das kommende Album von J. Bernardt.&lt;/p&gt;&lt;p&gt;Volker Krings&lt;/p&gt;</content:encoded>
+      <guid isPermaLink="false">https://1.brf.be/sendungen/rock-monsieur/1230319/</guid>
+      <enclosure url="https://streaming2.brf.be/audio/2026/44/daeb01f5623bd47601544a31c71174bf.mp3" length="55937279" type="audio/mpeg"/>
+      <pubDate>Thu, 29 Oct 2026 21:00:00 +0100</pubDate>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2026/10/pissgracegrignon-540x360.jpg"/>
+    </item>
+    <item>
+      <title>Rock Monsieur - 22. Oktober</title>
+      <link>https://1.brf.be/sendungen/rock-monsieur/1229777/</link>
+      <description>Mit Roger Pint.</description>
+      <content:encoded>&lt;p&gt;Roger Pint&lt;/p&gt;</content:encoded>
+      <guid isPermaLink="false">https://1.brf.be/sendungen/rock-monsieur/1229777/</guid>
+      <enclosure url="https://streaming2.brf.be/audio/2026/43/76b65b21c308619b3bfb10c7231478a5.mp3" length="57712905" type="audio/mpeg"/>
+      <pubDate>Thu, 22 Oct 2026 21:00:00 +0200</pubDate>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2024/09/rogerpintrmojulienclaessenbrf-540x360.jpg"/>
+    </item>
+    <item>
+      <title>Rock Monsieur - 15. Oktober</title>
+      <link>https://1.brf.be/sendungen/rock-monsieur/1229177/</link>
+      <description>Mit Volker Krings.</description>
+      <content:encoded>&lt;p&gt;Beck meldet sich nach sieben Jahren mit der ruhigen, melancholischen Platte &amp;quot;Ride Lonesome&amp;quot; zurück. Die Fontaines D.C. aus Dublin veröffentlichen am Freitag ihr fünftes Album &amp;quot;Dopamine Chamber&amp;quot;. Ihre Post-Punk-Landsleute von Basht. haben gerade ihr lobenswertes Debütalbum &amp;quot;Poor Advice&amp;quot; herausgebracht.&lt;/p&gt;&lt;p&gt;Außerdem neue Musik von Tramhaus aus Rotterdam, von Karate Boogaloo mit Instrumental-Deep-Funk-Soul-Jazz und von Fat Dog, einer Dance-Punk-Band aus London. Dazu gibt es Lex Walton, Cameron Winter mit einem Live-Album aus der Carnegie Hall (Foto), Father John Misty und Twin Temple.&lt;/p&gt;&lt;p&gt;Belgische Musik kommt diesmal von Eosine aus Lüttich.&lt;/p&gt;&lt;p&gt;Volker Krings&lt;/p&gt;</content:encoded>
+      <guid isPermaLink="false">https://1.brf.be/sendungen/rock-monsieur/1229177/</guid>
+      <enclosure url="https://streaming2.brf.be/audio/2026/42/5e0003d8af6e9b12fc36f1dc9dcf3437.mp3" length="55976051" type="audio/mpeg"/>
+      <pubDate>Thu, 15 Oct 2026 21:00:00 +0200</pubDate>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2026/10/cameronwinterlewisevans-540x360.jpg"/>
+    </item>
+    <item>
+      <title>Rock Monsieur - 8. Oktober</title>
+      <link>https://1.brf.be/sendungen/rock-monsieur/1228622/</link>
+      <description>Mit Roger Pint.</description>
+      <content:encoded>&lt;p&gt;Roger Pint&lt;/p&gt;</content:encoded>
+      <guid isPermaLink="false">https://1.brf.be/sendungen/rock-monsieur/1228622/</guid>
+      <enclosure url="https://streaming2.brf.be/audio/2026/41/581df0a059e4da196096ee8e78f90251.mp3" length="58022715" type="audio/mpeg"/>
+      <pubDate>Thu, 08 Oct 2026 21:00:00 +0200</pubDate>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2024/09/rogerpintrmojulienclaessenbrf-540x360.jpg"/>
+    </item>
+    <item>
+      <title>Rock Monsieur - 1. Oktober</title>
+      <link>https://1.brf.be/sendungen/rock-monsieur/1227524/</link>
+      <description>Mit Volker Krings.</description>
+      <content:encoded>&lt;p&gt;Heute mit den neuen Alben von Gilla Band aus Dublin, die Noise-Rock mit Techno-Anleihen verbindet, und von HOL1D4Y, dem Psychedelic-Soloprojekt von Rival-Sons-Gitarrist Scott Holiday (Foto).&lt;/p&gt;&lt;p&gt;Außerdem neue Musik von den Post-Punk-Bands Protomartyr aus Detroit und Tramhaus aus Rotterdam und von Beck, der mit &amp;quot;Ride Lonesome&amp;quot; nach &amp;quot;Sea Change&amp;quot; (2002) und &amp;quot;Morning Phase&amp;quot; (2014) wieder einmal ein ruhiges und melancholisches Album herausgebracht hat.&lt;/p&gt;&lt;p&gt;Dazu kommen Soul von Gotts Street Park aus Leeds und Instrumental-Funk von Karate Boogaloo aus Melbourne sowie neue Musik von Kristin Hersh. Zum Abschluss gibt es düsteren Folk von Emma Ruth Rundle.&lt;/p&gt;&lt;p&gt;Volker Krings&lt;/p&gt;</content:encoded>
+      <guid isPermaLink="false">https://1.brf.be/sendungen/rock-monsieur/1227524/</guid>
+      <enclosure url="https://streaming2.brf.be/audio/2026/40/ad9eb42f4b10d6e96842f36d1db301e5.mp3" length="55809336" type="audio/mpeg"/>
+      <pubDate>Thu, 01 Oct 2026 21:00:00 +0200</pubDate>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2026/09/scott-holiday-by-rick-horn-2026-v1-570x321.jpg"/>
+    </item>
+    <item>
+      <title>Rock Monsieur: 24. September</title>
+      <link>https://1.brf.be/sendungen/rock-monsieur/1226994/</link>
+      <description>Mit Roger Pint.</description>
+      <content:encoded>&lt;p&gt;Roger Pint&lt;/p&gt;</content:encoded>
+      <guid isPermaLink="false">https://1.brf.be/sendungen/rock-monsieur/1226994/</guid>
+      <enclosure url="https://streaming2.brf.be/audio/2026/39/780a04adec9df887c5c750500c25c634.mp3" length="58780728" type="audio/mpeg"/>
+      <pubDate>Thu, 24 Sep 2026 21:00:00 +0200</pubDate>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2024/09/rogerpintrmojulienclaessenbrf-540x360.jpg"/>
+    </item>
+    <item>
+      <title>Rock Monsieur - 17. September</title>
+      <link>https://1.brf.be/sendungen/rock-monsieur/1226388/</link>
+      <description>Mit Volker Krings.</description>
+      <content:encoded>&lt;p&gt;Heute mit den neuen Alben von Die Anstalt, einem Synth-Punk-Trio aus Berlin, das ihre kühlen EBM-Sounds mit 60s-Surfgitarren verziert und Russian Circles, einem Trio aus Chicago, das seit zwei Jahrzehnten für brachialen aber auch elegischen Instrumental-Post-Metal steht.&lt;/p&gt;&lt;p&gt;Außerdem neue Musik von den Urgesteinen Dinosaur Jr. (Foto), Radio Free Alice, einer aufstrebenden Band aus Australien und dem kalifornischen Psych-Jazz-Funk Trio Brainstory. Zum Abschluss gibt es dann noch soulige Klänge von der Menahan Street Band und dem Ghost Funk Orchestra.&lt;/p&gt;&lt;p&gt;Volker Krings&lt;/p&gt;</content:encoded>
+      <guid isPermaLink="false">https://1.brf.be/sendungen/rock-monsieur/1226388/</guid>
+      <enclosure url="https://streaming2.brf.be/audio/2026/38/7e8507812a789ff08abe142b936903ec.mp3" length="56582808" type="audio/mpeg"/>
+      <pubDate>Thu, 17 Sep 2026 21:00:00 +0200</pubDate>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2026/09/dinosaur-jrjeff-fowler-480x360.jpg"/>
+    </item>
+    <item>
+      <title>Rock Monsieur: 10. September</title>
+      <link>https://1.brf.be/sendungen/rock-monsieur/1225670/</link>
+      <description>Mit Roger Pint.</description>
+      <content:encoded>&lt;p&gt;Roger Pint&lt;/p&gt;</content:encoded>
+      <guid isPermaLink="false">https://1.brf.be/sendungen/rock-monsieur/1225670/</guid>
+      <enclosure url="https://streaming2.brf.be/audio/2026/37/48b06850240f5e45fb7dc5c0035e0e53.mp3" length="57356757" type="audio/mpeg"/>
+      <pubDate>Thu, 10 Sep 2026 21:00:00 +0200</pubDate>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2024/09/rogerpintrmojulienclaessenbrf-540x360.jpg"/>
+    </item>
+    <item>
+      <title>Rock Monsieur - 3. September</title>
+      <link>https://1.brf.be/sendungen/rock-monsieur/1225071/</link>
+      <description>Mit Volker Krings.</description>
+      <guid isPermaLink="false">https://1.brf.be/sendungen/rock-monsieur/1225071/</guid>
+      <enclosure url="https://streaming2.brf.be/audio/2026/36/f91b08e38ee1ba2d409f36981e57383f.mp3" length="55864809" type="audio/mpeg"/>
+      <pubDate>Thu, 03 Sep 2026 21:00:00 +0200</pubDate>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2021/08/VolkerKrings_StephanOffermann-540x360.jpg"/>
+    </item>
+    <item>
+      <title>Rock Monsieur - 27. August</title>
+      <link>https://1.brf.be/sendungen/rock-monsieur/1224451/</link>
+      <description>Mit Roger Pint.</description>
+      <content:encoded>&lt;p&gt;Roger Pint&lt;/p&gt;</content:encoded>
+      <guid isPermaLink="false">https://1.brf.be/sendungen/rock-monsieur/1224451/</guid>
+      <enclosure url="https://streaming2.brf.be/audio/2026/35/bab870730a4ef6e08c9eebab48b9b382.mp3" length="56911248" type="audio/mpeg"/>
+      <pubDate>Thu, 27 Aug 2026 21:00:00 +0200</pubDate>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2024/09/rogerpintrmojulienclaessenbrf-540x360.jpg"/>
+    </item>
+  </channel>
+</rss>

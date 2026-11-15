@@ -216,6 +216,35 @@ class TestEnrichItems:
         assert item["description"] == "full cached description"
         assert not any("1227507" in c for c in calls)
 
+    def test_enclosure_without_content_is_cached(self, monkeypatch):
+        """Pages with only a player (no article text) must not re-fetch."""
+        items = parse_archive_fixture()
+        old = {
+            "https://1.brf.be/sendungen/chansons/1227507/": {
+                "id": "https://1.brf.be/sendungen/chansons/1227507/",
+                "title": "cached",
+                "link": "https://1.brf.be/sendungen/chansons/1227507/",
+                "description": "cached description",
+                "published": None,
+                "enclosure": {
+                    "url": "https://streaming2.brf.be/audio/x.mp3",
+                    "type": "audio/mpeg",
+                    "length": 42,
+                },
+            }
+        }
+
+        def fail_fetch(url):
+            raise AssertionError(f"must not fetch {url}")
+
+        monkeypatch.setattr(brf1_show_feed, "fetch_episode_page", fail_fetch)
+        monkeypatch.setattr(brf1_show_feed, "fetch_play_snippet", fail_fetch)
+        brf1_show_feed.enrich_items(CFG, items, old)
+
+        item = by_id(items, "1227507")[0]
+        assert item["enclosure"]["length"] == 42
+        assert "content" not in item
+
     def test_offline_mode_uses_saved_copies_only(self, monkeypatch, tmp_path):
         pages = tmp_path / "pages"
         play = tmp_path / "play"
