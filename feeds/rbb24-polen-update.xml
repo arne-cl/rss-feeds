@@ -8,12 +8,21 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <language>de</language>
-    <lastBuildDate>Tue, 10 Nov 2026 20:38:06 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 15 Nov 2026 22:27:27 +0000</lastBuildDate>
     <itunes:author>rbb24</itunes:author>
     <itunes:category text="News"/>
     <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/fernsehen/kowalski_und_schmidt/2020/07_2020/KOW_KOW-Making-of-Polen-update-uv_47702376__10-00-53-14.jpg.jpg/size=1280x720.jpg"/>
     <itunes:explicit>no</itunes:explicit>
     <itunes:summary>Polen Update: aktuelle Nachrichten und Trends aus dem Nachbarland – die Videos der rbb|24-Reihe.</itunes:summary>
+    <item>
+      <title>Tödliche Attacke in Krakau: Verschärfung der Waffengesetze?</title>
+      <link>https://www.rbb24.de/panorama/av/av24/video-polen-update-attacke-krakau-waffengesetze-verschaerfung.html</link>
+      <description>Ein bewaffneter Mann fährt durch die Altstadt von Krakau und schießt wahllos auf Passanten. Mehrere Menschen sterben. Insgesamt werden bei ihm vier Waffen sichergestellt. Nun diskutiert Polen über die Verschärfung der Waffenvorschriften.</description>
+      <guid isPermaLink="false">https://www.rbb24.de/panorama/av/av24/video-polen-update-attacke-krakau-waffengesetze-verschaerfung.html</guid>
+      <enclosure url="https://rbb-progressive.ard-mcdn.de/content/36/fa/36fa8892-c264-42dc-9001-4abadfed2b7b/36fa8892-c264-42dc-9001-4abadfed2b7b_9zu16-sm1280.mp4" length="28621175" type="video/mp4"/>
+      <pubDate>Wed, 11 Nov 2026 17:44:39 +0100</pubDate>
+      <itunes:image href="https://www.rbb-online.de/content/dam/rbb/rbb/rbb24/2026/2026_11/rbb-reporter/2026_10_11-Krakau_16x9.jpg.jpg/size=1280x720.jpg"/>
+    </item>
     <item>
       <title>Plötzlich steht ein Wisent im Vorgarten</title>
       <link>https://www.rbb24.de/panorama/av/av24/video-polen-update-wisent-vorgarten-.html</link>

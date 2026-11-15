@@ -8,7 +8,17 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 10 Nov 2026 20:46:50 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 15 Nov 2026 22:28:17 +0000</lastBuildDate>
+    <item>
+      <title>Feed build failed</title>
+      <link>https://www.instagram.com/</link>
+      <description>stories need INSTAGRAM_SESSIONID</description>
+      <content:encoded>&lt;p&gt;The last feed update failed; the items below are the most recent entries known.&lt;/p&gt;
+&lt;pre&gt;RuntimeError: stories need INSTAGRAM_SESSIONID
+&lt;/pre&gt;</content:encoded>
+      <guid isPermaLink="false">https://www.instagram.com/#build-status</guid>
+      <pubDate>Sun, 15 Nov 2026 22:28:17 +0000</pubDate>
+    </item>
     <item>
       <title>Story by martinmaleschka · 2026-11-10 20:20</title>
       <link>https://www.instagram.com/stories/martinmaleschka/4027557561976488002/</link>
@@ -957,15 +967,6 @@
       <guid isPermaLink="false">4019514718416839214_1626565575</guid>
       <enclosure url="https://scontent-ber1-1.cdninstagram.com/v/t51.82787-15/877622097_18639053716005576_9023266756396361986_n.jpg?stp=dst-jpg_e35_tt6&amp;_nc_cat=101&amp;ig_cache_key=NDAxOTUxNDcxODQxNjgzOTIxNA%3D%3D.3-ccb7-5&amp;ccb=7-5&amp;_nc_sid=58cdad&amp;efg=eyJ2ZW5jb2RlX3RhZyI6IlNUT1JZLnhwaWRzLjExNzkuc2RyLnJlZ3VsYXJfcGhvdG8uQzMifQ%3D%3D&amp;_nc_ohc=VbtN5EFAR3UQ7kNvwFt2bDG&amp;_nc_oc=Adq5Rgh5ZdU8z8mbaOSyC2-OwBWEVpYbDSkyqVDxOLC4IdQD0Ycz7ThDu1m-wyvCCJxV2wza0UqC4GPHA-_iy_y4&amp;_nc_zt=23&amp;_nc_ht=scontent-ber1-1.cdninstagram.com&amp;_nc_gid=-mzdYmxLxmh2KEtRvEvp7g&amp;_nc_ss=7b6a8&amp;oh=00_AQTEtCEpMiUgWR2fCYeChVhRKmYYgFyEe2sarvYQH3ca_g&amp;oe=6AEB064D" length="0" type="image/jpeg"/>
       <pubDate>Fri, 30 Oct 2026 18:05:15 +0000</pubDate>
-    </item>
-    <item>
-      <title>Story by waveybobson · 2026-10-30 18:04</title>
-      <link>https://www.instagram.com/stories/waveybobson/4019514202618129859/</link>
-      <description>&lt;img src="https://scontent-ber1-1.cdninstagram.com/v/t51.82787-15/877253987_18639052948005576_8269430702981612963_n.jpg?stp=dst-jpg_e35_tt6&amp;amp;_nc_cat=101&amp;amp;ig_cache_key=NDAxOTUxNDIwMjYxODEyOTg1OQ%3D%3D.3-ccb7-5&amp;amp;ccb=7-5&amp;amp;_nc_sid=58cdad&amp;amp;efg=eyJ2ZW5jb2RlX3RhZyI6IlNUT1JZLnhwaWRzLjExNzkuc2RyLnJlZ3VsYXJfcGhvdG8uQzMifQ%3D%3D&amp;amp;_nc_ohc=oBZjY2d7toUQ7kNvwE5Lim2&amp;amp;_nc_oc=Adpr7Rret8o8xZNtHV1VMrVfqzvqwipk0Uon5E3RSlk6YeyqJ15ejhjYwRfeuNE5fzbZqxIpQmzCq912uYpzZa_z&amp;amp;_nc_zt=23&amp;amp;_nc_ht=scontent-ber1-1.cdninstagram.com&amp;amp;_nc_gid=-mzdYmxLxmh2KEtRvEvp7g&amp;amp;_nc_ss=7b6a8&amp;amp;oh=00_AQT7eEETa1HXsS8SfE1aQOzGLNft_Reux1Cj-EbSX18Aeg&amp;amp;oe=6AEAFEA1" /&gt;
-&lt;p&gt;Story by &lt;a href="https://www.instagram.com/stories/waveybobson/"&gt;waveybobson&lt;/a&gt; · expires 2026-10-31 18:04 UTC&lt;/p&gt;</description>
-      <guid isPermaLink="false">4019514202618129859_1626565575</guid>
-      <enclosure url="https://scontent-ber1-1.cdninstagram.com/v/t51.82787-15/877253987_18639052948005576_8269430702981612963_n.jpg?stp=dst-jpg_e35_tt6&amp;_nc_cat=101&amp;ig_cache_key=NDAxOTUxNDIwMjYxODEyOTg1OQ%3D%3D.3-ccb7-5&amp;ccb=7-5&amp;_nc_sid=58cdad&amp;efg=eyJ2ZW5jb2RlX3RhZyI6IlNUT1JZLnhwaWRzLjExNzkuc2RyLnJlZ3VsYXJfcGhvdG8uQzMifQ%3D%3D&amp;_nc_ohc=oBZjY2d7toUQ7kNvwE5Lim2&amp;_nc_oc=Adpr7Rret8o8xZNtHV1VMrVfqzvqwipk0Uon5E3RSlk6YeyqJ15ejhjYwRfeuNE5fzbZqxIpQmzCq912uYpzZa_z&amp;_nc_zt=23&amp;_nc_ht=scontent-ber1-1.cdninstagram.com&amp;_nc_gid=-mzdYmxLxmh2KEtRvEvp7g&amp;_nc_ss=7b6a8&amp;oh=00_AQT7eEETa1HXsS8SfE1aQOzGLNft_Reux1Cj-EbSX18Aeg&amp;oe=6AEAFEA1" length="0" type="image/jpeg"/>
-      <pubDate>Fri, 30 Oct 2026 18:04:13 +0000</pubDate>
     </item>
   </channel>
 </rss>
