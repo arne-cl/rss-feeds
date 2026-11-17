@@ -8,12 +8,21 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <language>nl</language>
-    <lastBuildDate>Mon, 16 Nov 2026 20:04:04 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 17 Nov 2026 09:02:25 +0000</lastBuildDate>
     <itunes:author>VRT Radio 1</itunes:author>
     <itunes:category text="Music"/>
     <itunes:image href="https://images.vrt.be/orig/2025/02/05/c26e5909-134d-4fe2-9e44-0e68c6d9f700.png"/>
     <itunes:explicit>no</itunes:explicit>
     <itunes:summary>DUYSTER. met Ayco Duyster op VRT Radio 1: muziek voor het late uur. Alle uitzendingen via VRT MAX.</itunes:summary>
+    <item>
+      <title>DUYSTER. - maandag 16 november 2026 om 22:00</title>
+      <link>https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39812-0/</link>
+      <description>met Ayco Duyster</description>
+      <guid isPermaLink="false">https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39812-0/</guid>
+      <enclosure url="https://ondemand-radio.vrtcdn.be/content/vod/aud-f372c22e-9fa8-4fa7-85d5-3996af202cc1-CDN_5/aud-f372c22e-9fa8-4fa7-85d5-3996af202cc1-CDN_5_nodrm_29642336-3673-40b5-b90a-1dd23ee9f172.ism/.m3u8?filter=%28%21%28type%3D%3D%22audio%22%26%26FourCC%21%3D%22AACL%22%29%29" length="0" type="application/vnd.apple.mpegurl"/>
+      <pubDate>Mon, 16 Nov 2026 21:00:00 +0000</pubDate>
+      <itunes:image href="https://images.vrt.be/orig/2025/02/05/5a2ebc96-c62f-4fab-b113-cceaba2d84d5.png"/>
+    </item>
     <item>
       <title>DUYSTER. - maandag 9 november 2026 om 22:00</title>
       <link>https://www.vrt.be/vrtmax/luister/radio/d/duyster~11-177/duyster~11-39811-0/</link>
