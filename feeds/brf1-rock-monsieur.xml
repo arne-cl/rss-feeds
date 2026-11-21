@@ -8,12 +8,22 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <language>de</language>
-    <lastBuildDate>Tue, 17 Nov 2026 09:02:23 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 21 Nov 2026 03:55:38 +0000</lastBuildDate>
     <itunes:author>BRF1</itunes:author>
     <itunes:category text="Music"/>
     <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2021/05/rockmonsieur_motiv-1420x968.jpg"/>
     <itunes:explicit>no</itunes:explicit>
     <itunes:summary>Rock Monsieur präsentiert Musik vom Tellerrand: schräg gebürstet oder melancholisch offen getragen, düster treibend oder gepflegt verzweifelnd, geschüttelt und gerührt. Jede Woche neue Alben, alter Kram und andere potentielle Ohrschmeichler. Der BRF1-Grenzpendler zwischen Alternative, Post, Indie, Experimental und allem, was ihm sonst noch so über den Weg läuft. Immer mit wachsamem Blick auf die belgische Musikszene. Moderation: Volker Krings, Roger Pint. Donnerstag, 20 - 21 Uhr.</itunes:summary>
+    <item>
+      <title>Rock Monsieur 19. November</title>
+      <link>https://1.brf.be/sendungen/rock-monsieur/1232186/</link>
+      <description>Mit Roger Pint</description>
+      <content:encoded>&lt;p&gt;Roger Pint&lt;/p&gt;</content:encoded>
+      <guid isPermaLink="false">https://1.brf.be/sendungen/rock-monsieur/1232186/</guid>
+      <enclosure url="https://streaming2.brf.be/audio/2026/47/070ca7f206b2996b88b8ad27d594f9ba.mp3" length="58375358" type="audio/mpeg"/>
+      <pubDate>Thu, 19 Nov 2026 21:00:00 +0100</pubDate>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2024/09/rogerpintrmojulienclaessenbrf-600x400.jpg"/>
+    </item>
     <item>
       <title>Rock Monsieur - 12. November</title>
       <link>https://1.brf.be/sendungen/rock-monsieur/1231559/</link>
@@ -31,7 +41,7 @@
       <guid isPermaLink="false">https://1.brf.be/sendungen/rock-monsieur/1231217/</guid>
       <enclosure url="https://streaming2.brf.be/audio/2026/45/f1ba45421e851941ab6aa63a63f7dcf8.mp3" length="57763388" type="audio/mpeg"/>
       <pubDate>Thu, 05 Nov 2026 21:00:00 +0100</pubDate>
-      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2024/09/rogerpintrmojulienclaessenbrf-600x400.jpg"/>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2024/09/rogerpintrmojulienclaessenbrf-540x360.jpg"/>
     </item>
     <item>
       <title>Rock Monsieur - 29. Oktober</title>

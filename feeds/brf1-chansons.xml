@@ -8,12 +8,21 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <language>de</language>
-    <lastBuildDate>Tue, 17 Nov 2026 09:02:23 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 21 Nov 2026 03:55:36 +0000</lastBuildDate>
     <itunes:author>BRF1</itunes:author>
     <itunes:category text="Music"/>
     <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2015/06/CLF-1420x968.jpg"/>
     <itunes:explicit>no</itunes:explicit>
     <itunes:summary>Eine Sendung, die, wenn es sie nicht schon seit über 30 Jahren geben würde, für Ostbelgien erfunden werden müsste. Am Schnittpunkt der Kulturen stellt der BRF französische Chansons, deutschsprachige Lieder und internationale Folk- und Worldmusic vor. Montag, 20 - 21 Uhr.</itunes:summary>
+    <item>
+      <title>Chansons, Lieder und Folk: Belle Affaire - Ein Luzerner Schlagzeuger bespielt das französische Chanson</title>
+      <link>https://1.brf.be/sendungen/chansons/1232115/</link>
+      <description>Das Quartett um den singenden Drummer Pirmin Setz verbindet Kammerjazz, Spoken Word und Poesie. Auf ihrem dritten Album "Galaxie Merveilleuse" widmet sich die Schweizer Formation flüchtigen Begegnungen, den großen Fragen des Alltags und dem Staunen über das scheinbar Selbstverständliche.</description>
+      <content:encoded>&lt;p&gt;Ein Schlagzeuger aus der deutschsprachigen Schweiz in der Rolle des Franco-Chansonniers - aus dieser ungewöhnlichen Konstellation bezieht die Musik von Belle Affaire einen unwiderstehlichen Reiz. Pirmin Setz aus Luzern singt und spricht auf Französisch, während er gleichzeitig den Takt angibt. Gemeinsam mit seinen Mitstreitern Peter Gossweiler am Kontrabass, Peter Zihlmann an Klavier und Wurlitzer sowie Philipp Z’Rotz an Klarinette, Sopransaxofon und Flöte hat er nach &amp;quot;Demain&amp;quot; (2018) und &amp;quot;Huit heures du matin&amp;quot; (2021) das dritte Album von Belle Affaire eingespielt. In neun Kompositionen verbinden die Musiker das erzählerische Element des Spoken Word mit einem transparenten, akustischen Bandsound, der dem frühen Serge Gainsbourg nähersteht als einem folkloristischen Touristen-Chanson.&lt;/p&gt;&lt;p&gt;Inhaltlich kreist &amp;quot;Galaxie Merveilleuse&amp;quot; um das Staunen und um Augenblicke, deren Bedeutung sich oft erst im Rückblick erschließt. Im Stück &amp;quot;Ses yeux sont bleus&amp;quot; verwischen die Grenzen zwischen Traum und Wirklichkeit so weit, bis selbst die Augenfarbe des Gegenübers ihre Eindeutigkeit verliert. Der Titel &amp;quot;Un autre monde&amp;quot; ist als Versuch entstanden, das plötzliche Versterben eines engen Freundes der Band zu begreifen und Trost in der Erinnerung zu finden. In &amp;quot;À la prochaine&amp;quot; nimmt die Band die flüchtige Alltagsfloskel des Abschieds beim Wort und verwandelt das unverbindliche &amp;quot;Tschüss&amp;quot; in eine fein gezeichnete Studie über das Wiedersehen. In der Neuinterpretation des französischen Volkslieds &amp;quot;Au clair de lune&amp;quot; überführt das Quartett das berühmte Schlaflied von seiner Kindlichkeit in eine schwebende, nächtliche Kammerjazz-Miniatur.&lt;/p&gt;&lt;p&gt;Bei all dem setzen Belle Affaire auf reduzierten Sprechgesang, der seinen eigenen, unperfekten Sprachakzent nicht versteckt, sondern als Stilmittel einsetzt. Musikalisch verzichtet das Quartett auf Effekte und lässt den akustischen Instrumenten Raum zum Atmen. Ein unaufgeregtes, präzise arrangiertes Werk zwischen Chanson-Sentiment, Poesie, Folk-Anklängen und feinem Jazz, das sich Zeit für träumerische Zwischentöne nimmt.&lt;/p&gt;&lt;p&gt;&amp;quot;Galaxie Merveilleuse&amp;quot; von Belle Affaire ist erschienen am 6. November bei Selftape Records.&lt;/p&gt;&lt;p&gt;Maaru Will&lt;/p&gt;</content:encoded>
+      <guid isPermaLink="false">https://1.brf.be/sendungen/chansons/1232115/</guid>
+      <enclosure url="https://streaming2.brf.be/audio/2026/47/a27e551075176c2a97c68c2ef6e57f0a.mp3" length="57894514" type="audio/mpeg"/>
+      <pubDate>Mon, 16 Nov 2026 21:00:00 +0100</pubDate>
+    </item>
     <item>
       <title>Chansons, Lieder und Folk: Johnny &amp; Lillie Flynn - Rückkehr ins Beam Cottage</title>
       <link>https://1.brf.be/sendungen/chansons/1231378/</link>
@@ -32,7 +41,7 @@
       <guid isPermaLink="false">https://1.brf.be/sendungen/chansons/1230687/</guid>
       <enclosure url="https://streaming2.brf.be/audio/2026/45/1e638d55df17449e9a850e85b9035360.mp3" length="57848545" type="audio/mpeg"/>
       <pubDate>Mon, 02 Nov 2026 21:00:00 +0100</pubDate>
-      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2026/11/bluaipersfotoanneke-dhollander-9-scaled-600x400.jpg"/>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2026/11/bluaipersfotoanneke-dhollander-9-scaled-540x360.jpg"/>
     </item>
     <item>
       <title>Chansons, Lieder und Folk: Muireann Bradley - Klangzauber aus Kirchenbänken</title>
