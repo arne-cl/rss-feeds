@@ -8,12 +8,22 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
     <language>de</language>
-    <lastBuildDate>Tue, 24 Nov 2026 04:59:17 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 25 Nov 2026 05:09:13 +0000</lastBuildDate>
     <itunes:author>BRF1</itunes:author>
     <itunes:category text="Music"/>
     <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2015/06/CLF-1420x968.jpg"/>
     <itunes:explicit>no</itunes:explicit>
     <itunes:summary>Eine Sendung, die, wenn es sie nicht schon seit über 30 Jahren geben würde, für Ostbelgien erfunden werden müsste. Am Schnittpunkt der Kulturen stellt der BRF französische Chansons, deutschsprachige Lieder und internationale Folk- und Worldmusic vor. Montag, 20 - 21 Uhr.</itunes:summary>
+    <item>
+      <title>Chansons, Lieder und Folk: Jake Bugg – mit akustischer Klarheit zurück zu den Anfängen</title>
+      <link>https://1.brf.be/sendungen/chansons/1232606/</link>
+      <description>Auf seinem siebten Studioalbum "Alamo" lässt der britische Songwriter die rockigen Eskapaden der letzten Jahre hinter sich und setzt auf melodische, nachdenkliche Stücke über das Älterwerden – umwölkt von akustischen Gitarren, Pedal-Steel und dem Geist der Siebzigerjahre.</description>
+      <content:encoded>&lt;p&gt;Als Jake Bugg 2012 als Teenager aus Nottingham mit seinem selbstbetitelten Debüt die britischen Charts eroberte, galt er als große Hoffnung des ungestümen Folk-Rock. Über die Jahre hat er sich jedoch an unterschiedlichen Klangfarben versucht und zuletzt auf &amp;quot;A Modern Day Distraction&amp;quot; noch stark auf elektrifizierten Sechzigerjahre-Rock gesetzt. Mit &amp;quot;Alamo&amp;quot; schlägt er nun eine deutlich ruhigere, reflektierte Richtung ein. Eingespielt in London mit den Produzenten Jimmy Hogarth und Steve McEwan rücken seine helle, charakteristisch leicht zitternde Stimme und das akustische Songwriting wieder in den Mittelpunkt.&lt;/p&gt;&lt;p&gt;Musikalisch schlägt das Album eine Brücke zum amerikanischen Pop und Country-Folk der Siebzigerjahre, etwa eines Jimmy Webb. Im Titelstück sowie in &amp;quot;Drop In The Water&amp;quot; sorgt eine warme Pedal-Steel-Gitarre für weite, melancholische Klangräume, während der Opener &amp;quot;When The Night&amp;quot; mit seinem schwebenden Gesang an den frühen Barock-Pop der Bee Gees oder an Gilbert O’Sullivan erinnert. Dazwischen lockern schwungvolle Momente wie das an Rockabilly angelehnte &amp;quot;Never Can Tell&amp;quot; oder das bluesige &amp;quot;Dropped In A Cage&amp;quot; die Stimmung auf, ohne die geschlossene Atmosphäre der Platte zu brechen.&lt;/p&gt;&lt;p&gt;Inhaltlich läuft Jake Bugg auf &amp;quot;Alamo&amp;quot; die langen Straßen des Lebens ab: das Erwachsenwerden und den Umgang mit schwierigen Emotionen. Dabei verzichtet er auf große Gesten und findet gerade in dieser Zurückhaltung eine eindringliche Stärke – etwa in &amp;quot;Ten Stories High&amp;quot;, wo er trotz aller Zweifel eine versöhnliche Bilanz zieht. &amp;quot;Alamo&amp;quot; ist ein reifes, zurückhaltendes Werk eines Künstlers, der seinen Platz gefunden hat.&lt;/p&gt;&lt;p&gt;&amp;quot;Alamo&amp;quot; von Jake Bugg ist erschienen am 13. November bei Lovebugg Recording. Jake Bugg live: 12. April 2027, Köln, Gloria&lt;/p&gt;&lt;p&gt;Außerdem in dieser Sendung:&lt;/p&gt;&lt;p&gt;Sheryl Crow: Die US-amerikanische Rock- und Country-Institution kommentiert auf sieben melodisch-kompakten Songs die turbulente Gegenwart und wirbt für Zusammenhalt (&amp;quot;Pick You Up&amp;quot;, Old Green Barn Productions)&lt;/p&gt;&lt;p&gt;Fine Food Market: Die kanadische Künstlerin Sophie Perras verbindet verträumten Indie-Pop mit zarten Country- und Folk-Elementen (&amp;quot;Alas Time Has Passed&amp;quot;, Arbutus Records)&lt;/p&gt;&lt;p&gt;Emma Ogier: Die 23-jährige Songwriterin aus Houston kreuzt auf ihrem Debüt sperrigen Rock mit Country, Indie-Folk und glasklarem Gesang (&amp;quot;Fly 1111&amp;quot;, Lost Highway Records)&lt;/p&gt;&lt;p&gt;Lambchop: Mastermind Kurt Wagner verstummt und lässt befreundete Stimmen seine Demos singen: MJ Lendermann, Alan Sparhawk &amp;amp; Circuit des Yeux, Dan Wriggins, Flock of Dimes u. a. (&amp;quot;Demoed&amp;quot;, City Slang)&lt;/p&gt;&lt;p&gt;+ Neuheiten von Kingfishr, Marika Hackman, Jo From School, Kuusi und Naima Bock&lt;/p&gt;&lt;p&gt;Maaru Will&lt;/p&gt;</content:encoded>
+      <guid isPermaLink="false">https://1.brf.be/sendungen/chansons/1232606/</guid>
+      <enclosure url="https://streaming2.brf.be/audio/2026/48/7b799edce3f98f214dc9f96cbabf742c.mp3" length="56068646" type="audio/mpeg"/>
+      <pubDate>Mon, 23 Nov 2026 21:00:00 +0100</pubDate>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2026/11/jbalamopress3580westenbergfinv4gr-531x400.jpg"/>
+    </item>
     <item>
       <title>Chansons, Lieder und Folk: Belle Affaire - Ein Luzerner Schlagzeuger bespielt das französische Chanson</title>
       <link>https://1.brf.be/sendungen/chansons/1232115/</link>
@@ -31,7 +41,7 @@
       <guid isPermaLink="false">https://1.brf.be/sendungen/chansons/1231378/</guid>
       <enclosure url="https://streaming2.brf.be/audio/2026/46/32c3e97357c66154a0f78027f37155d3.mp3" length="56240757" type="audio/mpeg"/>
       <pubDate>Mon, 09 Nov 2026 21:00:00 +0100</pubDate>
-      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2021/05/MarkusWill2_ThierryCornelyBRF-600x400.jpg"/>
+      <itunes:image href="https://1.brf.be/wp-content/uploads/sites/2/2021/05/MarkusWill2_ThierryCornelyBRF-540x360.jpg"/>
     </item>
     <item>
       <title>Chansons, Lieder und Folk: Bluai - weniger Folk, mehr Grunge</title>
